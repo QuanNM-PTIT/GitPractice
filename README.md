@@ -93,6 +93,6 @@ git log --oneline
 	 - Accept incoming change: Sử dụng những thay đổi của bạn A.
 	 - Accept both changes: Sử dụng những thay đổi của cả 2 bạn.
 - Sau khi resolve conflict xong, bạn B sẽ đưa các thay đổi vào staging area, commit và push lại lên nhánh b-dev. Lúc này sẽ hết conflict và có thể tiến hành merge request của bạn B.
-#### 2. Tình huống chỉ muốn merge 1 hoặc 1 vài commit nhất định vào 1 nhánh khác:
+#### 2. Tình huống chỉ muốn merge 1 hoặc 1 vài commit nhất định từ 1 nhành vào 1 nhánh khác:
 
 > Updating...
