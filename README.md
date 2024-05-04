@@ -1,3 +1,4 @@
+
 # Git cơ bản
 ### A. Các lệnh git cơ bản:
  - Khởi tạo 1 repo mới tại thư mục hiện tại:
@@ -160,7 +161,19 @@ git log --oneline
 	- 7. Trả sách: Chỉ thực hiện được nếu người dùng có role user. Cho phép người dùng nhập vào id cuốn sách muốn trả.
 	- 8. Lấy thông tin các quyển sách: Hiển thị toàn bộ danh sách các cuốn sách hiện có trong file books.txt. Các thông tin hiển thị theo thứ tự id tăng dần.
 	- 9. Lấy thông tin 1 quyển sách: Cho phép người dùng nhập vào id 1 quyển sách và hiển thị thông tin quyển sách đó.
-	- 10. Chỉnh sửa thông tin cá nhân: Cho phép người dùng chỉnh sửa thông tin cá nhân, trừ role và id.
-	- 11. Chỉnh sửa thông tin cá nhân của người khác: Chỉ thực hiện được nếu người dùng có role admin. Cho phép người dùng nhập nhập vào id của 1 user và chỉnh sửa thông tin của user đó, có thể cập nhật role cho user đó lên admin, nhưng không được chỉnh sửa id.
-	- 12. Đăng xuất.
-	- 13. Thoát chương trình.
+	- 10. Lấy thông tin tất cả các eBook hiện có.
+	- 11. Lấy thông tin 1 eBook có id nằm trong file eBooks.txt.
+	- 13. Hiển thị tất cả các quyển sách đã mượn của bản thân (Đối với role user).
+	- 14. Hiển thị tất cả các quyển sách của 1 người dùng đã mượn với id người dùng: Cho phép người dùng có role admin nhập vào id của 1 người dùng và hiển thị thông tin các quyển sách mà người dùng đó đã mượn.
+	- 15. Chỉnh sửa thông tin cá nhân: Cho phép người dùng chỉnh sửa thông tin cá nhân, trừ role và id.
+	- 16. Chỉnh sửa thông tin cá nhân của người khác: Chỉ thực hiện được nếu người dùng có role admin. Cho phép người dùng nhập nhập vào id của 1 user và chỉnh sửa thông tin của user đó, có thể cập nhật role cho user đó lên admin, nhưng không được chỉnh sửa id.
+	- 17. Đăng xuất.
+	- 18. Thoát chương trình.
+
+#### 4. Phân chia công việc:
+- Công việc 1:
+	- Xây dựng class Book, EBook, User cùng các methods chứa bên trong nó.
+	-  Làm các tính năng có số thứ tự là số lẻ.
+- Công việc 2:
+	- Xây dựng class Person, BorrowInfo cùng các methods bên trong nó.
+	- Làm các tính năng có số thứ tự là số chẵn. 
