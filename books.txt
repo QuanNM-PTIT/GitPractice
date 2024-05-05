@@ -9,7 +9,6 @@
 [9] [Moby-Dick] [Herman Melville] [3]
 [5] [To Kill a Mockingbird] [Harper Lee] [6]
 [7] [The Great Gatsby] [F. Scott Fitzgerald] [2]
-[2] [The Hobbit] [J. R. R. Tolkien] [3]
 [3] [1984] [George Orwell] [7]
 [10] [Jane Eyre] [Charlotte Brontë] [5]
-[12] [Animal Farm] [George Orwell] [6]
+[14] [The Great Gatsby] [F. Scott Fitzgerald] [3]

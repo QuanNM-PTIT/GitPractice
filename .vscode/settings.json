@@ -1,11 +1,6 @@
 {
     "files.associations": {
-<<<<<<< HEAD
-        "system_error": "cpp",
-        "*.tcc": "cpp",
-        "fstream": "cpp"
-=======
-        "iosfwd": "cpp"
->>>>>>> dev-6
+        "iosfwd": "cpp",
+        "iostream": "cpp"
     }
 }
