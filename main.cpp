@@ -2,6 +2,93 @@
 
 using namespace std;
 
+class Person{
+    private:
+    int id ; 
+    string name , email , sex , birthdate, address, phoneNumber, role;
+    public:
+    Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role ){
+        this->name = name ;
+        this->email = email;
+        this->sex = sex ;
+        this-> birthdate = birthdate; 
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->role = role;
+        ifstream in;
+        in.open("people.txt");
+        string tmp ;
+        int cnt = 0 ; 
+        while( getline( in , tmp ) )cnt ++ ; // dem so luong person
+        in.close();
+        this->id = cnt + 1 ; 
+    }
+    void addInfo(){
+        ofstream out("people.txt", ios::app); 
+        out << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << "]" << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']' << " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
+        out.close();
+    }
+    int getId(){
+        return this->id;
+    }
+    string getName(){
+        return this->name;
+    }
+    string getEmail(){
+        return this->email;
+    }
+    string getSex(){
+        return this->sex;
+    }
+    string getBirthdate(){
+        return this->birthdate;
+    }
+    string getAddress(){
+        return this->address;
+    }
+    string getPhoneNumber(){
+        return this->phoneNumber;
+    }
+    string getRole(){
+        return this->role;
+    }
+};
+
+class BorrowInfo{
+    private:
+    int id , personId, bookId, eBookId;
+    public:
+    BorrowInfo( int personId, int bookId, int eBookId ){
+        this->personId = personId ; 
+        this->bookId = bookId ;
+        this->eBookId = eBookId;
+        ifstream in;
+        in.open("borrowInfos.txt");
+        string tmp ;
+        int cnt = 0 ; 
+        while( getline( in , tmp ) )cnt ++ ; // dem so luong borrowInfos
+        in.close();
+        this->id = cnt + 1 ;
+    }
+    void addInfo(){
+        ofstream out("borrowInfos.txt", ios::app) ; 
+        out << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
+        out.close();
+    }
+    int getId(){
+        return this->id;
+    }
+    int getPersonId(){
+        return this->personId;
+    }
+    int getBookId(){
+        return this->bookId;
+    }
+    int getEbookId(){
+        return this->eBookId;
+    }
+};
+
 class bookInfo{ // dung 1 class rieng cho thong tin cua sach
 
     private:
@@ -136,21 +223,22 @@ bool cmp(bookInfo a, bookInfo b){ // sap xep theo thu tu tu be den lon
 
 int main()
 {
-
-    freopen("output.txt", "w", stdout);
-
-    book test;
-
-    // // test addBook => oke
-    // bookInfo info1(20, "The Great Gatsby", "F. Scott Fitzgerald", 3);
-    // test.AddBook(info1);
-
-    // // test updateBook => oke
-    // bookInfo info2(10, "To Kill a Mockingbird", "Harper Lee", 2);
-    // test.updateBook(info2);
-
-    // // test getBooks => oke
-    // test.getBooks();
-
+    string name, email, sex , birthdate , address , phone , role;
+    getline( cin , name );
+    getline( cin , email );
+    getline( cin , sex );
+    getline( cin , birthdate );
+    getline( cin , address );
+    getline( cin , phone );
+    getline( cin , role );
+    Person a( name , email , sex , birthdate , address , phone , role );
+    a.addInfo();
     return 0;
 }
+// Nguyen Tien Trong
+// trongbg2692004@gmail.com
+// male
+// 16/09/2004
+// Bac Giang
+// 0838947749
+// Admin
