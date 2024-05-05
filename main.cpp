@@ -12,20 +12,11 @@ class BookInfor{ // dung 1 class rieng cho thong tin cua sach
 
     public:
 
-        // BookInfor(int id, string title, string author, int quantity){ // ham khoi tao
-        //     id = id;
-        //     title = title;
-        //     author = author;
-        //     quantity = quantity;
-        // }
         BookInfor(int id, string title, string author, int quantity) : id(id), title(title), author(author), quantity(quantity) {}
 
         int getId() {return id;} // lay ra id
-
         string getTitle() {return title;} // lay ra title
-
         string getAuthor() {return author;} // lay ra author
-
         int getQuantity() {return quantity;} // lay ra quantity
 };
 
@@ -36,16 +27,13 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
         vector<BookInfor> dsBooks;
 
         int getNextId(){
-            if(dsBooks.empty()){
-                return 1;
-            }
-            else return dsBooks.size() + 1;
+            if(dsBooks.empty())  return 1;
+            return dsBooks.size() + 1;
         }
 
         bool checkBook(BookInfor &Book){
-            if(Book.getTitle().empty() || Book.getAuthor().empty() || Book.getQuantity() <= 0){
+            if(Book.getTitle().empty() || Book.getAuthor().empty() || Book.getQuantity() <= 0)
                 return false;
-            }
             return true;
         }
 
@@ -85,22 +73,18 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
                 dsBooks.push_back(BookInfor(id, title, author, quantity)); // them data vao vector
                 ofstream ofs("books.txt");
                 if(ofs.is_open()){
-                    for(auto x : dsBooks){
+                    for(auto x : dsBooks)
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
-                    }
                     ofs.close();
                     cout << "sach duoc them vao thanh cong!\n";
                 } 
-                else{
-                    cout << "loi khi khong truy cap duoc vao data!\n";
-                }
+                else cout << "loi khi khong truy cap duoc vao data!\n";
             }
         }
 
         void getBooks(){ // in ra thong tin cua tat ca sach co trong thu vien
-            for(auto x : dsBooks){
+            for(auto x : dsBooks)
                 cout << x.getId() << ' ' << x.getTitle() << ' ' << x.getAuthor() << ' ' << x.getQuantity() << '\n';
-            }
         }
 
         void updateBook(BookInfor &bookUpdate){ // update theo id cua sach
@@ -117,10 +101,8 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             else{
                 ofstream ofs("books.txt", ios::trunc); // mo tep trong che đo ghi đe
                 if(ofs.is_open()){ // cap nhat lai trong file Book.txt
-                    // ofs.clear();
-                    for(auto x : dsBooks){
+                    for(auto x : dsBooks)
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
-                    }
                     ofs.close();
                     cout << "update thanh cong!\n";
                 }
@@ -141,10 +123,8 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             else{
                 ofstream ofs("books.txt", ios::trunc); // mo tep trong che đo ghi đe
                 if(ofs.is_open()){ // cap nhat lai trong file Book.txt
-                    // ofs.clear();
-                    for(auto x : dsBooks){
+                    for(auto x : dsBooks)
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
-                    }
                     ofs.close();
                     cout << "delete thanh cong!\n";
                 }
@@ -169,9 +149,7 @@ class UserInfos{
         UserInfos(int id, string email, string password) : id(id), email(email), password(password) {}
 
         int getId() {return id;}
-
         string getEmail() {return email;}
-
         string getPassword() {return password;}
 };
 
@@ -221,9 +199,8 @@ class Users{
                 dsUsers.push_back(UserInfos(id, email, password)); // add them vao vector
                 ofstream ofs("users.txt");
                 if(ofs.is_open()){
-                    for(auto &x : dsUsers){ // cap nhat lai file txt
+                    for(auto &x : dsUsers) // cap nhat lai file txt
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getEmail() << ']' << ' ' << '[' << x.getPassword() << ']' << endl;
-                    }
                     cout << "user duoc them thanh cong!\n";
                     ofs.close();
                 }
