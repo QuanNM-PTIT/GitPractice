@@ -24,7 +24,7 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
 
     private:
 
-        vector<BookInfor> dsBooks;
+        vector<BookInfor> dsBooks ;
 
         int getNextId(){
             if(dsBooks.empty())  return 1;
