@@ -277,12 +277,10 @@ class Users{
             }
         }
 
-        void regist(UserInfos newUser){
-            if(!checkUser(newUser)) cout << "thong tin sai!\n";
+        void regist(string email, string password){ // check thong tin dang ki
+            if(!checkUser(UserInfos(0, email, password))) cout << "thong tin sai!\n";
             else{
                 int id = getNextId();
-                string email = newUser.getEmail();
-                string password = newUser.getPassword();
                 dsUsers.push_back(UserInfos(id, email, password)); // add them vao vector
                 ofstream ofs("users.txt");
                 if(ofs.is_open()){
@@ -294,6 +292,52 @@ class Users{
                 else cout << "khong truy cap duoc data!\n";
             }
         }
+
+        
+        // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
+        Person login(string email, string password){ // check thong tin dang nhap
+            if(!checkUser(UserInfos(0, email, password))) cout << "nhap du thong tin!\n";
+            else{
+                ifstream ifs("people.txt");
+                if(ifs.is_open()){
+                    string line;
+                    while(getline(ifs, line)){
+                        int id;
+                        string name, emailCheck;
+                        string sex, birthday, addre, phone, role;
+                        char c;
+                        ifs >> c >> id >> c >> c;
+                        getline(ifs, name, ']');
+                        ifs >> c;
+                        getline(ifs, emailCheck, ']');
+                        ifs >> c;
+                        getline(ifs, sex, ']');
+                        ifs >> c;
+                        getline(ifs, birthday, ']');
+                        ifs >> c;
+                        getline(ifs, addre, ']');
+                        ifs >> c;
+                        getline(ifs, phone, ']');
+                        ifs >> c;
+                        getline(ifs, role, ']');
+                        if(emailCheck == email){
+                            ifs.close();
+                            return Person(name, emailCheck, sex, birthday, addre, phone, role);
+                        }
+                    }
+                    ifs.close();
+                    return Person("", "", "", "", "", "", ""); // neu khong tim thay thong tin
+                }
+                else{
+                    cout << "khong truy cap duoc vao data";
+                    return Person("", "", "", "", "", "", ""); // neu khong tim thay thong tin
+                }
+            }
+        }
+
+        Person logout(Person currentUser){ // nhap vao thong tin cua nguoi dung hien tai va cho bien thong tin do bang rong
+            return Person("", "", "", "", "", "", "");
+        }
 };
 
 int main()
@@ -301,12 +345,12 @@ int main()
 
     freopen("output.txt", "w", stdout);
 
-    Book test1;
+    // Book test1;
     // Users test2;
 
-    // test addBook => oke
-    BookInfor info1(20, "The Great Gatsby", "F. Scott Fitzgerald", 3);
-    test1.AddBook(info1);
+    // // test addBook => oke
+    // BookInfor info1(20, "The Great Gatsby", "F. Scott Fitzgerald", 3);
+    // test1.AddBook(info1);
 
     // // test updateBook => oke
     // BookInfor info2(10, "To Kill a Mockingbird", "Harper Lee", 2);
@@ -320,6 +364,10 @@ int main()
 
     // // test regist => okee
     // test2.regist(UserInfos(0, "ahsdfkjbadugh", "safhdakjg"));
+
+    // // test login() => okee
+    // Person check = test2.login("john.smith@gmail.com", "pass1234");
+    // cout << check.getEmail() << ' ' << check.getName() << ' ' << check.getPhoneNumber() << ' ' << check.getRole();
 
     return 0;
 }
