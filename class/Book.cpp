@@ -66,11 +66,11 @@ int getSmallestID(){
     return bookIdList.size()+1;
 }
 
-int main(){
-    // Insert code here
+// int main(){
+//     // Insert code here
     
-    cout << "HelloBook\n";
-    Book sach1 = Book("Thep da toi the day", "Nikolai A Ostrovsky", 1);
-    cout << sach1.getBookID();
-    return 0;
-}
+//     cout << "HelloBook\n";
+//     Book sach1 = Book("Thep da toi the day", "Nikolai A Ostrovsky", 1);
+//     cout << sach1.getBookID();
+//     return 0;
+// }

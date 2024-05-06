@@ -32,7 +32,7 @@ void addInfo(BorrowInfo newBorrowInfo){
     outFile << "[" << newBorrowInfo.getBorrowId() << "] ";
     outFile << "[" << newBorrowInfo.getPersonId() << "] ";
     outFile << "[" << newBorrowInfo.getBookId() << "] ";
-    outFile << "[" << newBorrowInfo.getEBookId() << "]";
+    outFile << "[" << newBorrowInfo.getEBookId() << "]\n";
     outFile.close();
     return;
 }
@@ -49,15 +49,14 @@ void updateInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBoo
             borrowList[i] = "[" + to_string(updateBorrowId) + "] ";
             borrowList[i] += "[" + to_string(newPersonId) + "] ";
             borrowList[i] += "[" + to_string(newBookId) + "] ";
-            borrowList[i] += "[" + to_string(newEBookId) + "]\n";
+            borrowList[i] += "[" + to_string(newEBookId) + "]";
             break;
         }
     }
     ofstream outFile("../borrowInfos.txt");
-    for (int i = 0; i < borrowList.size()-1; i++){
+    for (int i = 0; i < borrowList.size(); i++){
         outFile << borrowList[i] << "\n";
     }
-    outFile << borrowList[borrowList.size()-1];
     outFile.close();
     return;
 }
@@ -74,15 +73,15 @@ int BorrowInfo::getEBookId(){
     return this -> eBookId;
 }
 
-int main(){
-    // Insert code here
-    cout << "Hello BorrowInfo\n";
-    BorrowInfo borrow1 = BorrowInfo(1, 1, 1);
-    addInfo(BorrowInfo(11, 12, 13));
-    cout << borrow1.getBorrowId() << "\n";
-    updateInfor(10, 1, 2, 3);
-    return 0;
-}
+// int main(){
+//     // Insert code here
+//     cout << "Hello BorrowInfo\n";
+//     BorrowInfo borrow1 = BorrowInfo(1, 1, 1);
+//     addInfo(BorrowInfo(11, 12, 13));
+//     cout << borrow1.getBorrowId() << "\n";
+//     updateInfor(10, 1, 2, 5);
+//     return 0;
+// }
 
 int getSmallestId(){
     vector<int> borrowIdList;

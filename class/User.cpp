@@ -21,8 +21,8 @@ User::User(int id, string email, string password){
     this -> password = password;
 }
 
-int main()
-{
-    // Insert code here
-    return 0;
-}
+// int main()
+// {
+//     // Insert code here
+//     return 0;
+// }

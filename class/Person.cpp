@@ -35,14 +35,14 @@ int Person::getPersonId(){
 
 
 
-int main()
-{
-    // Insert code here
-    cout << "Hello world\n";
-    Person hieu = Person("Hieu", "HieuMD.B22KH039", "male", "23/01/2004", "Hanoi", "0813267626", "User");
-    cout << hieu.getPersonId();
-    return 0;
-}
+// int main()
+// {
+//     // Insert code here
+//     cout << "Hello world\n";
+//     Person hieu = Person("Hieu", "HieuMD.B22KH039", "male", "23/01/2004", "Hanoi", "0813267626", "User");
+//     cout << hieu.getPersonId();
+//     return 0;
+// }
 
 int getSmallestId(){
     vector<int> peopleIdList;
