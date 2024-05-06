@@ -4,12 +4,21 @@
 using namespace std;
 
 class EBook : private Book{
-    
+    private:
+        string fileFormat;
+        int fileSize;
+    public:
+        EBook();
 };
 
-int main()
-{
-    // Insert code here
-    cout << "Hello";
-    return 0;
+EBook::EBook(){
+    this -> fileFormat = "";
+    this -> fileSize = 0;
 }
+
+// int main()
+// {
+//     // Insert code here
+//     cout << "Hello";
+//     return 0;
+// }

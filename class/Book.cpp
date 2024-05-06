@@ -2,6 +2,8 @@
 
 using namespace std;
 
+int getSmallestID();
+
 class Book {
     private:
         int id;
@@ -9,7 +11,7 @@ class Book {
         string author;
         int quantity;
     public:
-        Book(int id, string title, string author, int quantity);
+        Book(string title, string author, int quantity);
         void addBook();
         vector<Book> getBooks();
         void updateBook(int bookId);
@@ -17,8 +19,8 @@ class Book {
         int getBookID();
 };
 
-Book::Book(int id, string title, string author, int quantity){
-    this -> id = id;
+Book::Book(string title, string author, int quantity){
+    this -> id = getSmallestID();
     this -> title = title;
     this -> author = author;
     this -> quantity = quantity;
@@ -40,21 +42,35 @@ int Book::getBookID(){
 }
 
 
-int getSmallestID(vector<Book> bookList){
-    int present[bookList.size()] = {0};
-    for (auto book : bookList)
-        present[book.getBookID()] = 1;
-    for (int i = 0; i < bookList.size(); i++){
+int getSmallestID(){
+    vector<int> bookIdList;
+    ifstream inFile;
+    inFile.open("../books.txt");
+    string s;
+    while (getline(inFile, s)){
+        stringstream ss(s);
+        string tmp;
+        ss >> tmp;
+        int id = stoi(tmp.substr(1, tmp.size()-2));
+        bookIdList.push_back(id);
+    }
+
+    int present[bookIdList.size()] = {0};
+    for (auto id : bookIdList)
+        present[id] = 1;
+    for (int i = 1; i <= bookIdList.size(); i++){
         if (!present[i]){
             return i;
         } 
     }
-    return -1;
+    return bookIdList.size()+1;
 }
 
-// int main(){
-//     // Insert code here
+int main(){
+    // Insert code here
     
-//     cout << "Hello";
-//     return 0;
-// }
+    cout << "HelloBook\n";
+    Book sach1 = Book("Thep da toi the day", "Nikolai A Ostrovsky", 1);
+    cout << sach1.getBookID();
+    return 0;
+}
