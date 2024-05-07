@@ -183,15 +183,15 @@ public:
 int main()
 {
     Book book;
-    // book.addBook(); // Thêm m?t sách vào file books.txt
-    // // book.getBooks(); // Hi?n th? thông tin sách trong file books.txt
+    // book.addBook(); // Thêm một sách vào file books.txt
+    // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
     // EBook ebook;
-    // ebook.addBook(); // Thêm m?t sách di?n t? vào file books.txt
+    // ebook.addBook(); // Thêm một Ebook vào file books.txt
     int idToUpdate;
     cout << "Enter ID want to update: ";
     cin >> idToUpdate;
-    book.updateBook(idToUpdate); // C?p nh?t thông tin c?a sách
+    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
 
     return 0;
 }
