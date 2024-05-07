@@ -107,7 +107,7 @@ class BookInfor{ // dung 1 class rieng cho thong tin cua sach
         int getQuantity() {return quantity;} // lay ra quantity
 };
 
-class Book{ // class chua nhung thuoc tinh theo yeu cau
+class Books{ // class chua nhung thuoc tinh theo yeu cau
 
     private:
 
@@ -118,15 +118,15 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             return dsBooks.size() + 1;
         }
 
-        bool checkBook(BookInfor &Book){
-            if(Book.getTitle().empty() || Book.getAuthor().empty() || Book.getQuantity() <= 0)
+        bool checkBook(BookInfor &Books){
+            if(Books.getTitle().empty() || Books.getAuthor().empty() || Books.getQuantity() <= 0)
                 return false;
             return true;
         }
 
     public:
 
-        Book(){
+        Books(){
             ifstream ifs("books.txt");
             if(ifs.is_open()){
                 string line;
@@ -147,21 +147,20 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             }
         }
 
-        void AddBook(BookInfor &Book){ // chi user co tai khoan admin moi su dung duoc
-            if(!checkBook(Book)){
+        void AddBook(BookInfor &Books){ // chi user co tai khoan admin moi su dung duoc
+            if(!checkBook(Books)){
                 cout << "thong tin sach con thieu! \n";
                 return;
             }
             else{
                 int id = getNextId();
-                string title = Book.getTitle();
-                string author = Book.getAuthor();
-                int quantity = Book.getQuantity();
+                string title = Books.getTitle();
+                string author = Books.getAuthor();
+                int quantity = Books.getQuantity();
                 dsBooks.push_back(BookInfor(id, title, author, quantity)); // them data vao vector
-                ofstream ofs("books.txt");
+                ofstream ofs("books.txt", ios::app) ; 
                 if(ofs.is_open()){
-                    for(auto x : dsBooks)
-                        ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
+                    ofs << '[' << id << ']' << ' ' << '[' << title << ']' << ' ' << '[' << author << ']' << ' ' << '[' << quantity << ']' << endl;
                     ofs.close();
                     cout << "sach duoc them vao thanh cong!\n";
                 } 
@@ -187,7 +186,7 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             if(!check) cout << "khong tim thay thong tin!\n";
             else{
                 ofstream ofs("books.txt", ios::trunc); // mo tep trong che đo ghi đe
-                if(ofs.is_open()){ // cap nhat lai trong file Book.txt
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
                     for(auto x : dsBooks)
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
                     ofs.close();
@@ -209,7 +208,7 @@ class Book{ // class chua nhung thuoc tinh theo yeu cau
             if(!check) cout << "khong tim thay thong tin!\n";
             else{
                 ofstream ofs("books.txt", ios::trunc); // mo tep trong che đo ghi đe
-                if(ofs.is_open()){ // cap nhat lai trong file Book.txt
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
                     for(auto x : dsBooks)
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
                     ofs.close();
@@ -277,17 +276,19 @@ class Users{
             }
         }
 
-        void regist(string email, string password){ // check thong tin dang ki
-            if(!checkUser(UserInfos(0, email, password))) cout << "thong tin sai!\n";
+        void regist(Person info, string password){ // check thong tin dang ki
+            if(!checkUser(UserInfos(0, info.getEmail(), password))) cout << "thong tin sai!\n";
             else{
                 int id = getNextId();
-                dsUsers.push_back(UserInfos(id, email, password)); // add them vao vector
+                dsUsers.push_back(UserInfos(id, info.getEmail(), password)); // add them vao vector
                 ofstream ofs("users.txt");
                 if(ofs.is_open()){
                     for(auto &x : dsUsers) // cap nhat lai file txt
                         ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getEmail() << ']' << ' ' << '[' << x.getPassword() << ']' << endl;
-                    cout << "user duoc them thanh cong!\n";
+                    cout << "dang ki thanh cong!\n";
+                    cout << "hay dang nhap bang email cua ban!\n";
                     ofs.close();
+                    info.addInfo();
                 }
                 else cout << "khong truy cap duoc data!\n";
             }
@@ -340,12 +341,93 @@ class Users{
         }
 };
 
+
+// khai bao cac bien he thong
+Users acesstUsers; // class he thong => khai bao 1 lan
+Books acesstUsersBooks;
+Person infoUser("", "", "", "", "", "", "");
+bool checkInfoUser; // check xem dang nhap thanh cong khong?
+char option; // cac thao tac khi dang nhap thanh cong
+
+
+
+// funtion chuc nang
+
+void Login(){
+    checkInfoUser = false;
+    // infoUser = Person("", "", "", "", "", "", ""); // moi khi dang nhap lai tu dau
+    string email, password;
+    cout << "nhap email:\n";
+    cin >> email;
+    cout << "nhap password:\n";
+    cin >> password;
+    infoUser = acesstUsers.login(email, password);
+    if(infoUser.getEmail().empty()){ // chua dang ki
+        cout << "dang nhap that bai!\n";
+        cout << "vui long dang ki tai khoan!\n";
+    }
+    else{
+        cout << "Welcome \n" << infoUser.getName() << endl;
+        checkInfoUser = true;
+    }
+}
+
 int main()
 {
 
-    freopen("output.txt", "w", stdout);
+    // freopen("output.txt", "w", stdout);
 
-    // Book test1;
+    while(1){
+        cout << "dang nhap - bam \"a\"\n";
+        cout << "dang ki - bam \"b\"\n";
+        cout << "thoat chuong trinh - bam \"r\"\n";
+        cin >> option;
+        if(option == 'r') return 0;
+        if(option == 'b'){
+            // code thu tuc dang ki
+        }
+        if(option == 'a'){
+            Login();
+            while(checkInfoUser){
+                cout << "CHON CAC CHUC NANG:\n";
+                cout << "bam \"c\" de them sach - quyen cua admin\n";
+                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
+                cout << "bam \"e\" de xoa sach - quyen cua admin\n";
+                cout << "bam \"f\" de muon sach\n";
+                cout << "bam \"g\" de tra sach\n";
+                cout << "bam \"h\" de hien thi tat ca sach\n";
+                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n";
+                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
+                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n";
+                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
+                cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi - quyen cua admin\n";
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n";
+                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
+                cout << "bam \"q\" de dang suat\n";
+                cout << "bam \"r\" de thoat chuong trinh\n";
+                cout << endl;
+                cin >> option;
+                if(option == 'r') return 0; // dang ki
+                if(option == 'q') break; // dang xuat
+                // if(option == 'c')
+                // if(option == 'd')
+                // if(option == 'e')
+                // if(option == 'f')
+                // if(option == 'g')
+                // if(option == 'h')
+                // if(option == 'i')
+                // if(option == 'j')
+                // if(option == 'k')
+                // if(option == 'm')
+                // if(option == 'n')
+                // if(option == 'o')
+                // if(option == 'p')
+            }
+        }
+    }
+    
+
+    // Books test1;
     // Users test2;
 
     // // test addBook => oke
