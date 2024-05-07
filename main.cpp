@@ -75,14 +75,61 @@ public:
             cout << "Unable to open file.\n";
         }
     }
-    //     void updateBook(int id)
-    //     {
+    void updateBook(int idToUpdate)
+    {
+        string newTitle = "New Title";
+        string newAuthor = "New Author";
+        int newQuantity = 10;
 
-    //     }
-    //     void deleteBook(int id)
-    //     {
+        vector<string> lines;
+        ifstream file("books.txt");
+        if (!file.is_open())
+        {
+            cerr << "Error" << endl;
+            return;
+        }
 
-    //     }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            int id, quantity;
+            string title, author;
+
+            char bracket;
+            ss >> bracket >> id >> bracket;
+            getline(ss, title, ']');
+            getline(ss, author, ']');
+            ss >> bracket >> quantity >> bracket;
+
+            if (id == idToUpdate)
+            {
+                stringstream updatedLine;
+                updatedLine << "[" << id << "] [" << newTitle << "] [" << newAuthor << "] [" << newQuantity << "]";
+                lines.push_back(updatedLine.str());
+            }
+            else
+            {
+                lines.push_back(line);
+            }
+        }
+        file.close();
+
+        ofstream outFile("books.txt");
+        if (!outFile.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        for (const auto &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+
+        cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
+    }
 };
 
 class EBook : public Book
@@ -133,30 +180,118 @@ public:
     }
 };
 
-class Person{
-	private:
-		int id;
-		string 	name, email, sex, birthday, 
-				address, phoneNumber, role;
-		
-	public:
-		
-};
-
-
 class User{
 	private:
 		int id;
 		string email, password;
 };
+
+// Begin Person
+class Person{
+	private:
+		int id;
+		string 	name, email, sex, birthdate, 
+				address, phoneNumber, role;
+		
+	public:
+		Person(string, string, string, string, string, string, string);
+};
+
+Person::Person(string name, string email, string sex, string birthday, string address, string phoneNumber, string role)
+{
+	this->name = name;
+	this->email = email;
+	this->sex = sex ;
+	this-> birthdate = birthdate; 
+	this->address = address;
+	this->phoneNumber = phoneNumber;
+	this->role = role;
+}
+
+
+// End Person
+
+// Begin BorrowInfo
+class BorrowInfo{
+	private:
+		int id, personId, bookId, eBookId;
+	public:
+		BorrowInfo(int, int, int);
+		void addInfo();
+		int getNextAvailableId();
+		void setId(int);
+};
+
+BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
+{
+	this->personId = personId;
+	this->bookId = bookId;
+	this->eBookId = eBookId;
+}
+
+void BorrowInfo::addInfo()
+{
+	ofstream fileout("borrowInfos.txt", ios::app);
+	fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
+    fileout.close();
+}
+
+int BorrowInfo::getNextAvailableId()
+{
+    ifstream file("borrowInfos.txt");
+    if (file.is_open())
+    {
+        int lineCount = 0;
+        string line;
+        while (getline(file, line))
+        {
+            lineCount++;
+        }
+        file.close();
+        return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+    }
+    return 1; // Trả về 1 nếu không mở được file
+}
+
+void BorrowInfo::setId(int id)
+{
+	this->id = id;
+}
+
+// End BorrowInfo
+
+
+// Bat dau khai bao cac ham thao tac
+
+void themthongtinmuonsach()
+{
+	int id, persionId, bookId, eBookId;
+	cout << "Nhap id nguoi muon: ";
+	cin >> persionId;
+	cout << "Nhap id quyen sach duoc muon: ";
+	cin >> bookId;
+	cout << "Nhap id quyen sach dien tu duoc muon: ";
+	cin >> eBookId;
+	BorrowInfo x(persionId, bookId, eBookId);
+	x.setId(x.getNextAvailableId());
+    x.addInfo();
+}
+
+// Ket thuc khai bao cac ham thao tac
 int main()
 {
     Book book;
-    book.addBook(); // Thêm một sách vào file books.txt
-    // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
+    // book.addBook(); // Thêm một sách vào file books.txt
+    // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
-    EBook ebook;
-    ebook.addBook(); // Thêm một sách điện tử vào file books.txt
-
-
+    // EBook ebook;
+    // ebook.addBook(); // Thêm một Ebook vào file books.txt
+//    int idToUpdate;
+//    cout << "Enter ID want to update: ";
+//    cin >> idToUpdate;
+//    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+	
+//	themthongtinmuonsach(); --> done
+	
+	
 }
