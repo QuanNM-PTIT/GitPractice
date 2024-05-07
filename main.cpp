@@ -206,8 +206,8 @@ class Books{ // class chua nhung thuoc tinh theo yeu cau
             return dsBooks.size() + 1;
         }
 
-        bool checkBook(BookInfor &Books){
-            if(Books.getTitle().empty() || Books.getAuthor().empty() || Books.getQuantity() <= 0)
+        bool checkBook(BookInfor &Bookcheck){
+            if(Bookcheck.getTitle().empty() || Bookcheck.getAuthor().empty() || Bookcheck.getQuantity() <= 0)
                 return false;
             return true;
         }
@@ -235,16 +235,16 @@ class Books{ // class chua nhung thuoc tinh theo yeu cau
             }
         }
 
-        void AddBook(BookInfor &Books){ // chi user co tai khoan admin moi su dung duoc
-            if(!checkBook(Books)){
+        void AddBook(BookInfor &addBook){ // chi user co tai khoan admin moi su dung duoc
+            if(!checkBook(addBook)){
                 cout << "thong tin sach con thieu! \n";
                 return;
             }
             else{
                 int id = getNextId();
-                string title = Books.getTitle();
-                string author = Books.getAuthor();
-                int quantity = Books.getQuantity();
+                string title = addBook.getTitle();
+                string author = addBook.getAuthor();
+                int quantity = addBook.getQuantity();
                 dsBooks.push_back(BookInfor(id, title, author, quantity)); // them data vao vector
                 ofstream ofs("books.txt");
                 if(ofs.is_open()){
@@ -432,7 +432,7 @@ class Users{
 
 // khai bao cac bien he thong
 Users acesstUsers; // class he thong => khai bao 1 lan
-Books acesstUsersBooks;
+Books acesstBooks;
 Person infoUser("", "", "", "", "", "", "");
 bool checkInfoUser; // check xem dang nhap thanh cong khong?
 char option; // cac thao tac khi dang nhap thanh cong
@@ -455,9 +455,31 @@ void Login(){
         cout << "vui long dang ki tai khoan!\n";
     }
     else{
-        cout << "Welcome \n" << infoUser.getName() << endl;
+        cout << "Welcome " << infoUser.getName() << '\n' << endl;
         checkInfoUser = true;
     }
+}
+
+void AddBook(){ // chi admin
+    cout << "nhap thong tin cuon sach muon them\n";
+    int id = 0;
+    string name, author;
+    int quantity;
+    cout << "nhap ten sach:\n";
+    cin >> name;
+    cout << "nhap tac gia\n";
+    cin >> author;
+    cout << "nhap so luong:\n";
+    cin >> quantity;
+    BookInfor add(id, name, author, quantity);
+    acesstBooks.AddBook(add);
+}
+
+void DeleteBook(){
+    int id;
+    cout << "nhap id cua sach muon xoa:\n";
+    cin >> id;
+    acesstBooks.deleteBook(id);
 }
  
 int main()
@@ -497,9 +519,21 @@ int main()
                 cin >> option;
                 if(option == 'r') return 0; // dang ki
                 if(option == 'q') break; // dang xuat
-                // if(option == 'c')
+                if(option == 'c'){
+                    if(infoUser.getRole() == "Admin") AddBook();
+                    else{
+                        cout << "ban khong phai admin!\n";
+                        cout << "option khac:\n";
+                    }
+                }
                 // if(option == 'd')
-                // if(option == 'e')
+                if(option == 'e'){
+                    if(infoUser.getRole() == "Admin") DeleteBook();
+                    else{
+                        cout << "ban khong phai admin!\n";
+                        cout << "option khac:\n";
+                    }
+                }
                 // if(option == 'f')
                 // if(option == 'g')
                 // if(option == 'h')
