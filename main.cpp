@@ -429,7 +429,6 @@ class Users{
         }
 };
 
-
 // khai bao cac bien he thong
 Users acesstUsers; // class he thong => khai bao 1 lan
 Books acesstUsersBooks;
@@ -517,27 +516,27 @@ int main()
 
     // Books test1;
     // Users test2;
-
+ 
     // // test addBook => oke
     // BookInfor info1(20, "The Great Gatsby", "F. Scott Fitzgerald", 3);
     // test1.AddBook(info1);
-
+ 
     // // test updateBook => oke
     // BookInfor info2(10, "To Kill a Mockingbird", "Harper Lee", 2);
     // test1.updateBook(info2);
-
+ 
     // // test getBooks => oke
     // test1.getBooks();
-
+ 
     // // test deleteBook => okee
     // test1.deleteBook(12);
-
+ 
     // // test regist => okee
     // test2.regist(UserInfos(0, "ahsdfkjbadugh", "safhdakjg"));
-
+ 
     // // test login() => okee
     // Person check = test2.login("john.smith@gmail.com", "pass1234");
     // cout << check.getEmail() << ' ' << check.getName() << ' ' << check.getPhoneNumber() << ' ' << check.getRole();
-
+ 
     return 0;
 }
