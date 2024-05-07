@@ -196,9 +196,5 @@ void initInformationForPeople() {
 
 int main() {
     initInformationForPeople();
-
-    for (Person p : people) {
-        cout << p.getID() << ' ' << p.getName() << ' ' << p.getEmail() << ' ' << p.getSex() << ' ' << p.getBirthdate() << ' ' << p.getAddress() << ' ' << p.getPhoneNumber() << ' ' << p.getRole() << endl;
-    }
     return 0;
 }
