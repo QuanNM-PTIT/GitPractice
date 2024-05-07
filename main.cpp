@@ -118,9 +118,9 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
-bool isValid(const vector<string>& info, const string& email, int n) {
+bool isValid(const vector<string>& info, const string& needCheck, int n) {
     for (int i = 0; i < n; ++i) {
-        if (info[i] == email) {
+        if (info[i] == needCheck) {
             return false;
         }
     }
