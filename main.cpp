@@ -127,6 +127,22 @@ bool isValid(const vector<string>& info, const string& email, int n) {
     return true;
 }
 
+void initInformationForPeople() {
+    vector<vector<string>> info(7);
+    for (int i = 1; i <= 7; ++i) {
+        info[i - 1] = getInformationFromFile("people.txt", i);
+    }
+
+    int id = 1;
+    for (int j = 0; j < 10; ++j) {
+        if (isValid(info[1], info[1][j], j)) {
+            Person per(info[0][j], info[1][j], info[2][j], info[3][j], info[4][j], info[5][j], info[6][j]);
+            per.setID(id++);
+            people.push_back(per);
+        }
+    }
+}
+
 class Book {
 private:
     int id;
@@ -177,22 +193,6 @@ public:
         }
     }
 };
-
-void initInformationForPeople() {
-    vector<vector<string>> info(7);
-    for (int i = 1; i <= 7; ++i) {
-        info[i - 1] = getInformationFromFile("people.txt", i);
-    }
-
-    int id = 1;
-    for (int j = 0; j < 10; ++j) {
-        if (isValid(info[1], info[1][j], j)) {
-            Person per(info[0][j], info[1][j], info[2][j], info[3][j], info[4][j], info[5][j], info[6][j]);
-            per.setID(id++);
-            people.push_back(per);
-        }
-    }
-}
 
 int main() {
     initInformationForPeople();
