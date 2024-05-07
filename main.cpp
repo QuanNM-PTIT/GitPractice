@@ -130,6 +130,61 @@ public:
 
         cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
     }
+    void deleteBook(int idToDelete)
+    {
+        vector<string> lines;
+        ifstream file("books.txt");
+        if (!file.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        string line;
+        bool found = false;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            int id, quantity;
+            string title, author;
+
+            char bracket;
+            ss >> bracket >> id >> bracket;
+            getline(ss, title, ']');
+            getline(ss, author, ']');
+            ss >> bracket >> quantity >> bracket;
+
+            if (id == idToDelete)
+            {
+                found = true;
+                cout << "Book with ID " << id << " Deleted done!" << endl;
+            }
+            else
+            {
+                lines.push_back(line);
+            }
+        }
+        file.close();
+
+        if (!found)
+        {
+            cerr << "Error: Book with ID " << idToDelete << " not found." << endl;
+            return;
+        }
+
+        ofstream outFile("books.txt");
+        if (!outFile.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        for (const auto &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+    }
 };
 class EBook : public Book
 {
@@ -178,19 +233,110 @@ public:
         }
     }
 };
+class User
+{
+private:
+    int id;
+    string email;
+    string password;
 
+public:
+    User(int _id, const string &_email, const string &_password) : id(_id), email(_email), password(_password) {}
+
+    // check email trùng
+    bool validateEmail()
+    {
+        ifstream file("users.txt");
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                size_t found = line.find(email);
+                if (found != string::npos)
+                {
+                    file.close();
+                    return false; // Email đã tồn tại
+                }
+            }
+            file.close();
+        }
+        return true; // Email hợp lệ
+    }
+
+    // Kiểm tra mật khẩu bằng biểu thức,
+    //  thể hiện: Biểu thức này đảm bảo rằng mật khẩu chứa ít nhất một chữ số, một chữ cái thường, một chữ cái in hoa, một ký tự đặc biệt và có ít nhất 8 ký tự
+    bool validatePassword()
+    {
+        regex pattern("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-={}\\[\\]|;:'\"<>,.?/~]).{8,}$");
+        return regex_match(password, pattern);
+    }
+
+    bool registerUser()
+    {
+        if (!validateEmail())
+        {
+            cout << "Error: Email already exists." << endl;
+            return false;
+        }
+
+        ofstream fileout("users.txt", ios::app);
+        if (fileout.is_open())
+        {
+            fileout << '[' << id << ']' << " [" << email << "] [" << password << "]" << endl;
+            fileout.close();
+            return true;
+        }
+        else
+        {
+            cout << "Error: Unable to open file." << endl;
+            return false;
+        }
+    }
+
+    static int getNextAvailableId()
+    {
+        ifstream file("users.txt");
+        if (file.is_open())
+        {
+            int lineCount = 0;
+            string line;
+            while (getline(file, line))
+            {
+                lineCount++;
+            }
+            file.close();
+            return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+        }
+        return 1; // Trả về 1 nếu không mở được file
+    }
+};
 int main()
 {
     Book book;
+
     // book.addBook(); // Thêm một sách vào file books.txt
     // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
     // EBook ebook;
     // ebook.addBook(); // Thêm một sách điện tử vào file books.txt
-    int idToUpdate;
-    cout << "Enter ID want to update: ";
-    cin >> idToUpdate;
-    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+
+    // int idToUpdate;
+    // cout << "Enter ID want to update: ";
+    // cin >> idToUpdate;
+    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+
+    // int idToDelete;
+    // cout << "Enter ID want to delete: ";
+    // cin >> idToDelete;
+    // book.deleteBook(idToDelete);
+
+    int id = User::getNextAvailableId();
+    string email = "example@example.com";
+    string password = "PTITd22@";
+    User user(id, email, password);
+    user.registerUser();
+    cout << "Register Successfully" << endl;
 
     return 0;
 }
