@@ -85,7 +85,7 @@ public:
         ifstream file("books.txt");
         if (!file.is_open())
         {
-            cerr << "Error!" << endl;
+            cerr << "Error" << endl;
             return;
         }
 
