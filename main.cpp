@@ -15,18 +15,56 @@ class Person{
         this->address = address;
         this->phoneNumber = phoneNumber;
         this->role = role;
+        this->id = createId();
+        chuanHoa();
+    }
+    int createId(){
         ifstream in;
         in.open("people.txt");
-        string tmp ;
-        int cnt = 0 ; 
-        while( getline( in , tmp ) )cnt ++ ; // dem so luong person
+        map<int,bool> used ; 
+        string line;
+        while( getline( in, line ) ){
+            string id = "";
+            for( int i = 1 ; i < line.size() ; i ++ ){
+                if ( line[ i ] == ']' )break ; 
+                if( isdigit( line[ i ] ) )id.push_back( line[ i ] );
+            }
+            used[ stoi(id) ] = true ; 
+        }
         in.close();
-        this->id = cnt + 1 ; 
+        int cnt = 0;
+        for( auto x : used ){
+            if ( x.first != cnt + 1 )return cnt + 1 ; 
+            cnt = x.first; 
+        }
+        return cnt + 1 ; 
     }
-    void addInfo(){
+    void addInfo(){ // write into people.txt
         ofstream out("people.txt", ios::app); 
         out << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << "]" << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']' << " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
         out.close();
+    }
+    void chuanHoa(){
+        // chuan hoa ten 
+        stringstream ss ( this->name );
+        string tmp;
+        string res="";
+        while( ss >> tmp ){
+            for( auto &x : tmp ) x = tolower( x );
+            tmp[ 0 ] = toupper( tmp[ 0 ] );
+            res += tmp + " ";
+        }
+        res.pop_back();
+        this->name = res ; 
+        // chuan hoa ngay sinh
+        if(this->birthdate[ 1 ] == '/') this->birthdate = "0" + this->birthdate;
+        if(this->birthdate[ 4 ] == '/') this->birthdate.insert( 3 , "0" ); 
+        // chuan hoa sex 
+        for( auto &x : this->sex )x = tolower( x );
+        this->sex[ 0 ] = toupper( this->sex[ 0 ] );
+        // chuan hoa role
+        for( auto &x : this->role )x = tolower( x );
+        this->role[ 0 ] = toupper( this->role[ 0 ] );
     }
     int getId(){
         return this->id;
@@ -62,18 +100,68 @@ class BorrowInfo{
         this->personId = personId ; 
         this->bookId = bookId ;
         this->eBookId = eBookId;
+        this->id = createId() ;
+    }
+    int createId(){
         ifstream in;
         in.open("borrowInfos.txt");
-        string tmp ;
-        int cnt = 0 ; 
-        while( getline( in , tmp ) )cnt ++ ; // dem so luong borrowInfos
+        map<int,bool> used ; 
+        string line;
+        while( getline( in, line ) ){
+            string id = "";
+            for( int i = 1 ; i < line.size() ; i ++ ){
+                if ( line[ i ] == ']' )break ; 
+                if( isdigit( line[ i ] ) )id.push_back( line[ i ] );
+            }
+            used[ stoi(id) ] = true ; 
+        }
         in.close();
-        this->id = cnt + 1 ;
+        int cnt = 0;
+        for( auto x : used ){
+            if ( x.first != cnt + 1 )return cnt + 1 ; 
+            cnt = x.first; 
+        }
+        return cnt + 1 ; 
     }
-    void addInfo(){
+    void addInfo(){// write into borrowInfos.txt
         ofstream out("borrowInfos.txt", ios::app) ; 
         out << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
         out.close();
+    }
+    bool checkBook(){
+        if ( this->bookId == -1 )return true ; 
+        ifstream in;
+        in.open("books.txt");
+        string line;
+        while( getline( in, line ) ){
+            string id = "";
+            for( int i = 1 ; i < line.size() ; i ++ ){
+                if ( line[ i ] == ']' )break ; 
+                if( isdigit( line[ i ] ) )id.push_back( line[ i ] );
+            }
+            if ( stoi( id ) == this->bookId )return true ; 
+        }
+        in.close();
+        return false ; 
+    }
+    bool checkEbook(){
+        if ( this->eBookId == -1 )return true ; 
+        ifstream in;
+        in.open("ebooks.txt");
+        string line;
+        while( getline( in, line ) ){
+            string id = "";
+            for( int i = 1 ; i < line.size() ; i ++ ){
+                if ( line[ i ] == ']' )break ; 
+                if( isdigit( line[ i ] ) )id.push_back( line[ i ] );
+            }
+            if ( stoi( id ) == this->eBookId )return true ; 
+        }
+        in.close();
+        return false ;
+    }
+    bool checkInfo(){
+        return !( this->bookId == -1 and this->eBookId == -1 ) and checkBook() and checkEbook();
     }
     int getId(){
         return this->id;
