@@ -1,0 +1,5 @@
+.cph
+*.bin
+LongTest.cpp
+*.exe
+tempCodeRunnerFile.cpp
