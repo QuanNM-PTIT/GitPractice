@@ -91,8 +91,6 @@ public:
     }
 };
 
-vector<Person> people;
-
 vector<string> getInformationFromFile(const string& filename, int n) {
     vector<string> info;
     ifstream file(filename);
@@ -127,22 +125,6 @@ bool isValid(const vector<string>& info, const string& needCheck, int n) {
     return true;
 }
 
-void initInformationForPeople() {
-    vector<vector<string>> info(7);
-    for (int i = 1; i <= 7; ++i) {
-        info[i - 1] = getInformationFromFile("people.txt", i);
-    }
-
-    int id = 1;
-    for (int j = 0; j < 10; ++j) {
-        if (isValid(info[1], info[1][j], j)) {
-            Person per(info[0][j], info[1][j], info[2][j], info[3][j], info[4][j], info[5][j], info[6][j]);
-            per.setID(id++);
-            people.push_back(per);
-        }
-    }
-}
-
 class Book {
 private:
     int id;
@@ -159,7 +141,7 @@ public:
     }
 
     int getID() const {
-        return id;
+        return this->id;
     }
 
     void setID(int id) {
@@ -167,7 +149,7 @@ public:
     }
 
     string getTitle() const {
-        return title;
+        return this->title;
     }
 
     void setTitle(const string& title) {
@@ -175,7 +157,7 @@ public:
     }
 
     int getQuantity() const {
-        return quantity;
+        return this->quantity;
     }
 
     void setQuantity(int quantity) {
@@ -188,13 +170,37 @@ public:
             outFile << bookInf << '\n';
             outFile.close();
             cout << "Thông tin của cuốn sách đã được ghi thành công!\n";
-        } else {
+        } 
+        else {
             cerr << "Mở file thất bại!\n";
         }
     }
 };
 
 int main() {
-    initInformationForPeople();
+    cout    << "Vui lòng chọn một trong các tính năng sau đây\n" 
+            << "1. Đăng nhập.\n"
+            << "2. Đăng ký.\n"
+            << "3. Thêm sách (Admin).\n"
+            << "4. Sửa thông tin sách (Admin).\n"
+            << "5. Xóa sách (Admin).\n"
+            << "6. Mượn sách.\n"
+            << "7. Trả sách.\n"
+            << "8. Lấy thông tin các quyển sách.\n"
+            << "9. Lấy thông tin 1 quyển sách.\n"
+            << "10. Lấy thông tin tất cả các quyển sách eBook hiện có.\n"
+            << "11. Lấy thông tin 1 eBook có id nằm trong file eBooks.txt.\n"
+            << "12. Hiển thị tất cả các quyển sách đã mượn của bản thân (User).\n"
+            << "13. Hiển thị tất cả các quyển sách của 1 người dùng đã mượn với id người dùng.\n"
+            << "14. Chỉnh sửa thông tin cá nhân.\n"
+            << "15. Chỉnh sửa thông tin cá nhân của người khác (Admin).\n"
+            << "16. Đăng xuất.\n"
+            << "17. Thoát chương trình\n";
+
+    int query;
+    cin >> query;
+    while (true) {
+        
+    }
     return 0;
 }
