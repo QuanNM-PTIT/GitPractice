@@ -119,7 +119,7 @@ git log --oneline
 	- address: string
 	- phoneNumber: string
 	- role: string
-- BorrowInfo:
+- Class BorrowInfo:
 	- id: int
 	- personId: int
 	- bookId: int
@@ -137,7 +137,7 @@ git log --oneline
 	- deleteBook(): Xóa thông tin 1 cuốn sách trong file books.txt theo id. Cần được validate xem id có tồn tại không trước khi xóa.
 - Class EBook có thể override lại các methods trong class Book (Nếu cần).
 - Class Person:
-	- Person():  Hàm khởi tạo 1 cuốn sách với các thông tin tương ứng. Các thông tin cần được validate. Id sẽ tự động nhận là id bé nhất chưa xuất hiện trong file books.txt và không truyền id vào constructor.
+	- Person(): Hàm khởi tạo 1 người với các thông tin tương ứng. Các thông tin cần được validate. Id sẽ tự động nhận là id bé nhất chưa xuất hiện trong file people.txt và không truyền id vào constructor.
 - Class User:
 	- User(): Hàm khởi tạo thông tin 1 user với các thông tin tương ứng. Các thông tin cần được validate. Id sẽ tự động nhận là id bé nhất chưa xuất hiện trong file users.txt và không truyền id vào constructor.
 	- register(): Thêm thông tin đăng nhập 1 user vào file users.txt. Chú ý validate dữ liệu (email không được trùng, password cần có thêm rule gì đó các bạn tự quy định).
@@ -154,6 +154,7 @@ git log --oneline
 - Khi chạy chương trình, sẽ hiển thị ra 1 menu lựa chọn:
 	- 1. Đăng nhập: Nếu người dùng chọn chức năng này sẽ cho phép nhập vào thông tin đăng nhập và xác thực thông tin, nếu đăng nhập thành công sẽ in ra dòng chữ "Welcome <tên>!". Các chức năng từ chức năng thứ 3 trở đi sẽ phải yêu cầu người dùng đăng nhập mới có thể thao tác.
 	- 2. Đăng ký: Cho phép người dùng đăng ký tài khoản, role mặc định sẽ là user.
+
 	- 3. Thêm sách: Chỉ thực hiện được nếu người dùng có role admin. Sẽ cho phép người dùng thêm thông tin 1 cuốn sách mới.
 	- 4. Sửa thông tin sách: Chỉ thực hiện được nếu người dùng có role admin. Sẽ cho phép người dùng nhập vào id cuốn sách và cho phép sửa thông tin cuốn sách đó.
 	- 5. Xóa sách: Chỉ thực hiện được nếu người dùng có role admin. Cho phép người dùng nhập vào id cuốn sách, và có xác nhận trước khi xóa.
@@ -172,7 +173,7 @@ git log --oneline
 
 #### 4. Phân chia công việc:
 - Công việc 1:
-	- Xây dựng class Book, EBook, User cùng các methods chứa bên trong nó.
+	- Xây dựng class Book, EBook cùng các methods bên trong nó.
 	-  Làm các tính năng có số thứ tự là số lẻ.
 - Công việc 2:
 	- Xây dựng class Person, BorrowInfo cùng các methods bên trong nó.
