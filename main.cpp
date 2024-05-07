@@ -75,14 +75,61 @@ public:
             cout << "Unable to open file.\n";
         }
     }
-    //     void updateBook(int id)
-    //     {
+    void updateBook(int idToUpdate)
+    {
+        string newTitle = "New Title";
+        string newAuthor = "New Author";
+        int newQuantity = 10;
 
-    //     }
-    //     void deleteBook(int id)
-    //     {
+        vector<string> lines;
+        ifstream file("books.txt");
+        if (!file.is_open())
+        {
+            cerr << "Error" << endl;
+            return;
+        }
 
-    //     }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            int id, quantity;
+            string title, author;
+
+            char bracket;
+            ss >> bracket >> id >> bracket;
+            getline(ss, title, ']');
+            getline(ss, author, ']');
+            ss >> bracket >> quantity >> bracket;
+
+            if (id == idToUpdate)
+            {
+                stringstream updatedLine;
+                updatedLine << "[" << id << "] [" << newTitle << "] [" << newAuthor << "] [" << newQuantity << "]";
+                lines.push_back(updatedLine.str());
+            }
+            else
+            {
+                lines.push_back(line);
+            }
+        }
+        file.close();
+
+        ofstream outFile("books.txt");
+        if (!outFile.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        for (const auto &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+
+        cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
+    }
 };
 
 class EBook : public Book
@@ -136,11 +183,15 @@ public:
 int main()
 {
     Book book;
-    book.addBook(); // Thêm một sách vào file books.txt
-    // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
+    // book.addBook(); // Thêm một sách vào file books.txt
+    // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
-    EBook ebook;
-    ebook.addBook(); // Thêm một sách điện tử vào file books.txt
+    // EBook ebook;
+    // ebook.addBook(); // Thêm một Ebook vào file books.txt
+    int idToUpdate;
+    cout << "Enter ID want to update: ";
+    cin >> idToUpdate;
+    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
 
     return 0;
 }
