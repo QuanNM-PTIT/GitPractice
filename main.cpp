@@ -308,9 +308,9 @@ public:
         ++mex;
 
         if (outFile.is_open()) {
-            outFile << endl << '[' << to_string(mex) << "] " <<  bookInf << endl;
+            outFile << endl << '[' << to_string(mex) << "] " <<  bookInf;
             outFile.close();
-            cout << "Thong tin cua cuon sach da duoc ghi thanh cong!\n";
+            cout << "Thong tin cua cuon sach da duoc ghi thanh cong!\n\n";
         }
     }
 
@@ -544,6 +544,7 @@ int main() {
         while (isLogin(p) == false) {
             cout << "Dang nhap/Dang ky de su dung tinh nang!!!\n";
             cin >> query;
+
             switch(query){
                 case 1: 
                     p = u.login();
@@ -570,6 +571,7 @@ int main() {
                 if (p.getRole() == "Admin") {
                     cout << "Nhap cac thong tin cua sach: ";
                     string bookInfo;
+                    scanf("\n");
                     getline(cin, bookInfo);
                     b.addBook("books.txt", bookInfo);
                 }
@@ -577,6 +579,7 @@ int main() {
                     cout << "Ban khong co quyen them thong tin sach !!!\n";
                 }
                 break;
+
             case 4:
                 if (p.getRole() == "User") {
                     cout << "Ban khong co quyen chinh sua thong tin sach!" << endl;
