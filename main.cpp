@@ -100,6 +100,63 @@ public:
         phoneNumber = "";
         role = "";
     }
+
+    void updatePerson(const string& filename, const string& newPersonInfo, string newPersonID) {
+        ifstream inFile(filename); 
+        ofstream outFile("temp_person.txt"); 
+
+        string line;
+        bool found = false; // Kiểm tra xem ID có tồn tại không
+
+        // Đọc từng dòng từ file gốc
+        while (getline(inFile, line)) {
+            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
+            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
+            
+            // Nếu như vẫn còn đọc được dữ liệu
+            if (startPos != string::npos && endPos != string::npos) {
+                string personID = line.substr(startPos + 1, endPos - startPos - 1);
+
+                // Nếu id của sách cần cập nhật == id hiện tại trong books.txt thì thay thế nó
+                if (personID == newPersonID) {
+                    outFile << '[' << personID << "] " << newPersonInfo << endl;
+                    found = true; // Đánh dấu là đã tìm thấy và cập nhật thông tin của cuốn sách
+                } 
+                // Nếu là các dữ liệu khác thì đẩy thẳng vào file
+                else {
+                    outFile << line << endl;
+                }
+            } 
+            // Đẩy nốt dữ kiện cuối vào file
+            else {
+                outFile << line << endl;
+            }
+        }
+
+        inFile.close();
+        outFile.close();
+
+        if (found) {
+            // Xoá file gốc
+            if (remove(filename.c_str()) != 0) {
+                cerr << "Khong the xoa file goc." << endl;
+                return;
+            }
+
+            // Đổi tên file tạm thời thành file gốc
+            if (rename("temp_person.txt", filename.c_str()) != 0) {
+                cerr << "Khong the đoi ten file tam thoi." << endl;
+                return;
+            }
+
+            cout << "Da cap nhat thong tin cua nguoi dung co ID = " << newPersonID << " thanh cong." << endl;
+        } 
+        else {
+            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần cập nhật
+            remove("temp_person.txt");
+            cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
+        }
+    }
 };
 
 class User{
@@ -455,6 +512,43 @@ public:
             cout << "Khong tim thay cuon sach co ID = " << newBookId << " trong file." << endl;
         }
     }
+
+    void getOneBook(const string& filename, int id, int data) {
+        ifstream file(filename);
+        string line;
+        int cnt = 0;
+
+        while (getline(file, line)) {
+            ++cnt;
+        }
+
+        file.close();
+
+        vector<vector<string>> bookInfor(data);
+
+        for (int i = 0; i < data; ++i) {
+            bookInfor[i] = getInformationFromFile(filename, i);
+        }
+
+        int pos = -1;
+        for (int i = 0; i < cnt; ++i) {
+            if (stoi(bookInfor[0][i]) == id) {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos == -1) {
+            cout << "Khong ton tai cuon sach co ID la: " << id << '!' << endl;
+        }
+        else {
+            cout << "Thong tin cuon sach co ID la: " << id << endl;
+            for (int i = 0; i < data; ++i) {
+                cout << '[' << bookInfor[i][pos] << "] ";
+            }
+            cout << endl;
+        }
+    }
 };
 
 class EBook : public Book {
@@ -500,15 +594,15 @@ bool isValid(const vector<val>& info, const val needCheck) {
 void menu() {
     cout    << "-------------------------------------------------------------------------------------------------\n"
             << "|                      ___Vui long chon mot trong cac tinh nang sau day___                      |\n" 
-            << "|   1. Dang nhap.                                                                               |\n"
-            << "|   2. Dang ky.                                                                                 |\n"
-            << "|   3. Them sach (Admin).                                                                       |\n"
-            << "|   4. Sua thong tin sach (Admin).                                                              |\n"
-            << "|   5. Xoa sach (Admin).                                                                        |\n"
-            << "|   6. Muon sach.                                                                               |\n"
-            << "|   7. Tra sach.                                                                                |\n"
-            << "|   8. Lay thong tin cac quyen sach.                                                            |\n"
-            << "|   9. Lay thong tin 1 quyen sach.                                                              |\n"
+            << "|   1.  Dang nhap.                                                                              |\n"
+            << "|   2.  Dang ky.                                                                                |\n"
+            << "|   3.  Them sach (Admin).                                                                      |\n"
+            << "|   4.  Sua thong tin sach (Admin).                                                             |\n"
+            << "|   5.  Xoa sach (Admin).                                                                       |\n"
+            << "|   6.  Muon sach.                                                                              |\n"
+            << "|   7.  Tra sach.                                                                               |\n"
+            << "|   8.  Lay thong tin cac quyen sach.                                                           |\n"
+            << "|   9.  Lay thong tin 1 quyen sach.                                                             |\n"
             << "|   10. Lay thong tin tat ca cac quyen sach eBook hien co.                                      |\n"
             << "|   11. Lay thong tin 1 eBook co id nam trong file eBooks.txt.                                  |\n"
             << "|   12. Hien thi tat ca cac quyen sach da muon cua ban than (User).                             |\n"
@@ -551,13 +645,14 @@ int main() {
                     p.setID(1);
                     welcome = true;
                     break;
+                    
                 case 2: // Tinh nang 2: Dang ky.
                     break;
             }
         }
         if (welcome == true) {
             cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
-                    << "Welcome " << '<' << p.getName() << '>' << endl;
+                    << "Welcome " << '<' << p.getRole() << '>' << endl;
             welcome = false;
             cout << endl;
         }
@@ -592,35 +687,82 @@ int main() {
                     b.updateBook("books.txt", info);
                 }
                 break;
+
             case 5: // Tinh nang 5: Xoa sach (Admin).
                 break;
+
             case 6: // Tinh nang 6: Muon sach.
                 break;
+
             case 7: // Tinh nang 7: Tra sach.
                 break;
-            case 8: // Tinh nang 8: Lay thong tin cac quyen sach.
+
+            case 8: 
+                cout << "Day la thong tin cac quyen sach hien tai:" << endl;
+                b.getBooks("books.txt", 4);
+                cout << endl;
                 break;
-            case 9: // Tinh nang 9: Lay thong tin 1 quyen sach.
+
+            case 9: 
+                cout << "Nhap vao ID cuon sach ban muon biet thong tin: ";
+                int id;
+                cin >> id;
+                b.getOneBook("books.txt", id, 4);
+                cout << endl;
                 break;
+
             case 10:
                 cout << "Day la thong tin cac quyen sach EBooks hien tai:" << endl;
                 eb.getBooks("ebooks.txt", 6);
                 cout << endl;
                 break;
-            case 11: // Tinh nang 11: Lay thong tin 1 eBook theo id.
+
+            case 11: 
+                cout << "Nhap vao ID cuon sach EBook ban muon biet thong tin: ";
+                int idEBook;
+                cin >> idEBook;
+                eb.getOneBook("ebooks.txt", idEBook, 6);
+                cout << endl;
                 break;
+
             case 12: // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
                 break;
+
             case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
                 break;
+
             case 14: // Tinh nang 14: Chinh sua thong tin ca nhan (User).
                 break;
-            case 15: // Tinh nang 15: Chinh sua thong tin nguoi khac (Admin).
+
+            case 15:
+                if (p.getRole() == "User") {
+                    cout << "Ban khong co quyen chinh sua thong tin nguoi khac!" << endl;
+                }
+                else {
+                    vector<string> idPerson = getInformationFromFile("people.txt", 0);
+                    string id;
+                    cout << "Nhap vao id cua nguoi dung ban muon sua: ";
+                    cin >> id;
+                    while (isValid(idPerson, id) == true) {
+                        cout    << "Khong ton tai nguoi dung co id: " << id << endl
+                                << "Vui long nhap id nguoi dung hop le !!!" << endl
+                                << "Nhap lai id cua nguoi dung ban muon sua: ";
+                        cin >> id;
+                    }
+                    cout << "Nhap vao thong tin nguoi can chinh sua: ";
+                    string info;
+                    scanf("\n");
+                    getline(cin, info);
+                    p.updatePerson("people.txt", info, id);
+                }
+                cout << endl;
                 break;
+
             case 16: 
                 u.logout();
                 p.clearInfo();
                 break;
+
             case 17:
                 clearScreen();
                 menu();
