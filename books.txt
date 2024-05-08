@@ -13,3 +13,7 @@
 [3] [1984] [George Orwell] [7]
 [10] [Jane Eyre] [Charlotte Brontë] [5]
 [12] [Animal Farm] [George Orwell] [6]
+
+[7] [C++] [LQM] [100]
+cd "c:\Users\ASUS\Desktop\Projct GitHub\GitPractice\" ; if ($?) { g++ tempCodeRunnerFile.cpp -o tempCodeRunnerFile } ; if ($?) { .\tempCodeRunnerFile }
+[6] [C++] [LQM] [100]
