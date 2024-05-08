@@ -177,7 +177,7 @@ public:
     }
 };
 
-int main() {
+void menu() {
     cout    << "Vui lòng chọn một trong các tính năng sau đây\n" 
             << "1. Đăng nhập.\n"
             << "2. Đăng ký.\n"
@@ -196,6 +196,10 @@ int main() {
             << "15. Chỉnh sửa thông tin cá nhân của người khác (Admin).\n"
             << "16. Đăng xuất.\n"
             << "17. Thoát chương trình\n";
+}
+
+int main() {
+    menu();
 
     int query;
     cin >> query;
@@ -206,7 +210,7 @@ int main() {
             cin >> query;
             // Tinh nang 1: Dang nhap.
             if (query == 1) {
-
+                
             }
             // Tinh nang 2: Dang ky.
             else if (query == 2) {
