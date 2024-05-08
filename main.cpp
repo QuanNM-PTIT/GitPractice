@@ -97,6 +97,76 @@ class EBook : public Book{
 
 };
 
+class Person{
+    private: 
+        int id;
+        string name;
+        string email;
+        string sex;
+        string birthdate;
+        string address;
+        string phoneNumber;
+        string role;
+    public:
+    Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role){
+        this->id = autoId();
+        this->name = name;
+        this->email = email;
+        this->sex = sex;
+        this->birthdate = birthdate;
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->role = role;
+    }
+    int autoId(){
+        ifstream in;
+        in.open("people.txt");
+        set<int> s;
+        string tmp;
+        while(getline(in, tmp)){
+            int i = 1;
+            string id = "";
+            while(tmp[i] != ']'){
+                if(isdigit(tmp[i])) id += tmp[i];
+                i++;
+            }
+            s.insert(stoi(id));
+        }
+        in.close();
+        bool find = false;
+        int cnt = 1;
+        for(int x : s){
+            if(cnt == x) find = true;
+            cnt ++;
+        }
+        return cnt;
+    }
+    int getId(){
+        return this->id;
+    }
+    string getName(){
+        return this->name;
+    }
+    string getEmail(){
+        return this->email;
+    }
+    string getSex(){
+        return this->sex;
+    }
+    string getBirthdate(){
+        return this->birthdate;
+    }
+    string getAddress(){
+        return this->address;
+    }
+    string getPhoneNumber(){
+        return this->phoneNumber;
+    }
+    string getRole(){
+        return this->role;
+    }
+};
+
 
 class User{ // thong tin 1 user
     private:
@@ -164,6 +234,72 @@ class Users{ // Làm vc với users.txt
         
 
         //Dang xuat
+
+};
+
+class BorrowInfo{
+    private:
+        int id;
+        int personId;
+        int bookId;
+        int eBookId;
+    public:
+    BorrowInfo(int personId, int bookId, int eBookId){
+        this->id = autoId();
+        this->personId = personId;
+        this->bookId = bookId;
+        this->eBookId = eBookId;
+    }
+    int autoId(){
+        ifstream in;
+        in.open("borrowInfors.txt");
+        set<int> s;
+        string tmp;
+        while(getline(in, tmp)){
+            int i = 1;
+            string id = "";
+            while(tmp[i] != ']'){
+                if(isdigit(tmp[i])) id += tmp[i];
+                i++;
+            }
+            s.insert(stoi(id));
+        }
+        in.close();
+        bool find = false;
+        int cnt = 1;
+        for(int x : s){
+            if(cnt == x) find = true;
+            cnt ++;
+        }
+        return cnt;
+    }
+    void addInfo(){
+        ofstream out("borrowInfors.txt", ios::app);
+        out<<'['<<this->id<<']'<<' '<<'['<<this->personId<<']'<<' '<<'['<<this->bookId<<']'<<' '<<'['<<this->eBookId<<']'<<endl;
+        out.close();
+    }
+    void updateInfo(){
+        int updateId, updatePersonId, updatepersonId, updateBookId, updateEBookId;
+        cout<<"Nhap ID muon sach: ";
+        cin >> updateId >> updatePersonId >> updatepersonId >> updateBookId >> updateEBookId;
+        // ifstream in;
+        // in.open("borowInfors.txt", ios::in);
+        // string tmp;
+        // vector<B> listBorrowInfor;
+
+    }
+    int getid(){
+        return this->id;
+    }
+    int getpersonId(){
+        return this->personId;
+    }
+    int getbookId(){
+        return this->bookId;
+    }
+    int geteBookId(){
+        return this->eBookId;
+    }
 
 };
 
