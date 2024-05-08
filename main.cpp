@@ -210,17 +210,8 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
-bool isValid(const vector<string>& info, const string& needCheck, int n) {
-    for (int i = 0; i < n; ++i) {
-        if (info[i] == needCheck) {
-            return false;
-        }
-    }
-    return true;
-}
-
 class Book {
-private:
+protected:
     int id;
     string title;
     string author;
@@ -259,17 +250,48 @@ public:
     }
 
     void addBook(const string& bookInf) {
-        ofstream outFile("test_add_book.txt", ios::app);
+        ofstream outFile("books.txt", ios::app);
         if (outFile.is_open()) {
             outFile << bookInf << '\n';
             outFile.close();
             cout << "Thông tin của cuốn sách đã được ghi thành công!\n";
-        } 
-        else {
-            cerr << "Mở file thất bại!\n";
+        }
+    }
+
+    void getBooks() {
+        ifstream file("books.txt");
+        string line;
+        int cnt = 0;
+
+        while (getline(file, line)) {
+            ++cnt;
+        }
+
+        file.close();
+
+        vector<vector<string>> bookInfor(4);
+
+        for (int i = 0; i < 4; ++i) {
+            bookInfor[i] = getInformationFromFile("books.txt", i);
+        }
+
+        for (int i = 0; i < cnt; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                cout << "[" << bookInfor[j][i] << "] ";
+            }
+            cout << endl;
         }
     }
 };
+
+bool isValid(const vector<string>& info, const string& needCheck, int n) {
+    for (int i = 0; i < n; ++i) {
+        if (info[i] == needCheck) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void menu() {
     cout    << "Vui lòng chọn một trong các tính năng sau đây\n" 
@@ -293,11 +315,12 @@ void menu() {
 }
 
 int main() {
-    
     menu();
+
     int query;
     cin >> query;
     bool isLogin = false;
+
     while (true) {
         while (isLogin == false) {
             cout << "Đăng nhập/Đăng ký để sử dụng tính năng!!!\n";
