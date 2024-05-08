@@ -287,7 +287,6 @@ class BorrowInfo{
         // string tmp;
         // vector<B> listBorrowInfor;
 
-        
     }
     int getid(){
         return this->id;
