@@ -13,22 +13,11 @@ public:
         this->personId = personId;
         this->bookId = bookId;
         this->eBookId = eBookId;
-        string file_name = "users.txt";
-        ifstream file(file_name);
-        string line;
-        while(getline(file, line)){
-            int pos;
-            vector<string> tokens;
-            while(pos = line.find("]")){
-                string token = line.substr(1, pos - 1);
-                tokens.push_back(token);
-                line.erase(0, pos + 2);
-            }
-        }
-        
-        file.close();
+        // Cập nhật Id ...
+        // Validate các thông tin đầu vào ...
     }
     void addInfo(){
+        // Validate dữ liệu ...
         string file_name = "users.txt";
         ofstream file("file_name");
         file << endl;
@@ -39,6 +28,7 @@ public:
         file.close();
     }
     void updateInfo(){
+        // Validate dữ liệu ...
 
     }
 };
@@ -180,28 +170,24 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
-bool isValid(const vector<string>& info, const string& email, int n) {
+bool isValid(const vector<string>& info, const string& needCheck, int n) {
     for (int i = 0; i < n; ++i) {
-        if (info[i] == email) {
+        if (info[i] == needCheck) {
             return false;
         }
     }
     return true;
 }
 
-void initInformationForPeople() {
-    vector<vector<string>> info(7);
-    for (int i = 1; i <= 7; ++i) {
-        info[i - 1] = getInformationFromFile("people.txt", i);
+void init_Id(const string& file_name) {
+    vector<string> id_list = getInformationFromFile(file_name, 0);
+    map<string, int> mp;
+    for(auto id : id_list){
+        mp[id] = 1;
     }
-
     int id = 1;
-    for (int j = 0; j < 10; ++j) {
-        if (isValid(info[1], info[1][j], j)) {
-            Person per(info[0][j], info[1][j], info[2][j], info[3][j], info[4][j], info[5][j], info[6][j]);
-            per.setID(id++);
-            people.push_back(per);
-        }
+    while(mp[id]){
+        id ++;
     }
 }
 
@@ -257,6 +243,6 @@ public:
 };
 
 int main() {
-    initInformationForPeople();
+    
     return 0;
 }
