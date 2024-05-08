@@ -185,6 +185,7 @@ public:
     }
 };
 
+// Hàm lấy ra từng kiểu thông tin một trong file (ví dụ: trả về 1 vector<string> toàn ID)
 vector<string> getInformationFromFile(const string& filename, int n) {
     vector<string> info;
     ifstream file(filename);
@@ -216,14 +217,17 @@ protected:
     string title;
     string author;
     int quantity;
-public:
-    Book() {}
 
+public:
     Book(const string& title, const string& author, int quantity) {
         this->title = title;
         this->author = author;
         this->quantity = quantity;
     }
+
+    // Khởi tạo contructor gồm đầy đủ thông tin
+    Book(const int& id, const string& title, const string& author, const int& quantity)
+        : id(id), title(title), author(author), quantity(quantity) {}
 
     int getID() const {
         return this->id;
@@ -282,8 +286,59 @@ public:
             cout << endl;
         }
     }
+
+    void deleteBook(const string& filename) const {
+        ifstream inFile(filename); 
+        ofstream outFile("temp_books.txt"); 
+
+        string line;
+        bool found = false; // Kiểm tra xem ID có tồn tại không
+
+        // Đọc từng dòng từ file gốc
+        while (getline(inFile, line)) {
+            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
+            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
+            
+            if (startPos != string::npos && endPos != string::npos) {
+                string bookId = line.substr(startPos + 1, endPos - startPos - 1);
+
+                if (bookId == to_string(id)) {
+                    found = true; // Đánh dấu là đã tìm thấy cuốn sách cần xoá
+                    continue; // Bỏ qua việc ghi dòng này vào file tạm thời
+                }
+            }
+
+            // Ghi lại dòng vào file tạm thời
+            outFile << line << endl;
+        }
+
+        inFile.close();
+        outFile.close();
+
+        if (found) {
+            // Xoá file gốc
+            if (remove(filename.c_str()) != 0) {
+                cerr << "Không thể xoá file gốc." << endl;
+                return;
+            }
+
+            // Đổi tên file tạm thời thành file gốc
+            if (rename("temp_books.txt", filename.c_str()) != 0) {
+                cerr << "Không thể đổi tên file tạm thời." << endl;
+                return;
+            }
+
+            cout << "Đã xoá thông tin của cuốn sách có ID = " << id << " thành công." << endl;
+        } 
+        else {
+            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần xoá
+            remove("temp_books.txt");
+            cout << "Không tìm thấy cuốn sách có ID = " << id << " trong file." << endl;
+        }
+    }
 };
 
+// Kiểm tra thông tin needCheck đã tồn tại trong file hay chưa
 bool isValid(const vector<string>& info, const string& needCheck, int n) {
     for (int i = 0; i < n; ++i) {
         if (info[i] == needCheck) {
@@ -293,6 +348,7 @@ bool isValid(const vector<string>& info, const string& needCheck, int n) {
     return true;
 }
 
+// In ra danh sách tính năng
 void menu() {
     cout    << "Vui lòng chọn một trong các tính năng sau đây\n" 
             << "1. Đăng nhập.\n"
