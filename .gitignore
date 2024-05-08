@@ -5,4 +5,4 @@
 LongTest.cpp
 *.exe
 tempCodeRunnerFile.cpp
-.idea
+*.idea
