@@ -302,74 +302,44 @@ int main() {
         while (isLogin == false) {
             cout << "Đăng nhập/Đăng ký để sử dụng tính năng!!!\n";
             cin >> query;
-            // Tinh nang 1: Dang nhap.
-            if (query == 1) {
-                
-            }
-            // Tinh nang 2: Dang ky.
-            else if (query == 2) {
-
+            switch(query){
+                case 1: // Tinh nang 1: Dang nhap.
+                    break;
+                case 2: // Tinh nang 2: Dang ky.
+                    break;
             }
         }
-        // Tinh nang 3: Them sach (Admin).
-        if (query == 3) {
-
-        }
-        // Tinh nang 4: Sua thong tin sach (Admin).
-        else if (query == 4) {
-
-        }
-        // Tinh nang 5: Xoa sach (Admin).
-        else if (query == 5) {
-
-        }
-        // Tinh nang 6: Muon sach.
-        else if (query == 6) {
-
-        }
-        // Tinh nang 7: Tra sach.
-        else if (query == 7) {
-
-        }
-        // Tinh nang 8: Lay thong tin cac quyen sach.
-        else if (query == 8) {
-
-        }
-        // Tinh nang 9: Lay thong tin 1 quyen sach.
-        else if (query == 9) {
-
-        }
-        // Tinh nang 10: Lay thong tin cac quyen sach eBook.
-        else if (query == 10) {
-
-        }
-        // Tinh nang 11: Lay thong tin 1 eBook theo id.
-        else if (query == 11) {
-
-        }
-        // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
-        else if (query == 12) {
-
-        }
-        // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
-        else if (query == 13) {
-
-        }
-        // Tinh nang 14: Chinh sua thong tin ca nhan (User).
-        else if (query == 14) {
-
-        }
-        // Tinh nang 15: Chinh sua thong tin nguoi khac (Admin).
-        else if (query == 15) {
-
-        }
-        // Tinh nang 16: Dang xuat.
-        else if (query == 16) {
-            
-        }
-        // Tinh nang 17: Thoat chuong trinh.
-        else if (query == 17) {
-            return 0;
+        switch(query){
+            case 3: // Tinh nang 3: Them sach (Admin).
+                break;
+            case 4: // Tinh nang 4: Sua thong tin sach (Admin).
+                break;
+            case 5: // Tinh nang 5: Xoa sach (Admin).
+                break;
+            case 6: // Tinh nang 6: Muon sach.
+                break;
+            case 7: // Tinh nang 7: Tra sach.
+                break;
+            case 8: // Tinh nang 8: Lay thong tin cac quyen sach.
+                break;
+            case 9: // Tinh nang 9: Lay thong tin 1 quyen sach.
+                break;
+            case 10: // Tinh nang 10: Lay thong tin cac quyen sach eBook.
+                break;
+            case 11: // Tinh nang 11: Lay thong tin 1 eBook theo id.
+                break;
+            case 12: // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
+                break;
+            case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
+                break;
+            case 14: // Tinh nang 14: Chinh sua thong tin ca nhan (User).
+                break;
+            case 15: // Tinh nang 15: Chinh sua thong tin nguoi khac (Admin).
+                break;
+            case 16: // Tinh nang 16: Dang xuat.
+                break;
+            case 17: // Tinh nang 17: Thoat chuong trinh.
+                return 0;
         }
     }
     return 0;
