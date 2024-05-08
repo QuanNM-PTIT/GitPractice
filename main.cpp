@@ -31,6 +31,30 @@ public:
         // Validate dữ liệu ...
 
     }
+    int getId(){
+        return id;
+    }
+    void setId(int id){
+        this->id = id;
+    }
+    int getPersonId(){
+        return personId;
+    }
+    void setPersonId(int personId){
+        this->personId = personId;
+    }
+    int getBookId(){
+        return bookId;
+    }
+    void setBookId(int bookId){
+        this->bookId = bookId;
+    }
+    int getEbookId(){
+        return eBookId;
+    }
+    void setEbookId(int eBookId){
+        this->eBookId = eBookId;
+    }
 };
 
 class User{
@@ -43,7 +67,7 @@ public:
         this->email = email;
         this->password = password;
     }
-    void register(){
+    void Register(){
 
     }
     Person login(){
@@ -51,6 +75,24 @@ public:
     }
     void logout(){
 
+    }
+    int getId(){
+        return id;
+    }
+    void setId(int id){
+        this->id = id;
+    }
+    string getEmail(){
+        return email;
+    }
+    void setEmail(string email){
+        this->email = email;
+    }
+    string getPassword(){
+        return password;
+    }
+    void setPassword(string password){
+        this->password = password;
     }
 };
 
@@ -177,21 +219,6 @@ bool isValid(const vector<string>& info, const string& needCheck, int n) {
     return true;
 }
 
-<<<<<<< HEAD
-void init_Id(const string& file_name) {
-    vector<string> id_list = getInformationFromFile(file_name, 0);
-    map<string, int> mp;
-    for(auto id : id_list){
-        mp[id] = 1;
-    }
-    int id = 1;
-    while(mp[id]){
-        id ++;
-    }
-}
-
-=======
->>>>>>> 772a3615b886f8299a90ada9c7be317c060ba085
 class Book {
 private:
     int id;
@@ -266,11 +293,8 @@ void menu() {
 }
 
 int main() {
-<<<<<<< HEAD
     
-=======
     menu();
-
     int query;
     cin >> query;
     bool isLogin = false;
@@ -348,6 +372,5 @@ int main() {
             return 0;
         }
     }
->>>>>>> 772a3615b886f8299a90ada9c7be317c060ba085
     return 0;
 }
