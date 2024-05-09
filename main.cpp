@@ -130,62 +130,8 @@ public:
 
         cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
     }
-    void deleteBook(int idToDelete)
-    {
-        vector<string> lines;
-        ifstream file("books.txt");
-        if (!file.is_open())
-        {
-            cerr << "Error!" << endl;
-            return;
-        }
-
-        string line;
-        bool found = false;
-        while (getline(file, line))
-        {
-            stringstream ss(line);
-            int id, quantity;
-            string title, author;
-
-            char bracket;
-            ss >> bracket >> id >> bracket;
-            getline(ss, title, ']');
-            getline(ss, author, ']');
-            ss >> bracket >> quantity >> bracket;
-
-            if (id == idToDelete)
-            {
-                found = true;
-                cout << "Book with ID " << id << " Deleted done!" << endl;
-            }
-            else
-            {
-                lines.push_back(line);
-            }
-        }
-        file.close();
-
-        if (!found)
-        {
-            cerr << "Error: Book with ID " << idToDelete << " not found." << endl;
-            return;
-        }
-
-        ofstream outFile("books.txt");
-        if (!outFile.is_open())
-        {
-            cerr << "Error!" << endl;
-            return;
-        }
-
-        for (const auto &line : lines)
-        {
-            outFile << line << endl;
-        }
-        outFile.close();
-    }
 };
+
 class EBook : public Book
 {
 protected:
@@ -233,15 +179,43 @@ public:
         }
     }
 };
+// Begin Person
+class Person{
+private:
+    int id;
+    string name, email, sex, birthdate, 
+           address, phoneNumber, role;
+public:
+    Person(string, string, string, string, string, string, string);
+    string getName() const { return name; } // Phương thức để lấy tên
+    void logout() { /* Phương thức logout */ } // Phương thức logout
+};
+
+Person::Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role)
+{
+    this->name = name;
+    this->email = email;
+    this->sex = sex;
+    this->birthdate = birthdate;
+    this->address = address;
+    this->phoneNumber = phoneNumber;
+    this->role = role;
+}
+
+
+// End Person
+
+//Begin Users
 class User
 {
 private:
     int id;
     string email;
     string password;
+    bool isLoggedIn;
 
 public:
-    User(int _id, const string &_email, const string &_password) : id(_id), email(_email), password(_password) {}
+    User(int _id, const string &_email, const string &_password) : id(_id), email(_email), password(_password), isLoggedIn(false) {}
 
     // check email trùng
     bool validateEmail()
@@ -310,33 +284,201 @@ public:
         }
         return 1; // Trả về 1 nếu không mở được file
     }
+   
+    Person login()
+    {
+        if (!validateEmail() || !validatePassword())
+        {
+            cout << "Invalid email or password." << endl;
+            return Person("", "", "", "", "", "", ""); // Return empty Person object
+        }
+
+        ifstream ifs("users.txt");
+        if (ifs.is_open())
+        {
+            string line;
+            while (getline(ifs, line))
+            {
+                int userId;
+                string userEmail, userPassword;
+                char c;
+                ifs >> c >> userId >> c >> c;
+                getline(ifs, userEmail, ']');
+                ifs >> c;
+                getline(ifs, userPassword, ']');
+
+                if (userEmail == email && userPassword == password)
+                {
+                    ifs.close();
+                    isLoggedIn = true;
+                    return Person(id, email, ""); // Assuming Person constructor takes ID, email, and role
+                }
+            }
+            ifs.close();
+        }
+        cout << "Invalid email or password." << endl;
+        return Person("", "", "", "", "", "", ""); // Return empty Person object
+    }
 };
+// End Users
+
+
+// // Begin BorrowInfo
+// class BorrowInfo
+// {
+// private:
+//     int id, personId, bookId, eBookId;
+
+// public:
+//     BorrowInfo(int, int, int);
+//     void addInfo();
+//     int getNextAvailableId();
+//     void setId(int);
+// 	this->name = name;
+// 	this->email = email;
+// 	this->sex = sex ;
+// 	this-> birthdate = birthdate; 
+// 	this->address = address;
+// 	this->phoneNumber = phoneNumber;
+// 	this->role = role;
+// }
+
+
+// // End Person
+
+// // Begin BorrowInfo
+// class BorrowInfo{
+// 	private:
+// 		int id, personId, bookId, eBookId;
+// 	public:
+// 		BorrowInfo(int, int, int);
+// 		void addInfo();
+// 		int getNextAvailableId();
+// 		void setId(int);
+// };
+
+// BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
+// {
+//     this->personId = personId;
+//     this->bookId = bookId;
+//     this->eBookId = eBookId;
+// 	this->personId = personId;
+// 	this->bookId = bookId;
+// 	this->eBookId = eBookId;
+// }
+
+// void BorrowInfo::addInfo()
+// {
+//     ofstream fileout("borrowInfos.txt", ios::app);
+//     fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
+//             << " " << '[' << this->eBookId << ']' << endl;
+// 	ofstream fileout("borrowInfos.txt", ios::app);
+// 	fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
+//     fileout.close();
+// }
+
+// int BorrowInfo::getNextAvailableId()
+// {
+//     ifstream file("borrowInfos.txt");
+//     if (file.is_open())
+//     {
+//         int lineCount = 0;
+//         string line;
+//         while (getline(file, line))
+//         {
+//             lineCount++;
+//         }
+//         file.close();
+//         return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+//     }
+//     return 1; // Trả về 1 nếu không mở được file
+// }
+
+// void BorrowInfo::setId(int id)
+// {
+//     this->id = id;
+// 	this->id = id;
+// }
+
+// // End BorrowInfo
+
+
+// // Bat dau khai bao cac ham thao tac
+
+// void themthongtinmuonsach()
+// {
+//     int id, persionId, bookId, eBookId;
+//     cout << "Nhap id nguoi muon: ";
+//     cin >> persionId;
+//     cout << "Nhap id quyen sach duoc muon: ";
+//     cin >> bookId;
+//     cout << "Nhap id quyen sach dien tu duoc muon: ";
+//     cin >> eBookId;
+//     BorrowInfo x(persionId, bookId, eBookId);
+//     x.setId(x.getNextAvailableId());
+// 	int id, persionId, bookId, eBookId;
+// 	cout << "Nhap id nguoi muon: ";
+// 	cin >> persionId;
+// 	cout << "Nhap id quyen sach duoc muon: ";
+// 	cin >> bookId;
+// 	cout << "Nhap id quyen sach dien tu duoc muon: ";
+// 	cin >> eBookId;
+// 	BorrowInfo x(persionId, bookId, eBookId);
+// 	x.setId(x.getNextAvailableId());
+//     x.addInfo();
+// }
+
+// // Ket thuc khai bao cac ham thao tac
+
 int main()
 {
-    Book book;
-
+    // Book book;
     // book.addBook(); // Thêm một sách vào file books.txt
     // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
     // EBook ebook;
-    // ebook.addBook(); // Thêm một sách điện tử vào file books.txt
+    // ebook.addBook(); // Thêm một Ebook vào file books.txt
+    //    int idToUpdate;
+    //    cout << "Enter ID want to update: ";
+    //    cin >> idToUpdate;
+    //    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
 
-    // int idToUpdate;
-    // cout << "Enter ID want to update: ";
-    // cin >> idToUpdate;
-    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+    //	themthongtinmuonsach(); --> done
 
-    // int idToDelete;
-    // cout << "Enter ID want to delete: ";
-    // cin >> idToDelete;
-    // book.deleteBook(idToDelete);
+    // int id = User::getNextAvailableId();
+    // string email = "example@example.com";
+    // string password = "PTITd22@";
+    // User user(id, email, password);
+    // user.registerUser();
+    // cout << "Register Successfully" << endl;
 
-    int id = User::getNextAvailableId();
-    string email = "example@example.com";
-    string password = "PTITd22@";
-    User user(id, email, password);
-    user.registerUser();
-    cout << "Register Successfully" << endl;
+//    int idToUpdate;
+//    cout << "Enter ID want to update: ";
+//    cin >> idToUpdate;
+//    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+	
+//	themthongtinmuonsach(); --> done
+	
+	// Tạo một đối tượng User
+    User user1(1, "john.smith@gmail.com", "pass1234");
+    User user2(2, "jane.doe@gmail.com", "abcD1234");
+    User user3(3, "alice.johnson@gmail.com", "MyP@ssw0rd");
+    User user4(4, "example@example.com", "PTITd22@");
 
-    return 0;
+    // Đăng nhập người dùng
+    Person currentUser = user4.login();
+    if (currentUser.getName() != "") {
+        cout << "Logged in as " << currentUser.getName() << endl;
+        // Thực hiện các hoạt động khi đăng nhập thành công
+    } else {
+        cout << "Failed to login." << endl;
+        return 1; // Thoát chương trình với mã lỗi
+    }
+
+    // Thực hiện các hoạt động khác ở đây với người dùng đã đăng nhập
+
+    // Đăng xuất người dùng
+    currentUser.logout();
+    cout << "Logged out." << endl;
+
 }
