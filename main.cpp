@@ -2,6 +2,163 @@
 
 using namespace std;
 
+class Person {
+private:
+    int id;
+    string name;
+    string email;
+    string sex;
+    string birthdate;
+    string address;
+    string phoneNumber;
+    string role;
+
+public:
+    Person() {}
+
+    Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role) {
+        this->name = name;
+        this->email = email;
+        this->sex = sex;
+        this->birthdate = birthdate;
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->role = role;
+    }
+
+    int getID() const {
+        return id;
+    }
+
+    void setID(int id) {
+        this->id = id;
+    }
+
+    string getName() const {
+        return name;
+    }
+
+    void setName(const string& name) {
+        this->name = name;
+    }
+
+    string getEmail() const {
+        return email;
+    }
+
+    void setEmail(const string& email) {
+        this->email = email;
+    }
+
+    string getSex() const {
+        return sex;
+    }
+
+    void setSex(const string& sex) {
+        this->sex = sex;
+    }
+
+    string getBirthdate() const {
+        return birthdate;
+    }
+
+    void setBirthdate(const string& birthdate) {
+        this->birthdate = birthdate;
+    }
+
+    string getAddress() const {
+        return address;
+    }
+
+    void setAddress(const string& address) {
+        this->address = address;
+    }
+
+    string getPhoneNumber() const {
+        return phoneNumber;
+    }
+
+    void setPhoneNumber(const string& phoneNumber) {
+        this->phoneNumber = phoneNumber;
+    }
+
+    string getRole() const {
+        return role;
+    }
+
+    void setRole(const string& role) {
+        this->role = role;
+    }
+
+    void clearInfo() {
+        id = -1;
+        name = "";
+        email = "";
+        sex = "";
+        birthdate = "";
+        address = "";
+        phoneNumber = "";
+        role = "";
+    }
+
+    void updatePerson(const string& filename, const string& newPersonInfo, string newPersonID) {
+        ifstream inFile(filename); 
+        ofstream outFile("temp_person.txt"); 
+
+        string line;
+        bool found = false; // Kiểm tra xem ID có tồn tại không
+
+        // Đọc từng dòng từ file gốc
+        while (getline(inFile, line)) {
+            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
+            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
+            
+            // Nếu như vẫn còn đọc được dữ liệu
+            if (startPos != string::npos && endPos != string::npos) {
+                string personID = line.substr(startPos + 1, endPos - startPos - 1);
+
+                // Nếu id của sách cần cập nhật == id hiện tại trong books.txt thì thay thế nó
+                if (personID == newPersonID) {
+                    outFile << '[' << personID << "] " << newPersonInfo << endl;
+                    found = true; // Đánh dấu là đã tìm thấy và cập nhật thông tin của cuốn sách
+                } 
+                // Nếu là các dữ liệu khác thì đẩy thẳng vào file
+                else {
+                    outFile << line << endl;
+                }
+            } 
+            // Đẩy nốt dữ kiện cuối vào file
+            else {
+                outFile << line << endl;
+            }
+        }
+
+        inFile.close();
+        outFile.close();
+
+        if (found) {
+            // Xoá file gốc
+            if (remove(filename.c_str()) != 0) {
+                cerr << "Khong the xoa file goc." << endl;
+                return;
+            }
+
+            // Đổi tên file tạm thời thành file gốc
+            if (rename("temp_person.txt", filename.c_str()) != 0) {
+                cerr << "Khong the đoi ten file tam thoi." << endl;
+                return;
+            }
+
+            cout << "Da cap nhat thong tin cua nguoi dung co ID = " << newPersonID << " thanh cong." << endl;
+        } 
+        else {
+            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần cập nhật
+            remove("temp_person.txt");
+            cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
+        }
+    }
+};
+
 class BorrowInfo{
 private:
 	int id = 1;
@@ -199,186 +356,37 @@ public:
     void Register(){
 
     }
+    
     Person login(){
 
     }
+
     void logout(){
 
     }
+
     int getId(){
         return id;
     }
+
     void setId(int id){
         this->id = id;
     }
+
     string getEmail(){
         return email;
     }
+
     void setEmail(string email){
         this->email = email;
     }
+
     string getPassword(){
         return password;
     }
+
     void setPassword(string password){
         this->password = password;
-    }
-};
-
-class Person {
-private:
-    int id;
-    string name;
-    string email;
-    string sex;
-    string birthdate;
-    string address;
-    string phoneNumber;
-    string role;
-
-public:
-    Person() {}
-
-    Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role) {
-        this->name = name;
-        this->email = email;
-        this->sex = sex;
-        this->birthdate = birthdate;
-        this->address = address;
-        this->phoneNumber = phoneNumber;
-        this->role = role;
-    }
-
-    int getID() const {
-        return id;
-    }
-
-    void setID(int id) {
-        this->id = id;
-    }
-
-    string getName() const {
-        return name;
-    }
-
-    void setName(const string& name) {
-        this->name = name;
-    }
-
-    string getEmail() const {
-        return email;
-    }
-
-    void setEmail(const string& email) {
-        this->email = email;
-    }
-
-    string getSex() const {
-        return sex;
-    }
-
-    void setSex(const string& sex) {
-        this->sex = sex;
-    }
-
-    string getBirthdate() const {
-        return birthdate;
-    }
-
-    void setBirthdate(const string& birthdate) {
-        this->birthdate = birthdate;
-    }
-
-    string getAddress() const {
-        return address;
-    }
-
-    void setAddress(const string& address) {
-        this->address = address;
-    }
-
-    string getPhoneNumber() const {
-        return phoneNumber;
-    }
-
-    void setPhoneNumber(const string& phoneNumber) {
-        this->phoneNumber = phoneNumber;
-    }
-
-    string getRole() const {
-        return role;
-    }
-
-    void setRole(const string& role) {
-        this->role = role;
-    }
-
-    void clearInfo() {
-        id = -1;
-        name = "";
-        email = "";
-        sex = "";
-        birthdate = "";
-        address = "";
-        phoneNumber = "";
-        role = "";
-    }
-
-    void updatePerson(const string& filename, const string& newPersonInfo, string newPersonID) {
-        ifstream inFile(filename); 
-        ofstream outFile("temp_person.txt"); 
-
-        string line;
-        bool found = false; // Kiểm tra xem ID có tồn tại không
-
-        // Đọc từng dòng từ file gốc
-        while (getline(inFile, line)) {
-            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
-            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
-            
-            // Nếu như vẫn còn đọc được dữ liệu
-            if (startPos != string::npos && endPos != string::npos) {
-                string personID = line.substr(startPos + 1, endPos - startPos - 1);
-
-                // Nếu id của sách cần cập nhật == id hiện tại trong books.txt thì thay thế nó
-                if (personID == newPersonID) {
-                    outFile << '[' << personID << "] " << newPersonInfo << endl;
-                    found = true; // Đánh dấu là đã tìm thấy và cập nhật thông tin của cuốn sách
-                } 
-                // Nếu là các dữ liệu khác thì đẩy thẳng vào file
-                else {
-                    outFile << line << endl;
-                }
-            } 
-            // Đẩy nốt dữ kiện cuối vào file
-            else {
-                outFile << line << endl;
-            }
-        }
-
-        inFile.close();
-        outFile.close();
-
-        if (found) {
-            // Xoá file gốc
-            if (remove(filename.c_str()) != 0) {
-                cerr << "Khong the xoa file goc." << endl;
-                return;
-            }
-
-            // Đổi tên file tạm thời thành file gốc
-            if (rename("temp_person.txt", filename.c_str()) != 0) {
-                cerr << "Khong the đoi ten file tam thoi." << endl;
-                return;
-            }
-
-            cout << "Da cap nhat thong tin cua nguoi dung co ID = " << newPersonID << " thanh cong." << endl;
-        } 
-        else {
-            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần cập nhật
-            remove("temp_person.txt");
-            cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
-        }
     }
 };
 
