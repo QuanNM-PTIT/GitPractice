@@ -2,6 +2,36 @@
 
 using namespace std;
 
+// Hàm lấy ra từng kiểu thông tin một trong file (ví dụ: trả về 1 vector<string> toàn ID)
+vector<string> getInformationFromFile(const string& filename, int n) {
+    vector<string> info;
+    ifstream file(filename);
+    string line;
+    while (getline(file, line)) {
+        size_t pos = 0;
+        string token;
+        vector<string> tokens;
+
+        while ((pos = line.find("] [")) != string::npos) {
+            string token = line.substr(1, pos - 1);
+            tokens.push_back(token);
+            line.erase(0, pos + 2);
+        }
+
+        if (!line.empty()) {
+            line.pop_back();
+            line.erase(0, 1);
+            tokens.push_back(line);
+        }
+
+        if (tokens.size() >= 3) {
+            info.push_back(tokens[n]);
+        }
+    }
+    file.close();
+    return info;
+}
+
 class Person {
 private:
     int id;
@@ -157,6 +187,39 @@ public:
             cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
         }
     }
+
+    Person getData(const string& filename, const string& targetID, int data) {
+        ifstream file(filename);
+        string line;
+        int cnt = 0;
+
+        while (getline(file, line)) {
+            ++cnt;
+        }
+
+        file.close();
+
+        vector<vector<string>> personData(data);
+
+        for (int i = 0; i < data; ++i) {
+            personData[i] = getInformationFromFile(filename, i);
+        }
+
+        int pos = -1;
+        for (int i = 0; i < cnt; ++i) {
+            if (personData[0][i] == targetID) {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos == -1) {
+            cout << "Khong ton tai nguoi dung co ID la: " << targetID << '!' << endl;
+        }
+        else {
+            return Person(personData[1][pos], personData[2][pos], personData[3][pos], personData[4][pos], personData[5][pos], personData[6][pos], personData[7][pos]);
+        }
+    }
 };
 
 class User{
@@ -216,6 +279,7 @@ private:
 	int personId;
 	int bookId;
 	int eBookId;
+
 public:
     BorrowInfo(int personId, int bookId, int eBookId){
         this->personId = personId;
@@ -274,26 +338,6 @@ public:
         this->eBookId = eBookId;
     }
 };
-
-// Hàm lấy ra từng kiểu thông tin một trong file (ví dụ: trả về 1 vector<string> toàn ID)
-vector<string> getInformationFromFile(const string& filename, int n) {
-    vector<string> info;
-    ifstream file(filename);
-    string line;
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string token;
-        vector<string> tokens;
-
-        while (ss >> token) {
-            tokens.push_back(token.substr(1, token.size() - 2));
-        }
-        
-        info.push_back(tokens[n]);
-    }
-    file.close();
-    return info;
-}
 
 class Book {
 protected:
@@ -390,7 +434,7 @@ public:
         }
     }
 
-    void deleteBook(const string& filename) const {
+    void deleteBook(const string& filename, int id) const {
         ifstream inFile(filename); 
         ofstream outFile("temp_books.txt"); 
 
@@ -405,7 +449,7 @@ public:
             if (startPos != string::npos && endPos != string::npos) {
                 string bookId = line.substr(startPos + 1, endPos - startPos - 1);
 
-                if (bookId == to_string(this->id)) {
+                if (bookId == to_string(id)) {
                     found = true; // Đánh dấu là đã tìm thấy cuốn sách cần xoá
                     continue; // Bỏ qua việc ghi dòng này vào file tạm thời
                 }
@@ -431,7 +475,7 @@ public:
                 return;
             }
 
-            cout << "Da xoa thong tin cua cuon sach có ID = " << id << " thanh cong." << endl;
+            cout << "Da xoa thong tin cua cuon sach co ID = " << id << " thanh cong." << endl;
         } 
         else {
             // Xoá file tạm thời nếu không tìm thấy cuốn sách cần xoá
@@ -617,6 +661,123 @@ void clearScreen() {
     system("cls");
 }
 
+bool isExistAlphaOrNum(string& s) {
+    for (char c : s) {
+        if (isalnum(c)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int cnt = 0;
+vector<string> arributeOfPerson = {"ten", "email", "gioi tinh", "ngay sinh", "dia chi", "so dien thoai"};
+string input(string& data) {
+    cout << "Nhap vao " << arributeOfPerson[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+    scanf("\n");
+    getline(cin, data);
+    while (isExistAlphaOrNum(data) == false) {
+        cout    << "Nhap sai du lieu cho, yeu cau phai co it nhat 1 ky tu!" << endl
+                << "Nhap lai  " << arributeOfPerson[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+        scanf("\n");
+        getline(cin, data);
+    }
+
+    ++cnt;
+
+    string tmp = data;
+    transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
+
+    if (tmp == "khong") {
+        return "-1";
+    }
+    
+    return data;
+}
+
+string editPersonalData(Person& p) {
+    cnt = 0;
+    string info = "";
+
+    string name;
+    name = input(name);
+    if (name == "-1") {
+        info += '[' + p.getName() + "] ";
+    }
+    else {
+        info += '[' + name + "] ";
+    }
+
+    string email;
+    email = input(email);
+    if (email == "-1") {
+        info += '[' + p.getEmail() + "] ";
+    }
+    else {
+        info += '[' + email + "] ";
+    }
+
+    string sex;
+    sex = input(sex);
+    if (sex == "-1") {
+        info += '[' + p.getSex() + "] ";
+    }
+    else {
+        info += '[' + sex + "] ";
+    }
+
+    string birthdate;
+    birthdate = input(birthdate);
+    if (birthdate == "-1") {
+        info += '[' + p.getBirthdate() + "] ";
+    }
+    else {
+        info += '[' + birthdate + "] ";
+    }
+
+    string address;
+    address = input(address);
+    if (address == "-1") {
+        info += '[' + p.getAddress() + "] ";
+    }
+    else {
+        info += '[' + address + "] ";
+    }
+
+    string phoneNumber;
+    phoneNumber = input(phoneNumber);
+    if (phoneNumber == "-1") {
+        info += '[' + p.getPhoneNumber() + "] ";
+    }
+    else {
+        info += '[' + phoneNumber + "] ";
+    }
+    return info;
+}
+
+string changeRole(string& data) {
+    cout << "Nhap vao role ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+    scanf("\n");
+    getline(cin, data);
+    while (isExistAlphaOrNum(data) == false) {
+        cout    << "Nhap sai du lieu cho, yeu cau phai co it nhat 1 ky tu!" << endl
+                << "Nhap lai role ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+        scanf("\n");
+        getline(cin, data);
+    }
+
+    string tmp = data;
+    transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
+
+    if (tmp == "khong") {
+        return "-1";
+    }
+    
+    return data;
+}
+
+string str;
+
 int main() {
     menu();
 
@@ -631,19 +792,33 @@ int main() {
     while (query != 18) {
         while (isLogin(p) == false) {
             cout << "Dang nhap/Dang ky de su dung tinh nang!!!\n";
-            cin >> query;
 
-            switch(query){
-                case 1: 
-                    p = u.login();
-                    p.setID(1);
-                    welcome = true;
-                    break;
-                    
-                case 2: // Tinh nang 2: Dang ky.
-                    break;
+            // Try...catch để bắt lỗi nhập không đúng định dạng số cho query
+            try {
+                cin >> query;
+
+                if (cin.fail() == true) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    throw runtime_error("Sai dinh dang! Vui long nhap lai.\n");
+                }
+
+                switch(query){
+                    case 1: 
+                        p = u.login();
+                        p.setID(1);
+                        welcome = true;
+                        break;
+                        
+                    case 2: // Tinh nang 2: Dang ky.
+                        break;
+                }
+            }
+            catch (const exception& e) {
+                cout << e.what() << endl;
             }
         }
+
         if (welcome == true) {
             cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
                     << "Welcome " << '<' << p.getRole() << '>' << endl;
@@ -652,115 +827,153 @@ int main() {
         }
 
         cout << "Nhap vao tinh nang ban muon su dung: ";
-        cin >> query;
-        cout << endl;
 
-        switch(query){
-            case 3: 
-                if (p.getRole() == "Admin") {
-                    cout << "Nhap cac thong tin cua sach: ";
-                    string bookInfo;
-                    scanf("\n");
-                    getline(cin, bookInfo);
-                    b.addBook("books.txt", bookInfo);
-                }
-                else {
-                    cout << "Ban khong co quyen them thong tin sach !!!\n";
-                }
-                break;
+        try {
+            cin >> query;
 
-            case 4:
-                if (p.getRole() == "User") {
-                    cout << "Ban khong co quyen chinh sua thong tin sach!" << endl;
-                }
-                else {
-                    cout << "Nhap vao thong tin sach can chinh sua:" << endl;
-                    string info;
-                    scanf("\n");
-                    getline(cin, info);
-                    b.updateBook("books.txt", info);
-                }
-                break;
+            if (cin.fail() == true) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw runtime_error("Sai dinh dang! Vui long nhap lai.\n");
+            }
 
-            case 5: // Tinh nang 5: Xoa sach (Admin).
-                break;
+            cout << endl;
 
-            case 6: // Tinh nang 6: Muon sach.
-                break;
-
-            case 7: // Tinh nang 7: Tra sach.
-                break;
-
-            case 8: 
-                cout << "Day la thong tin cac quyen sach hien tai:" << endl;
-                b.getBooks("books.txt", 4);
-                cout << endl;
-                break;
-
-            case 9: 
-                cout << "Nhap vao ID cuon sach ban muon biet thong tin: ";
-                int id;
-                cin >> id;
-                b.getOneBook("books.txt", id, 4);
-                cout << endl;
-                break;
-
-            case 10:
-                cout << "Day la thong tin cac quyen sach EBooks hien tai:" << endl;
-                eb.getBooks("ebooks.txt", 6);
-                cout << endl;
-                break;
-
-            case 11: 
-                cout << "Nhap vao ID cuon sach EBook ban muon biet thong tin: ";
-                int idEBook;
-                cin >> idEBook;
-                eb.getOneBook("ebooks.txt", idEBook, 6);
-                cout << endl;
-                break;
-
-            case 12: // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
-                break;
-
-            case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
-                break;
-
-            case 14: // Tinh nang 14: Chinh sua thong tin ca nhan (User).
-                break;
-
-            case 15:
-                if (p.getRole() == "User") {
-                    cout << "Ban khong co quyen chinh sua thong tin nguoi khac!" << endl;
-                }
-                else {
-                    vector<string> idPerson = getInformationFromFile("people.txt", 0);
-                    string id;
-                    cout << "Nhap vao id cua nguoi dung ban muon sua: ";
-                    cin >> id;
-                    while (isValid(idPerson, id) == true) {
-                        cout    << "Khong ton tai nguoi dung co id: " << id << endl
-                                << "Vui long nhap id nguoi dung hop le !!!" << endl
-                                << "Nhap lai id cua nguoi dung ban muon sua: ";
-                        cin >> id;
+            switch (query) {
+                case 3: 
+                    if (p.getRole() == "Admin") {
+                        cout << "Nhap cac thong tin cua sach: ";
+                        string bookInfo;
+                        scanf("\n");
+                        getline(cin, bookInfo);
+                        b.addBook("books.txt", bookInfo);
                     }
-                    cout << "Nhap vao thong tin nguoi can chinh sua: ";
-                    string info;
-                    scanf("\n");
-                    getline(cin, info);
-                    p.updatePerson("people.txt", info, id);
-                }
-                cout << endl;
-                break;
+                    else {
+                        cout << "Ban khong co quyen them thong tin sach !!!\n";
+                    }
+                    break;
 
-            case 16: 
-                u.logout();
-                p.clearInfo();
-                break;
+                case 4:
+                    if (p.getRole() == "User") {
+                        cout << "Ban khong co quyen chinh sua thong tin sach!" << endl;
+                    }
+                    else {
+                        cout << "Nhap vao thong tin sach can chinh sua:" << endl;
+                        string info;
+                        scanf("\n");
+                        getline(cin, info);
+                        b.updateBook("books.txt", info);
+                    }
+                    break;
 
-            case 17:
-                clearScreen();
-                menu();
-                break;
+                case 5:
+                    if (p.getRole() == "User") {
+                        cout << "Ban khong co quyen xoa sach!\n";
+                    }
+                    else {
+                        int idDelBook;
+                        cout << "Nhap vao ID cuon sach can xoa: ";
+                        cin >> idDelBook;
+                        b.deleteBook("books.txt", idDelBook);
+                    }
+                    break;
+
+                case 6: // Tinh nang 6: Muon sach.
+                    break;
+
+                case 7: // Tinh nang 7: Tra sach.
+                    break;
+
+                case 8: 
+                    cout << "Day la thong tin cac quyen sach hien tai:" << endl;
+                    b.getBooks("books.txt", 4);
+                    cout << endl;
+                    break;
+
+                case 9: 
+                    cout << "Nhap vao ID cuon sach ban muon biet thong tin: ";
+                    int id;
+                    cin >> id;
+                    b.getOneBook("books.txt", id, 4);
+                    cout << endl;
+                    break;
+
+                case 10:
+                    cout << "Day la thong tin cac quyen sach EBooks hien tai:" << endl;
+                    eb.getBooks("ebooks.txt", 6);
+                    cout << endl;
+                    break;
+
+                case 11: 
+                    cout << "Nhap vao ID cuon sach EBook ban muon biet thong tin: ";
+                    int idEBook;
+                    cin >> idEBook;
+                    eb.getOneBook("ebooks.txt", idEBook, 6);
+                    cout << endl;
+                    break;
+
+                case 12: // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
+                    break;
+
+                case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
+                    break;
+
+                case 14:
+                    str = editPersonalData(p);
+                    str += '[' + p.getRole() + ']';
+
+                    p.updatePerson("people.txt", str, to_string(p.getID()));
+                    break;
+
+                case 15:
+                    if (p.getRole() == "User") {
+                        cout << "Ban khong co quyen chinh sua thong tin nguoi khac!" << endl;
+                    }
+                    else {
+                        vector<string> idPerson = getInformationFromFile("people.txt", 0);
+                        string id;
+                        cout << "Nhap vao id cua nguoi dung ban muon sua: ";
+                        cin >> id;
+
+                        while (isValid(idPerson, id) == true) {
+                            cout    << "Khong ton tai nguoi dung co id: " << id << endl
+                                    << "Vui long nhap id nguoi dung hop le !!!" << endl
+                                    << "Nhap lai id cua nguoi dung ban muon sua: ";
+                            cin >> id;
+                        }
+
+                        Person tmp;
+                        tmp = p.getData("people.txt", id, 8);
+
+                        string info;
+                        info = editPersonalData(tmp);
+                        string newRole;
+                        newRole = changeRole(newRole);
+                        if (newRole == "-1") {
+                            info += '[' + tmp.getRole() + ']';
+                        }
+                        else {
+                            info += '[' + newRole + ']';
+                        }
+
+                        p.updatePerson("people.txt", info, id);
+                    }
+                    cout << endl;
+                    break;
+
+                case 16: 
+                    u.logout();
+                    p.clearInfo();
+                    break;
+
+                case 17:
+                    clearScreen();
+                    menu();
+                    break;
+            }
+        }
+        catch (const exception& e) {
+            cout << e.what() << endl;
         }
     }
     return 0;
