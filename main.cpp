@@ -232,7 +232,6 @@ public:
     void addInfo(){
         // Kiểm tra dữ liệu trước khi thêm vào file
         if(this->isValid()){
-            cout << ">>> Them thong tin thanh cong !\n";
             string file_name = "test_borrowInfos.txt";
             ofstream file(file_name, ios::app);
             file << endl;
@@ -241,16 +240,17 @@ public:
             file << "[" << bookId << "] ";
             file << "[" << eBookId << "]";
             file.close();
+            cout << ">>> THEM THONG TIN THANH CONG !\n";
         }
         else{
-            cout << ">>> Thong tin da ton tai\n";
+            cout << ">>> THONG TIN DA TON TAI !\n";
         }
     }
 
     void updateInfo(int new_personId, int new_bookId, int new_eBookId){
         // Validate dữ liệu trước khi cập nhật
-        BorrowInfo valid_var(new_personId, new_bookId, new_eBookId);
-        if(!valid_var.isValid()){
+        BorrowInfo valid_check(new_personId, new_bookId, new_eBookId);
+        if(!valid_check.isValid()){
             return;
         }
         // Cập nhật dữ liệu
@@ -324,6 +324,7 @@ public:
     User(string email, string password){
         this->email = email;
         this->password = password;
+        //Validate dữ liệu
         // Cập nhật Id
         vector<string> ID_list = this->getInfo(0);
         map<int, int> mp;
@@ -337,7 +338,7 @@ public:
 
     vector<string> getInfo(int n){
         vector<string> info;
-        string filename = "test_user.txt";
+        string filename = "test_users.txt";
         ifstream file(filename);
         string line;
         while (getline(file, line)) {
@@ -353,12 +354,65 @@ public:
         return info;
     }
 
-    void Register(){
-
+    bool isValid(){
+        // Kiểm tra email trùng lặp
+        vector<string> emails = this->getInfo(1);
+        for(auto email : emails){
+            if(this->email == email) return false;
+        }
+        // Kiểm tra password phù hợp ...
+        
+        return true;
     }
-    
-    Person login(){
 
+    void Register(){
+        // Kiểm tra dữ liệu trước khi thêm vào file
+        if(this->isValid()){
+            string file_name = "test_users.txt";
+            ofstream file(file_name, ios::app);
+            file << endl;
+            file << "[" << id << "] ";
+            file << "[" << email << "] ";
+            file << "[" << password << "] ";
+            file.close();
+            cout << ">>> DANG KY THANH CONG !\n";
+        }
+        else{
+            cout << ">>> THONG TIN DA TON TAI\n";
+        }
+    }
+
+    bool correctInfo(){
+        // Kiểm tra thông tin đăng nhập
+        vector<string> emails, passwords;
+        string filename = "test_users.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            emails.push_back(tokens[1]);
+            passwords.push_back(tokens[2]);
+        }   
+        file.close();
+        if(!emails.empty()){
+            for(int pos = 0; pos < emails.size(); pos ++){
+                if(this->email == emails[pos] && this->password == passwords[pos]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    Person login(){
+        if(this->correctInfo()){
+            // vector<string> emails = getInformationFromFile("people.txt", 2);
+        }
     }
 
     void logout(){
