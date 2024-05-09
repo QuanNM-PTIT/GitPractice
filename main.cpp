@@ -258,8 +258,6 @@ public:
     }
 };
 
-// Begin Person
-
 
 // Begin Person
 class Person{
@@ -296,27 +294,13 @@ public:
     void addInfo();
     int getNextAvailableId();
     void setId(int);
-	this->name = name;
-	this->email = email;
-	this->sex = sex ;
-	this-> birthdate = birthdate; 
-	this->address = address;
-	this->phoneNumber = phoneNumber;
-	this->role = role;
-}
-
-
-// End Person
-
-// Begin BorrowInfo
-class BorrowInfo{
-	private:
-		int id, personId, bookId, eBookId;
-	public:
-		BorrowInfo(int, int, int);
-		void addInfo();
-		int getNextAvailableId();
-		void setId(int);
+    void setpersonId(int);
+    void setbookId(int);
+    void seteBookId(int);
+    int getId();
+    int getpersonId();
+    int getbookId();
+    int geteBookId();
 };
 
 BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
@@ -324,9 +308,6 @@ BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
     this->personId = personId;
     this->bookId = bookId;
     this->eBookId = eBookId;
-	this->personId = personId;
-	this->bookId = bookId;
-	this->eBookId = eBookId;
 }
 
 void BorrowInfo::addInfo()
@@ -334,8 +315,6 @@ void BorrowInfo::addInfo()
     ofstream fileout("borrowInfos.txt", ios::app);
     fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
             << " " << '[' << this->eBookId << ']' << endl;
-	ofstream fileout("borrowInfos.txt", ios::app);
-	fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
     fileout.close();
 }
 
@@ -359,7 +338,41 @@ int BorrowInfo::getNextAvailableId()
 void BorrowInfo::setId(int id)
 {
     this->id = id;
+}
+
+void BorrowInfo::setpersonId(int id)
+{
 	this->id = id;
+}
+
+void BorrowInfo::setbookId(int id)
+{
+	this->id = id;
+} 
+
+void BorrowInfo::seteBookId(int id)
+{
+	this->id = id;
+} 
+
+int BorrowInfo::getId()
+{
+	return this->id;
+}
+
+int BorrowInfo::getpersonId()
+{
+	return this->personId;
+}
+
+int BorrowInfo::getbookId()
+{
+	return this->bookId;
+}
+
+int BorrowInfo::geteBookId()
+{
+	return this->eBookId;
 }
 
 // End BorrowInfo
@@ -378,16 +391,58 @@ void themthongtinmuonsach()
     cin >> eBookId;
     BorrowInfo x(persionId, bookId, eBookId);
     x.setId(x.getNextAvailableId());
-	int id, persionId, bookId, eBookId;
-	cout << "Nhap id nguoi muon: ";
-	cin >> persionId;
-	cout << "Nhap id quyen sach duoc muon: ";
-	cin >> bookId;
-	cout << "Nhap id quyen sach dien tu duoc muon: ";
-	cin >> eBookId;
-	BorrowInfo x(persionId, bookId, eBookId);
-	x.setId(x.getNextAvailableId());
     x.addInfo();
+}
+
+vector<int> extractNumbers(const string& input) //ham tra ve 1 vector id, id trong dau [] o file borrowInfo
+{
+    vector<int> numbers;
+    stringstream ss(input);
+
+    char ch;
+    int number;
+
+    // Ð?c t?ng ký t? t? chu?i
+    while (ss >> ch) {
+        if (ch == '[') {
+            // N?u g?p ký t? '[', d?c s? trong d?u '[' ']'
+            if (ss >> number) {
+                numbers.push_back(number);
+                // B? qua các ký t? còn l?i cho d?n khi g?p ký t? ']'
+                ss.ignore(numeric_limits<streamsize>::max(), ']');
+            }
+        }
+    }
+
+    return numbers;
+}
+
+void capnhatthongtinmuonsach()
+{
+	vector<BorrowInfo>v;
+	ifstream filein("borrowInfos.txt");
+	if(!filein.is_open())
+	{
+		cout << "Khong the mo tep borrowInfos.txt";
+	}
+	else
+	{
+		string tmp;
+		while(getline(filein, tmp))
+		{
+			int id, perId, bookId, eBookId;
+			vector<int>numbers = extractNumbers(tmp);
+			id = numbers[0];
+			perId = numbers[1];
+			bookId = numbers[2];
+			eBookId = numbers[3];
+			BorrowInfo x(perId, bookId, eBookId);
+			x.setId(id);
+			cout << x.getId() << " " << x.getbookId() << endl;
+		}
+	}
+	
+	filein.close();
 }
 
 // Ket thuc khai bao cac ham thao tac
@@ -405,14 +460,15 @@ int main()
     //    book.updateBook(idToUpdate); // Cáº­p nháº­t thÃ´ng tin cá»§a sÃ¡ch
 
     //	themthongtinmuonsach(); --> done
+    capnhatthongtinmuonsach();
 
-    int id = User::getNextAvailableId();
-    string email = "example@example.com";
-    string password = "PTITd22@";
-    User user(id, email, password);
-    user.registerUser();
-    cout << "Register Successfully" << endl;
-
+//    int id = User::getNextAvailableId();
+//    string email = "example@example.com";
+//    string password = "PTITd22@";
+//    User user(id, email, password);
+//    user.registerUser();
+//    cout << "Register Successfully" << endl;
+	
     return 0;
 //    int idToUpdate;
 //    cout << "Enter ID want to update: ";
