@@ -2,6 +2,201 @@
 
 using namespace std;
 
+class BorrowInfo{
+private:
+	int id = 1;
+	int personId;
+	int bookId;
+	int eBookId;
+public:
+    BorrowInfo(int personId, int bookId, int eBookId){
+        // Validate dữ liệu đầu vào ...
+
+        this->personId = personId;
+        this->bookId = bookId;
+        this->eBookId = eBookId;
+        // Cập nhật Id
+        vector<string> ID_list = this->getInfo(0);
+        map<int, int> mp;
+        for(string ID : ID_list){
+            mp[stoi(ID)] = 1;
+        }
+        while(mp[id]){
+            ++ id;
+        }
+    }
+
+    vector<string> getInfo(int n){
+        vector<string> info;
+        string filename = "test_borrowInfos.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            info.push_back(tokens[n]);
+        }   
+        file.close();
+        return info;
+    }
+    
+    bool isValid(){
+        // Kiểm tra thông tin đã tồn tại trong file chưa ?
+        vector<string> personIds, bookIds, eBookIds;
+        string filename = "test_borrowInfos.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            personIds.push_back(tokens[1]);
+            bookIds.push_back(tokens[2]);
+            eBookIds.push_back(tokens[3]);
+        }   
+        file.close();
+        if(!personIds.empty()){
+            for(int pos = 0; pos < personIds.size(); pos ++){
+                if(this->personId == stoi(personIds[pos]) && this->bookId == stoi(bookIds[pos]) && this->eBookId == stoi(eBookIds[pos])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void addInfo(){
+        // Kiểm tra dữ liệu trước khi thêm vào file
+        if(this->isValid()){
+            cout << ">>> Them thong tin thanh cong !\n";
+            string file_name = "test_borrowInfos.txt";
+            ofstream file(file_name, ios::app);
+            file << endl;
+            file << "[" << id << "] ";
+            file << "[" << personId << "] ";
+            file << "[" << bookId << "] ";
+            file << "[" << eBookId << "]";
+            file.close();
+        }
+        else{
+            cout << ">>> Thong tin da ton tai\n";
+        }
+    }
+
+    void updateInfo(int new_personId, int new_bookId, int new_eBookId){
+        // Validate dữ liệu trước khi cập nhật
+        BorrowInfo valid_var(new_personId, new_bookId, new_eBookId);
+        if(!valid_var.isValid()){
+            return;
+        }
+        // Cập nhật dữ liệu
+        this->personId = new_personId;
+        this->bookId = new_bookId;
+        this->eBookId = new_eBookId;
+
+        // Thay đổi trong file
+        string file_name = "test_borrowInfors.txt";
+        fstream file(file_name);
+        vector<string> lines;
+        string line;
+        while(getline(file, line)){
+            lines.push_back(line);
+        }
+        // Thay đổi dữ liệu dựa theo personId
+        vector<string> ID_list = this->getInfo(0);
+        for(auto iter = ID_list.begin(); iter != ID_list.end(); iter ++){
+            if(this->id == stoi(*iter)){
+                int line_pos = iter - ID_list.begin();
+                lines[line_pos] = "[" + to_string(this->id) + "] [" + to_string(new_personId) + "] ";
+                lines[line_pos] += "[" + to_string(new_bookId) + "] [" + to_string(new_eBookId) + "]";
+            }
+        }
+        // Đặt con trỏ về đầu tập tin để ghi lại dữ liệu
+        file.seekg(0);
+        for(const string& l : lines){
+            file << l << endl;
+        }
+    }
+
+    int getId(){
+        return id;
+    }
+
+    void setId(int id){
+        this->id = id;
+    }
+
+    int getPersonId(){
+        return personId;
+    }
+
+    void setPersonId(int personId){
+        this->personId = personId;
+    }
+
+    int getBookId(){
+        return bookId;
+    }
+
+    void setBookId(int bookId){
+        this->bookId = bookId;
+    }
+
+    int getEbookId(){
+        return eBookId;
+    }
+
+    void setEbookId(int eBookId){
+        this->eBookId = eBookId;
+    }
+};
+
+class User{
+private:
+	int id;
+	string email;
+	string password;
+public:
+    User(string email, string password){
+        this->email = email;
+        this->password = password;
+    }
+    void Register(){
+
+    }
+    Person login(){
+
+    }
+    void logout(){
+
+    }
+    int getId(){
+        return id;
+    }
+    void setId(int id){
+        this->id = id;
+    }
+    string getEmail(){
+        return email;
+    }
+    void setEmail(string email){
+        this->email = email;
+    }
+    string getPassword(){
+        return password;
+    }
+    void setPassword(string password){
+        this->password = password;
+    }
+};
+
 class Person {
 private:
     int id;
@@ -89,219 +284,48 @@ public:
     void setRole(const string& role) {
         this->role = role;
     }
-
-    void clearInfo() {
-        id = -1;
-        name = "";
-        email = "";
-        sex = "";
-        birthdate = "";
-        address = "";
-        phoneNumber = "";
-        role = "";
-    }
-
-    void updatePerson(const string& filename, const string& newPersonInfo, string newPersonID) {
-        ifstream inFile(filename); 
-        ofstream outFile("temp_person.txt"); 
-
-        string line;
-        bool found = false; // Kiểm tra xem ID có tồn tại không
-
-        // Đọc từng dòng từ file gốc
-        while (getline(inFile, line)) {
-            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
-            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
-            
-            // Nếu như vẫn còn đọc được dữ liệu
-            if (startPos != string::npos && endPos != string::npos) {
-                string personID = line.substr(startPos + 1, endPos - startPos - 1);
-
-                // Nếu id của sách cần cập nhật == id hiện tại trong books.txt thì thay thế nó
-                if (personID == newPersonID) {
-                    outFile << '[' << personID << "] " << newPersonInfo << endl;
-                    found = true; // Đánh dấu là đã tìm thấy và cập nhật thông tin của cuốn sách
-                } 
-                // Nếu là các dữ liệu khác thì đẩy thẳng vào file
-                else {
-                    outFile << line << endl;
-                }
-            } 
-            // Đẩy nốt dữ kiện cuối vào file
-            else {
-                outFile << line << endl;
-            }
-        }
-
-        inFile.close();
-        outFile.close();
-
-        if (found) {
-            // Xoá file gốc
-            if (remove(filename.c_str()) != 0) {
-                cerr << "Khong the xoa file goc." << endl;
-                return;
-            }
-
-            // Đổi tên file tạm thời thành file gốc
-            if (rename("temp_person.txt", filename.c_str()) != 0) {
-                cerr << "Khong the đoi ten file tam thoi." << endl;
-                return;
-            }
-
-            cout << "Da cap nhat thong tin cua nguoi dung co ID = " << newPersonID << " thanh cong." << endl;
-        } 
-        else {
-            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần cập nhật
-            remove("temp_person.txt");
-            cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
-        }
-    }
 };
 
-class User{
-private:
-	int id;
-	string email;
-	string password;
-
-public:
-    User() {}
-
-    User(string email, string password){
-        this->email = email;
-        this->password = password;
-    }
-
-    void Register(){
-
-    }
-
-    Person login(){
-        return Person("HDL", "hdl@gmail.com", "Male", "25/01/2005", "Ha Noi", "000", "Admin");
-    }
-
-    void logout(){
-
-    }
-
-    int getId(){
-        return id;
-    }
-
-    void setId(int id){
-        this->id = id;
-    }
-
-    string getEmail(){
-        return email;
-    }
-
-    void setEmail(string email){
-        this->email = email;
-    }
-
-    string getPassword(){
-        return password;
-    }
-
-    void setPassword(string password){
-        this->password = password;
-    }
-};
-
-class BorrowInfo{
-private:
-	int id = 1;
-	int personId;
-	int bookId;
-	int eBookId;
-public:
-    BorrowInfo(int personId, int bookId, int eBookId){
-        this->personId = personId;
-        this->bookId = bookId;
-        this->eBookId = eBookId;
-        // Cập nhật Id ...
-        // Validate các thông tin đầu vào ...
-    }
-
-    void addInfo(){
-        // Validate dữ liệu ...
-        string file_name = "users.txt";
-        ofstream file("file_name");
-        file << endl;
-        file << "[" << this->id << "] ";
-        file << "[" << this->personId << "] ";
-        file << "[" << this->bookId << "] ";
-        file << "[" << this->eBookId << "]";
-        file.close();
-    }
-
-    void updateInfo(){
-        // Validate dữ liệu ...
-
-    }
-
-    int getId(){
-        return id;
-    }
-
-    void setId(int id){
-        this->id = id;
-    }
-
-    int getPersonId(){
-        return personId;
-    }
-
-    void setPersonId(int personId){
-        this->personId = personId;
-    }
-
-    int getBookId(){
-        return bookId;
-    }
-
-    void setBookId(int bookId){
-        this->bookId = bookId;
-    }
-
-    int getEbookId(){
-        return eBookId;
-    }
-
-    void setEbookId(int eBookId){
-        this->eBookId = eBookId;
-    }
-};
-
-// Hàm lấy ra từng kiểu thông tin một trong file (ví dụ: trả về 1 vector<string> toàn ID)
 vector<string> getInformationFromFile(const string& filename, int n) {
     vector<string> info;
     ifstream file(filename);
     string line;
     while (getline(file, line)) {
-        stringstream ss(line);
-        string token;
+        size_t pos = 0;
         vector<string> tokens;
-
-        while (ss >> token) {
-            tokens.push_back(token.substr(1, token.size() - 2));
+        while ((pos = line.find("] [")) != string::npos) {
+            string token = line.substr(1, pos - 1);
+            tokens.push_back(token);
+            line.erase(0, pos + 2);
         }
-        
-        info.push_back(tokens[n]);
+        if (!line.empty()) {
+            line.pop_back();
+            line.erase(0, 1);
+            tokens.push_back(line);
+        }
+        if (tokens.size() >= 3) {
+            info.push_back(tokens[n]);
+        }
     }
     file.close();
     return info;
 }
 
+bool isValid(const vector<string>& info, const string& needCheck, int n) {
+    for (int i = 0; i < n; ++i) {
+        if (info[i] == needCheck) {
+            return false;
+        }
+    }
+    return true;
+}
+
 class Book {
-protected:
+private:
     int id;
     string title;
     string author;
     int quantity;
-
 public:
     Book() {}
 
@@ -310,10 +334,6 @@ public:
         this->author = author;
         this->quantity = quantity;
     }
-
-    // Khởi tạo contructor gồm đầy đủ thông tin
-    Book(const int& id, const string& title, const string& author, const int& quantity)
-        : id(id), title(title), author(author), quantity(quantity) {}
 
     int getID() const {
         return this->id;
@@ -339,428 +359,88 @@ public:
         this->quantity = quantity;
     }
 
-    void addBook(const string& filename, const string& bookInf) {
-        ofstream outFile(filename, ios::app);
-        vector<string> dataID = getInformationFromFile(filename, 0);
-
-        set<long long> dataIDInt;
-        for (string s : dataID) {
-            dataIDInt.insert(stoi(s));
-        } 
-
-        int mex = 0;
-        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
-            if (*it > mex + 1) {
-                mex = mex + 1;
-                break;
-            }
-            mex = *it;
-        }
-        ++mex;
-
+    void addBook(const string& bookInf) {
+        ofstream outFile("test_add_book.txt", ios::app);
         if (outFile.is_open()) {
-            outFile << endl << '[' << to_string(mex) << "] " <<  bookInf;
+            outFile << bookInf << '\n';
             outFile.close();
-            cout << "Thong tin cua cuon sach da duoc ghi thanh cong!\n\n";
-        }
-    }
-
-    void getBooks(const string& filename, int data) const {
-        ifstream file(filename);
-        string line;
-        int cnt = 0;
-
-        while (getline(file, line)) {
-            ++cnt;
-        }
-
-        file.close();
-
-        vector<vector<string>> bookInfor(data);
-
-        for (int i = 0; i < data; ++i) {
-            bookInfor[i] = getInformationFromFile(filename, i);
-        }
-
-        for (int i = 0; i < cnt; ++i) {
-            for (int j = 0; j < data; ++j) {
-                cout << "[" << bookInfor[j][i] << "] ";
-            }
-            cout << endl;
-        }
-    }
-
-    void deleteBook(const string& filename) const {
-        ifstream inFile(filename); 
-        ofstream outFile("temp_books.txt"); 
-
-        string line;
-        bool found = false; // Kiểm tra xem ID có tồn tại không
-
-        // Đọc từng dòng từ file gốc
-        while (getline(inFile, line)) {
-            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
-            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
-            
-            if (startPos != string::npos && endPos != string::npos) {
-                string bookId = line.substr(startPos + 1, endPos - startPos - 1);
-
-                if (bookId == to_string(this->id)) {
-                    found = true; // Đánh dấu là đã tìm thấy cuốn sách cần xoá
-                    continue; // Bỏ qua việc ghi dòng này vào file tạm thời
-                }
-            }
-
-            // Ghi lại dòng vào file tạm thời
-            outFile << line << endl;
-        }
-
-        inFile.close();
-        outFile.close();
-
-        if (found) {
-            // Xoá file gốc
-            if (remove(filename.c_str()) != 0) {
-                cerr << "Khong the xoa file goc." << endl;
-                return;
-            }
-
-            // Đổi tên file tạm thời thành file gốc
-            if (rename("temp_books.txt", filename.c_str()) != 0) {
-                cerr << "Khong the đoi ten file tam thoi." << endl;
-                return;
-            }
-
-            cout << "Da xoa thong tin cua cuon sach có ID = " << id << " thanh cong." << endl;
+            cout << "Thông tin của cuốn sách đã được ghi thành công!\n";
         } 
         else {
-            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần xoá
-            remove("temp_books.txt");
-            cout << "Khong tim thay cuon sach co ID = " << id << " trong file." << endl;
-        }
-    }
-
-    void updateBook(const string& filename, const string& newBookInfo) {
-        // Tìm id từ thông tin mới của sách
-        size_t startPos = newBookInfo.find("[");
-        size_t endPos = newBookInfo.find("]", startPos);
-        if (startPos == string::npos || endPos == string::npos) {
-            cerr << "Khong the cap nhat thong tin sach vi khong tim thay ID." << endl;
-            return;
-        }
-
-        string newBookId = newBookInfo.substr(startPos + 1, endPos - startPos - 1);
-
-        ifstream inFile(filename); 
-        ofstream outFile("temp_books.txt"); 
-
-        string line;
-        bool found = false; // Kiểm tra xem ID có tồn tại không
-
-        // Đọc từng dòng từ file gốc
-        while (getline(inFile, line)) {
-            size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
-            size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
-            
-            // Nếu như vẫn còn đọc được dữ liệu
-            if (startPos != string::npos && endPos != string::npos) {
-                string bookId = line.substr(startPos + 1, endPos - startPos - 1);
-
-                // Nếu id của sách cần cập nhật == id hiện tại trong books.txt thì thay thế nó
-                if (bookId == newBookId) {
-                    outFile << newBookInfo << endl;
-                    found = true; // Đánh dấu là đã tìm thấy và cập nhật thông tin của cuốn sách
-                } 
-                // Nếu là các dữ liệu khác thì đẩy thẳng vào file
-                else {
-                    outFile << line << endl;
-                }
-            } 
-            // Đẩy nốt dữ kiện cuối vào file
-            else {
-                outFile << line << endl;
-            }
-        }
-
-        inFile.close();
-        outFile.close();
-
-        if (found) {
-            // Xoá file gốc
-            if (remove(filename.c_str()) != 0) {
-                cerr << "Khong the xoa file goc." << endl;
-                return;
-            }
-
-            // Đổi tên file tạm thời thành file gốc
-            if (rename("temp_books.txt", filename.c_str()) != 0) {
-                cerr << "Khong the đoi ten file tam thoi." << endl;
-                return;
-            }
-
-            cout << "Da cap nhat thong tin cua cuon sach có ID = " << newBookId << " thanh cong." << endl;
-        } 
-        else {
-            // Xoá file tạm thời nếu không tìm thấy cuốn sách cần cập nhật
-            remove("temp_books.txt");
-            cout << "Khong tim thay cuon sach co ID = " << newBookId << " trong file." << endl;
-        }
-    }
-
-    void getOneBook(const string& filename, int id, int data) {
-        ifstream file(filename);
-        string line;
-        int cnt = 0;
-
-        while (getline(file, line)) {
-            ++cnt;
-        }
-
-        file.close();
-
-        vector<vector<string>> bookInfor(data);
-
-        for (int i = 0; i < data; ++i) {
-            bookInfor[i] = getInformationFromFile(filename, i);
-        }
-
-        int pos = -1;
-        for (int i = 0; i < cnt; ++i) {
-            if (stoi(bookInfor[0][i]) == id) {
-                pos = i;
-                break;
-            }
-        }
-
-        if (pos == -1) {
-            cout << "Khong ton tai cuon sach co ID la: " << id << '!' << endl;
-        }
-        else {
-            cout << "Thong tin cuon sach co ID la: " << id << endl;
-            for (int i = 0; i < data; ++i) {
-                cout << '[' << bookInfor[i][pos] << "] ";
-            }
-            cout << endl;
+            cerr << "Mở file thất bại!\n";
         }
     }
 };
 
-class EBook : public Book {
-private: 
-    string fileFormat;
-    int fileSize;
-
-public:
-    EBook() {}
-
-    EBook(const string& title, const string& author, int quantity, const string& fileFormat, int fileSize)
-        : Book(title, author, quantity), fileFormat(fileFormat), fileSize(fileSize) {}
-
-    string getFileFormat() {
-        return this->fileFormat;
-    }
-
-    void setFileFormat(string ff) {
-        this->fileFormat == ff;
-    }
-
-    int getFileSize() {
-        return this->fileSize;
-    }
-
-    void setFileSize(int fs) {
-        this->fileSize = fs;
-    } 
-};
-
-// Kiểm tra thông tin needCheck đã tồn tại trong file hay chưa
-template <class val>
-bool isValid(const vector<val>& info, const val needCheck) {
-    for (auto i : info) {
-        if (i == needCheck) {
-            return false;
-        }
-    }
-    return true;
-}
-
-// In ra danh sách tính năng
 void menu() {
-    cout    << "-------------------------------------------------------------------------------------------------\n"
-            << "|                      ___Vui long chon mot trong cac tinh nang sau day___                      |\n" 
-            << "|   1.  Dang nhap.                                                                              |\n"
-            << "|   2.  Dang ky.                                                                                |\n"
-            << "|   3.  Them sach (Admin).                                                                      |\n"
-            << "|   4.  Sua thong tin sach (Admin).                                                             |\n"
-            << "|   5.  Xoa sach (Admin).                                                                       |\n"
-            << "|   6.  Muon sach.                                                                              |\n"
-            << "|   7.  Tra sach.                                                                               |\n"
-            << "|   8.  Lay thong tin cac quyen sach.                                                           |\n"
-            << "|   9.  Lay thong tin 1 quyen sach.                                                             |\n"
-            << "|   10. Lay thong tin tat ca cac quyen sach eBook hien co.                                      |\n"
-            << "|   11. Lay thong tin 1 eBook co id nam trong file eBooks.txt.                                  |\n"
-            << "|   12. Hien thi tat ca cac quyen sach da muon cua ban than (User).                             |\n"
-            << "|   13. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon voi id nguoi dung (Admin).      |\n"
-            << "|   14. Chinh sua thong tin ca nhan.                                                            |\n"
-            << "|   15. Chinh sua thong tin ca nhan cua nguoi khac (Admin).                                     |\n"
-            << "|   16. Dang xuat.                                                                              |\n"
-            << "|   17. Xoa man hinh console.                                                                   |\n"
-            << "|   18. Thoat chuong trinh.                                                                     |\n"
-            << "-------------------------------------------------------------------------------------------------\n";
-}
-
-bool isLogin(Person& p) {
-    return p.getID() > 0 and p.getName() != "" and p.getEmail() != "" and p.getSex() != "" and p.getBirthdate() != "" and p.getAddress() != "" and p.getPhoneNumber() != "" and p.getRole() != "";
-}
-
-void clearScreen() {
-    system("cls");
+    cout    << "Vui lòng chọn một trong các tính năng sau đây\n" 
+            << "1. Đăng nhập.\n"
+            << "2. Đăng ký.\n"
+            << "3. Thêm sách (Admin).\n"
+            << "4. Sửa thông tin sách (Admin).\n"
+            << "5. Xóa sách (Admin).\n"
+            << "6. Mượn sách.\n"
+            << "7. Trả sách.\n"
+            << "8. Lấy thông tin các quyển sách.\n"
+            << "9. Lấy thông tin 1 quyển sách.\n"
+            << "10. Lấy thông tin tất cả các quyển sách eBook hiện có.\n"
+            << "11. Lấy thông tin 1 eBook có id nằm trong file eBooks.txt.\n"
+            << "12. Hiển thị tất cả các quyển sách đã mượn của bản thân (User).\n"
+            << "13. Hiển thị tất cả các quyển sách của 1 người dùng đã mượn với id người dùng (Admin).\n"
+            << "14. Chỉnh sửa thông tin cá nhân.\n"
+            << "15. Chỉnh sửa thông tin cá nhân của người khác (Admin).\n"
+            << "16. Đăng xuất.\n"
+            << "17. Thoát chương trình\n";
 }
 
 int main() {
+    
     menu();
-
-    int query = 0;
-    bool welcome = false;
-
-    Person p;
-    User u;
-    Book b;
-    EBook eb;
-
-    while (query != 18) {
-        while (isLogin(p) == false) {
-            cout << "Dang nhap/Dang ky de su dung tinh nang!!!\n";
+    int query;
+    cin >> query;
+    bool isLogin = false;
+    while (true) {
+        while (isLogin == false) {
+            cout << "Đăng nhập/Đăng ký để sử dụng tính năng!!!\n";
             cin >> query;
-
             switch(query){
-                case 1: 
-                    p = u.login();
-                    p.setID(1);
-                    welcome = true;
+                case 1: // Tinh nang 1: Dang nhap.
                     break;
-                    
                 case 2: // Tinh nang 2: Dang ky.
                     break;
             }
         }
-        if (welcome == true) {
-            cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
-                    << "Welcome " << '<' << p.getRole() << '>' << endl;
-            welcome = false;
-            cout << endl;
-        }
-
-        cout << "Nhap vao tinh nang ban muon su dung: ";
-        cin >> query;
-        cout << endl;
-
         switch(query){
-            case 3: 
-                if (p.getRole() == "Admin") {
-                    cout << "Nhap cac thong tin cua sach: ";
-                    string bookInfo;
-                    scanf("\n");
-                    getline(cin, bookInfo);
-                    b.addBook("books.txt", bookInfo);
-                }
-                else {
-                    cout << "Ban khong co quyen them thong tin sach !!!\n";
-                }
+            case 3: // Tinh nang 3: Them sach (Admin).
                 break;
-
-            case 4:
-                if (p.getRole() == "User") {
-                    cout << "Ban khong co quyen chinh sua thong tin sach!" << endl;
-                }
-                else {
-                    cout << "Nhap vao thong tin sach can chinh sua:" << endl;
-                    string info;
-                    scanf("\n");
-                    getline(cin, info);
-                    b.updateBook("books.txt", info);
-                }
+            case 4: // Tinh nang 4: Sua thong tin sach (Admin).
                 break;
-
             case 5: // Tinh nang 5: Xoa sach (Admin).
                 break;
-
             case 6: // Tinh nang 6: Muon sach.
                 break;
-
             case 7: // Tinh nang 7: Tra sach.
                 break;
-
-            case 8: 
-                cout << "Day la thong tin cac quyen sach hien tai:" << endl;
-                b.getBooks("books.txt", 4);
-                cout << endl;
+            case 8: // Tinh nang 8: Lay thong tin cac quyen sach.
                 break;
-
-            case 9: 
-                cout << "Nhap vao ID cuon sach ban muon biet thong tin: ";
-                int id;
-                cin >> id;
-                b.getOneBook("books.txt", id, 4);
-                cout << endl;
+            case 9: // Tinh nang 9: Lay thong tin 1 quyen sach.
                 break;
-
-            case 10:
-                cout << "Day la thong tin cac quyen sach EBooks hien tai:" << endl;
-                eb.getBooks("ebooks.txt", 6);
-                cout << endl;
+            case 10: // Tinh nang 10: Lay thong tin cac quyen sach eBook.
                 break;
-
-            case 11: 
-                cout << "Nhap vao ID cuon sach EBook ban muon biet thong tin: ";
-                int idEBook;
-                cin >> idEBook;
-                eb.getOneBook("ebooks.txt", idEBook, 6);
-                cout << endl;
+            case 11: // Tinh nang 11: Lay thong tin 1 eBook theo id.
                 break;
-
             case 12: // Tinh nang 12: Hien thi cac quyen sach da muon cua ban than (User).
                 break;
-
             case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
                 break;
-
             case 14: // Tinh nang 14: Chinh sua thong tin ca nhan (User).
                 break;
-
-            case 15:
-                if (p.getRole() == "User") {
-                    cout << "Ban khong co quyen chinh sua thong tin nguoi khac!" << endl;
-                }
-                else {
-                    vector<string> idPerson = getInformationFromFile("people.txt", 0);
-                    string id;
-                    cout << "Nhap vao id cua nguoi dung ban muon sua: ";
-                    cin >> id;
-                    while (isValid(idPerson, id) == true) {
-                        cout    << "Khong ton tai nguoi dung co id: " << id << endl
-                                << "Vui long nhap id nguoi dung hop le !!!" << endl
-                                << "Nhap lai id cua nguoi dung ban muon sua: ";
-                        cin >> id;
-                    }
-                    cout << "Nhap vao thong tin nguoi can chinh sua: ";
-                    string info;
-                    scanf("\n");
-                    getline(cin, info);
-                    p.updatePerson("people.txt", info, id);
-                }
-                cout << endl;
+            case 15: // Tinh nang 15: Chinh sua thong tin nguoi khac (Admin).
                 break;
-
-            case 16: 
-                u.logout();
-                p.clearInfo();
+            case 16: // Tinh nang 16: Dang xuat.
                 break;
-
-            case 17:
-                clearScreen();
-                menu();
-                break;
+            case 17: // Tinh nang 17: Thoat chuong trinh.
+                return 0;
         }
     }
     return 0;
