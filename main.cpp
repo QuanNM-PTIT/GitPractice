@@ -167,7 +167,35 @@ public:
     User(string email, string password){
         this->email = email;
         this->password = password;
+        // Cập nhật Id
+        vector<string> ID_list = this->getInfo(0);
+        map<int, int> mp;
+        for(string ID : ID_list){
+            mp[stoi(ID)] = 1;
+        }
+        while(mp[id]){
+            ++ id;
+        }
     }
+
+    vector<string> getInfo(int n){
+        vector<string> info;
+        string filename = "test_user.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            info.push_back(tokens[n]);
+        }   
+        file.close();
+        return info;
+    }
+
     void Register(){
 
     }
@@ -351,122 +379,6 @@ public:
             remove("temp_person.txt");
             cout << "Khong tim thay nguoi dung co ID = " << newPersonID << " trong file." << endl;
         }
-    }
-};
-
-class User{
-private:
-	int id;
-	string email;
-	string password;
-
-public:
-    User() {}
-
-    User(string email, string password){
-        this->email = email;
-        this->password = password;
-    }
-
-    void Register(){
-
-    }
-
-    Person login(){
-        return Person("HDL", "hdl@gmail.com", "Male", "25/01/2005", "Ha Noi", "000", "Admin");
-    }
-
-    void logout(){
-
-    }
-
-    int getId(){
-        return id;
-    }
-
-    void setId(int id){
-        this->id = id;
-    }
-
-    string getEmail(){
-        return email;
-    }
-
-    void setEmail(string email){
-        this->email = email;
-    }
-
-    string getPassword(){
-        return password;
-    }
-
-    void setPassword(string password){
-        this->password = password;
-    }
-};
-
-class BorrowInfo{
-private:
-	int id = 1;
-	int personId;
-	int bookId;
-	int eBookId;
-public:
-    BorrowInfo(int personId, int bookId, int eBookId){
-        this->personId = personId;
-        this->bookId = bookId;
-        this->eBookId = eBookId;
-        // Cập nhật Id ...
-        // Validate các thông tin đầu vào ...
-    }
-
-    void addInfo(){
-        // Validate dữ liệu ...
-        string file_name = "users.txt";
-        ofstream file("file_name");
-        file << endl;
-        file << "[" << this->id << "] ";
-        file << "[" << this->personId << "] ";
-        file << "[" << this->bookId << "] ";
-        file << "[" << this->eBookId << "]";
-        file.close();
-    }
-
-    void updateInfo(){
-        // Validate dữ liệu ...
-
-    }
-
-    int getId(){
-        return id;
-    }
-
-    void setId(int id){
-        this->id = id;
-    }
-
-    int getPersonId(){
-        return personId;
-    }
-
-    void setPersonId(int personId){
-        this->personId = personId;
-    }
-
-    int getBookId(){
-        return bookId;
-    }
-
-    void setBookId(int bookId){
-        this->bookId = bookId;
-    }
-
-    int getEbookId(){
-        return eBookId;
-    }
-
-    void setEbookId(int eBookId){
-        this->eBookId = eBookId;
     }
 };
 
