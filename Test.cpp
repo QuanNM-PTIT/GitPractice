@@ -2,63 +2,43 @@
 
 using namespace std;
 
-void deleteBook(string idToRemove){
-    const string& filename = "books.txt";
-    ifstream inFile(filename); // File input stream
-    ofstream outFile("temp_books.txt"); // Temporary file output stream
-
-    if (!inFile.is_open()) {
-        cerr << "Không thể mở file." << endl;
-        return;
-    }
-
+vector<string> getInformationFromFile(const string& filename, int n) {
+    vector<string> info;
+    ifstream file(filename);
     string line;
-    bool found = false; // Flag to track if book with specified ID is found
-
-    // Đọc từng dòng từ file gốc
-    while (getline(inFile, line)) {
-        size_t startPos = line.find("["); // Tìm vị trí của ký tự '['
-        size_t endPos = line.find("]", startPos); // Tìm vị trí của ký tự ']' sau ký tự '['
-        
-        if (startPos != string::npos && endPos != string::npos) {
-            string bookId = line.substr(startPos + 1, endPos - startPos - 1);
-
-            if (bookId == idToRemove) {
-                found = true; // Đánh dấu là đã tìm thấy cuốn sách cần xoá
-                continue; // Bỏ qua việc ghi dòng này vào file tạm thời
-            }
+    while (getline(file, line)) {
+        size_t pos = 0;
+        vector<string> tokens;
+        while ((pos = line.find("] [")) != string::npos) {
+            string token = line.substr(1, pos - 1);
+            tokens.push_back(token);
+            line.erase(0, pos + 2);
         }
-
-        // Ghi lại dòng vào file tạm thời
-        outFile << line << endl;
+        if (!line.empty()) {
+            line.pop_back();
+            line.erase(0, 1);
+            tokens.push_back(line);
+        }
+        if (tokens.size() >= 3) {
+            info.push_back(tokens[n]);
+        }
     }
-
-    inFile.close();
-    outFile.close();
-
-    if (found) {
-        // Xoá file gốc
-        if (remove(filename.c_str()) != 0) {
-            cerr << "Không thể xoá file gốc." << endl;
-            return;
-        }
-
-        // Đổi tên file tạm thời thành file gốc
-        if (rename("temp_books.txt", filename.c_str()) != 0) {
-            cerr << "Không thể đổi tên file tạm thời." << endl;
-            return;
-        }
-
-        cout << "Đã xoá thông tin của cuốn sách có ID = " << idToRemove << " thành công." << endl;
-    } 
-    else {
-        // Xoá file tạm thời nếu không tìm thấy cuốn sách cần xoá
-        remove("temp_books.txt");
-        cout << "Không tìm thấy cuốn sách có ID = " << idToRemove << " trong file." << endl;
-    }
+    file.close();
+    return info;
 }
 
+template <class val>
+bool isExist(const val infoNeedCheck, const string& filename, int dataPos) {
+    vector<val> info = getInformationFromFile(filename, dataPos);
+    for (auto s : info) {
+        if (s == infoNeedCheck) {
+            return true;
+        }
+    }
+    return false;
+}
 int main() {
-    deleteBook("6");
+    string check = "Emily Davis";
+    cout << isExist(check, "people.txt", 1);
     return 0;
 }
