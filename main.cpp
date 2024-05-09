@@ -168,30 +168,39 @@ public:
         this->email = email;
         this->password = password;
     }
+
     void Register(){
 
     }
+
     Person login(){
 
     }
+
     void logout(){
 
     }
+
     int getId(){
         return id;
     }
+
     void setId(int id){
         this->id = id;
     }
+
     string getEmail(){
         return email;
     }
+
     void setEmail(string email){
         this->email = email;
     }
+
     string getPassword(){
         return password;
     }
+
     void setPassword(string password){
         this->password = password;
     }
