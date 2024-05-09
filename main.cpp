@@ -402,19 +402,24 @@ vector<int> extractNumbers(const string& input) //ham tra ve 1 vector id, id tro
     char ch;
     int number;
 
-    // Ð?c t?ng ký t? t? chu?i
+    // ï¿½?c t?ng kï¿½ t? t? chu?i
     while (ss >> ch) {
         if (ch == '[') {
-            // N?u g?p ký t? '[', d?c s? trong d?u '[' ']'
+            // N?u g?p kï¿½ t? '[', d?c s? trong d?u '[' ']'
             if (ss >> number) {
                 numbers.push_back(number);
-                // B? qua các ký t? còn l?i cho d?n khi g?p ký t? ']'
+                // B? qua cï¿½c kï¿½ t? cï¿½n l?i cho d?n khi g?p kï¿½ t? ']'
                 ss.ignore(numeric_limits<streamsize>::max(), ']');
             }
         }
     }
 
     return numbers;
+}
+
+bool cmpBorrowInfo(BorrowInfo a, BorrowInfo b)
+{
+	return a.getId() < b.getId();
 }
 
 void capnhatthongtinmuonsach()
@@ -438,7 +443,48 @@ void capnhatthongtinmuonsach()
 			eBookId = numbers[3];
 			BorrowInfo x(perId, bookId, eBookId);
 			x.setId(id);
-			cout << x.getId() << " " << x.getbookId() << endl;
+			v.push_back(x);
+		}
+		int id, perId, bookId, eBookId;
+		cout << "Nhap id muon sach muon sua thong tin: ";
+		cin >> id;
+		cout << "Nhap personId muon sua: ";
+		cin >> perId;
+		cout << "Nhap bookId muon sua: ";
+		cin >> bookId;
+		cout << "Nhap eBookId muon sua: ";
+		cin >> eBookId;
+		int ok = 0;
+		for(auto it = v.begin(); it != v.end(); it++)
+		{
+			if(it->getId() == id)
+			{
+				v.erase(it);
+				ok = 1;
+				break;
+			}
+		}
+		if(ok==0)
+		{
+			cout << "Khong tim thay id muon sach muon sua thong tin\n";
+		}
+		else
+		{
+			ofstream fileout("borrowInfos.txt", ios::trunc);
+			if(fileout.is_open())
+			{
+				BorrowInfo x(perId, bookId, eBookId);
+				x.setId(id);
+				v.push_back(x);
+				sort(v.begin(), v.end(), cmpBorrowInfo);
+				for(BorrowInfo i : v)
+				{
+					fileout << "[" << i.getId() << "] " << "[" << i.getpersonId() << "] " << "[" << i.getbookId() << "] " << "[" << i.geteBookId() << "]" << endl;
+				}
+				cout << "Da sua thanh cong\n";
+			}
+			else cout << "Khong the mo tep borrowInfos.txt\n";
+			fileout.close();
 		}
 	}
 	
@@ -460,7 +506,7 @@ int main()
     //    book.updateBook(idToUpdate); // Cáº­p nháº­t thÃ´ng tin cá»§a sÃ¡ch
 
     //	themthongtinmuonsach(); --> done
-    capnhatthongtinmuonsach();
+//    capnhatthongtinmuonsach();--> done
 
 //    int id = User::getNextAvailableId();
 //    string email = "example@example.com";
