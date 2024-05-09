@@ -222,57 +222,6 @@ public:
     }
 };
 
-class User{
-private:
-	int id;
-	string email;
-	string password;
-
-public:
-    User() {}
-
-    User(string email, string password){
-        this->email = email;
-        this->password = password;
-    }
-
-    void Register(){
-
-    }
-
-    Person login(){
-        return Person("HDL", "hdl@gmail.com", "Male", "25/01/2005", "Ha Noi", "000", "Admin");
-    }
-
-    void logout(){
-
-    }
-
-    int getId(){
-        return id;
-    }
-
-    void setId(int id){
-        this->id = id;
-    }
-
-    string getEmail(){
-        return email;
-    }
-
-    void setEmail(string email){
-        this->email = email;
-    }
-
-    string getPassword(){
-        return password;
-    }
-
-    void setPassword(string password){
-        this->password = password;
-    }
-};
-
 class BorrowInfo{
 private:
 	int id = 1;
@@ -282,28 +231,119 @@ private:
 
 public:
     BorrowInfo(int personId, int bookId, int eBookId){
+        // Validate dữ liệu đầu vào ...
+
         this->personId = personId;
         this->bookId = bookId;
         this->eBookId = eBookId;
-        // Cập nhật Id ...
-        // Validate các thông tin đầu vào ...
+        // Cập nhật Id
+        vector<string> ID_list = this->getInfo(0);
+        map<int, int> mp;
+        for(string ID : ID_list){
+            mp[stoi(ID)] = 1;
+        }
+        while(mp[id]){
+            ++ id;
+        }
+    }
+
+    vector<string> getInfo(int n){
+        vector<string> info;
+        string filename = "test_borrowInfos.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            info.push_back(tokens[n]);
+        }   
+        file.close();
+        return info;
+    }
+    
+    bool isValid(){
+        // Kiểm tra thông tin đã tồn tại trong file chưa ?
+        vector<string> personIds, bookIds, eBookIds;
+        string filename = "test_borrowInfos.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            personIds.push_back(tokens[1]);
+            bookIds.push_back(tokens[2]);
+            eBookIds.push_back(tokens[3]);
+        }   
+        file.close();
+        if(!personIds.empty()){
+            for(int pos = 0; pos < personIds.size(); pos ++){
+                if(this->personId == stoi(personIds[pos]) && this->bookId == stoi(bookIds[pos]) && this->eBookId == stoi(eBookIds[pos])){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     void addInfo(){
-        // Validate dữ liệu ...
-        string file_name = "users.txt";
-        ofstream file("file_name");
-        file << endl;
-        file << "[" << this->id << "] ";
-        file << "[" << this->personId << "] ";
-        file << "[" << this->bookId << "] ";
-        file << "[" << this->eBookId << "]";
-        file.close();
+        // Kiểm tra dữ liệu trước khi thêm vào file
+        if(this->isValid()){
+            cout << ">>> Them thong tin thanh cong !\n";
+            string file_name = "test_borrowInfos.txt";
+            ofstream file(file_name, ios::app);
+            file << endl;
+            file << "[" << id << "] ";
+            file << "[" << personId << "] ";
+            file << "[" << bookId << "] ";
+            file << "[" << eBookId << "]";
+            file.close();
+        }
+        else{
+            cout << ">>> Thong tin da ton tai\n";
+        }
     }
 
-    void updateInfo(){
-        // Validate dữ liệu ...
+    void updateInfo(int new_personId, int new_bookId, int new_eBookId){
+        // Validate dữ liệu trước khi cập nhật
+        BorrowInfo valid_var(new_personId, new_bookId, new_eBookId);
+        if(!valid_var.isValid()){
+            return;
+        }
+        // Cập nhật dữ liệu
+        this->personId = new_personId;
+        this->bookId = new_bookId;
+        this->eBookId = new_eBookId;
 
+        // Thay đổi trong file
+        string file_name = "test_borrowInfors.txt";
+        fstream file(file_name);
+        vector<string> lines;
+        string line;
+        while(getline(file, line)){
+            lines.push_back(line);
+        }
+        // Thay đổi dữ liệu dựa theo personId
+        vector<string> ID_list = this->getInfo(0);
+        for(auto iter = ID_list.begin(); iter != ID_list.end(); iter ++){
+            if(this->id == stoi(*iter)){
+                int line_pos = iter - ID_list.begin();
+                lines[line_pos] = "[" + to_string(this->id) + "] [" + to_string(new_personId) + "] ";
+                lines[line_pos] += "[" + to_string(new_bookId) + "] [" + to_string(new_eBookId) + "]";
+            }
+        }
+        // Đặt con trỏ về đầu tập tin để ghi lại dữ liệu
+        file.seekg(0);
+        for(const string& l : lines){
+            file << l << endl;
+        }
     }
 
     int getId(){
@@ -336,6 +376,84 @@ public:
 
     void setEbookId(int eBookId){
         this->eBookId = eBookId;
+    }
+};
+
+class User{
+private:
+	int id;
+	string email;
+	string password;
+
+public:
+    User() {}
+
+    User(string email, string password){
+        this->email = email;
+        this->password = password;
+        // Cập nhật Id
+        vector<string> ID_list = this->getInfo(0);
+        map<int, int> mp;
+        for(string ID : ID_list){
+            mp[stoi(ID)] = 1;
+        }
+        while(mp[id]){
+            ++ id;
+        }
+    }
+
+    vector<string> getInfo(int n){
+        vector<string> info;
+        string filename = "test_user.txt";
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string token;
+            vector<string> tokens;
+            while(ss >> token){
+                tokens.push_back(token.substr(1, token.size() - 2));
+            }
+            info.push_back(tokens[n]);
+        }   
+        file.close();
+        return info;
+    }
+
+    void Register(){
+
+    }
+    
+    Person login(){
+        return Person("HDL", "hdl@gmail.com", "Male", "25/01/2005", "Ha Noi", "000", "Admin");
+    }   
+
+    void logout(){
+
+    }
+
+    int getId(){
+        return id;
+    }
+
+    void setId(int id){
+        this->id = id;
+    }
+
+    string getEmail(){
+        return email;
+    }
+
+    void setEmail(string email){
+        this->email = email;
+    }
+
+    string getPassword(){
+        return password;
+    }
+
+    void setPassword(string password){
+        this->password = password;
     }
 };
 
@@ -475,7 +593,7 @@ public:
                 return;
             }
 
-            cout << "Da xoa thong tin cua cuon sach co ID = " << id << " thanh cong." << endl;
+            cout << "Da xoa thong tin cua cuon sach có ID = " << id << " thanh cong." << endl;
         } 
         else {
             // Xoá file tạm thời nếu không tìm thấy cuốn sách cần xoá
