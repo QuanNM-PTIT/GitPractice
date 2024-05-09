@@ -281,21 +281,15 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     ifstream file(filename);
     string line;
     while (getline(file, line)) {
-        size_t pos = 0;
+        stringstream ss(line);
+        string token;
         vector<string> tokens;
-        while ((pos = line.find("] [")) != string::npos) {
-            string token = line.substr(1, pos - 1);
-            tokens.push_back(token);
-            line.erase(0, pos + 2);
+
+        while (ss >> token) {
+            tokens.push_back(token.substr(1, token.size() - 2));
         }
-        if (!line.empty()) {
-            line.pop_back();
-            line.erase(0, 1);
-            tokens.push_back(line);
-        }
-        if (tokens.size() >= 3) {
-            info.push_back(tokens[n]);
-        }
+        
+        info.push_back(tokens[n]);
     }
     file.close();
     return info;

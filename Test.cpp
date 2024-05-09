@@ -2,6 +2,7 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 class BorrowInfo
 {
 private:
@@ -236,18 +237,36 @@ vector<string> getInformationFromFile(const string &filename, int n)
         vector<string> tokens;
         while ((pos = line.find("] [")) != string::npos)
         {
+=======
+vector<string> getInformationFromFile(const string& filename, int n) {
+    vector<string> info;
+    ifstream file(filename);
+    string line;
+    while (getline(file, line)) {
+        size_t pos = 0;
+        vector<string> tokens;
+        while ((pos = line.find("] [")) != string::npos) {
+>>>>>>> 16aa580899709bda64a6e32a0b26546473ae7c36
             string token = line.substr(1, pos - 1);
             tokens.push_back(token);
             line.erase(0, pos + 2);
         }
+<<<<<<< HEAD
         if (!line.empty())
         {
+=======
+        if (!line.empty()) {
+>>>>>>> 16aa580899709bda64a6e32a0b26546473ae7c36
             line.pop_back();
             line.erase(0, 1);
             tokens.push_back(line);
         }
+<<<<<<< HEAD
         if (tokens.size() >= 3)
         {
+=======
+        if (tokens.size() >= 3) {
+>>>>>>> 16aa580899709bda64a6e32a0b26546473ae7c36
             info.push_back(tokens[n]);
         }
     }
@@ -255,6 +274,7 @@ vector<string> getInformationFromFile(const string &filename, int n)
     return info;
 }
 
+<<<<<<< HEAD
 class Book
 {
 protected:
@@ -464,6 +484,21 @@ int main()
     }
     else
         cout << "Bạn không có quyền thêm thông tin sách !!!\n";
+=======
+template <class val>
+bool isExist(const val infoNeedCheck, const string& filename, int dataPos) {
+    vector<val> info = getInformationFromFile(filename, dataPos);
+    for (auto s : info) {
+        if (s == infoNeedCheck) {
+            return true;
+        }
+    }
+    return false;
+}
+int main() {
+    string check = "Emily Davis";
+    cout << isExist(check, "people.txt", 1);
+>>>>>>> 16aa580899709bda64a6e32a0b26546473ae7c36
     return 0;
 }
 
