@@ -795,7 +795,7 @@ string input(string& data) {
     scanf("\n");
     getline(cin, data);
     while (isExistAlphaOrNum(data) == false) {
-        cout    << "Nhap sai du lieu cho, yeu cau phai co it nhat 1 ky tu!" << endl
+        cout    << "Nhap sai du lieu cho, yeu cau phai co it nhat 1 ky tu hoac 1 so!" << endl
                 << "Nhap lai  " << arributeOfPerson[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
         scanf("\n");
         getline(cin, data);
@@ -939,7 +939,7 @@ int main() {
 
         if (welcome == true) {
             cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
-                    << "Welcome " << '<' << p.getRole() << '>' << endl;
+                    << "Welcome " << '<' << p.getName() << '>' << endl;
             welcome = false;
             cout << endl;
         }
