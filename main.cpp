@@ -279,14 +279,36 @@ class BorrowInfo{
         out.close();
     }
     void updateInfo(){
-        int updateId, updatePersonId, updatepersonId, updateBookId, updateEBookId;
-        cout<<"Nhap ID muon sach: ";
-        cin >> updateId >> updatePersonId >> updatepersonId >> updateBookId >> updateEBookId;
-        // ifstream in;
-        // in.open("borowInfors.txt", ios::in);
-        // string tmp;
-        // vector<B> listBorrowInfor;
-
+        int updateId, updatePersonId, updateBookId, updateEBookId;
+        cout<<"Cap nhat thong tin muon sach\n"<<"Nhap ID muon sach, ID nguoi muon, ID sach, ID Ebook: ";
+        cin >> updateId >> updatePersonId >> updateBookId >> updateEBookId;
+        cin.ignore(); 
+        ifstream in;
+        in.open("borowInfors.txt", ios::in);
+        string tmp;
+        vector<string> listBorrowInfors;
+        while(getline(in, tmp)){
+            int i = 1;
+            string id = "";
+            while(tmp[i] != ']'){
+                if(isdigit(tmp[i])) id += tmp[i];
+                i++;
+            }
+            if(stoi(id) != updateId){
+                listBorrowInfors.push_back(tmp);
+            }
+            else{
+                string update = '[' + to_string(updateId) + ']' + ' ' + '[' + to_string(updatePersonId) + ']' + ' ' + '[' + to_string(updateBookId) + ']' + ' ' + '[' + to_string(updateEBookId) + ']';
+                listBorrowInfors.push_back(update);
+            }
+        }
+        in.close();
+        ofstream out;
+        out.open("borrowInfors.txt", ios :: out);
+        for(string s : listBorrowInfors){
+            out<<s<<endl;
+        }
+        out.close();
     }
     int getid(){
         return this->id;
@@ -302,7 +324,6 @@ class BorrowInfo{
     }
 
 };
-
 
 int main() {
     cout<<"Hello world !";
