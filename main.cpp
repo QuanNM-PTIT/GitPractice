@@ -45,17 +45,16 @@ class Person{
         out.close();
     }
     void chuanHoa(){
-        // chuan hoa ten 
-        stringstream ss ( this->name );
-        string tmp;
-        string res="";
+        // chuan hoa ten
+        stringstream ss( this->name );
+        string tmp ;
+        this->name = "";
         while( ss >> tmp ){
             for( auto &x : tmp ) x = tolower( x );
             tmp[ 0 ] = toupper( tmp[ 0 ] );
-            res += tmp + " ";
+            this->name += tmp + " ";
         }
-        res.pop_back();
-        this->name = res ; 
+        this->name.pop_back();
         // chuan hoa ngay sinh
         if(this->birthdate[ 1 ] == '/') this->birthdate = "0" + this->birthdate;
         if(this->birthdate[ 4 ] == '/') this->birthdate.insert( 3 , "0" ); 
@@ -176,95 +175,6 @@ class BorrowInfo{
         return this->eBookId;
     }
 };
-
-
-// code cu cua trong chay duoc con code ben tren dag bi loi gi do khong chay duoc
-// class Person{
-//     private:
-//     int id ; 
-//     string name , email , sex , birthdate, address, phoneNumber, role;
-//     public:
-//     Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role ){
-//         this->name = name ;
-//         this->email = email;
-//         this->sex = sex ;
-//         this-> birthdate = birthdate; 
-//         this->address = address;
-//         this->phoneNumber = phoneNumber;
-//         this->role = role;
-//         ifstream in;
-//         in.open("people.txt");
-//         string tmp ;
-//         int cnt = 0 ; 
-//         while( getline( in , tmp ) )cnt ++ ; // dem so luong person
-//         in.close();
-//         this->id = cnt + 1 ; 
-//     }
-//     void addInfo(){
-//         ofstream out("people.txt", ios::app); 
-//         out << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << "]" << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']' << " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
-//         out.close();
-//     }
-//     int getId(){
-//         return this->id;
-//     }
-//     string getName(){
-//         return this->name;
-//     }
-//     string getEmail(){
-//         return this->email;
-//     }
-//     string getSex(){
-//         return this->sex;
-//     }
-//     string getBirthdate(){
-//         return this->birthdate;
-//     }
-//     string getAddress(){
-//         return this->address;
-//     }
-//     string getPhoneNumber(){
-//         return this->phoneNumber;
-//     }
-//     string getRole(){
-//         return this->role;
-//     }
-// };
- 
-// class BorrowInfo{
-//     private:
-//     int id , personId, bookId, eBookId;
-//     public:
-//     BorrowInfo( int personId, int bookId, int eBookId ){
-//         this->personId = personId ; 
-//         this->bookId = bookId ;
-//         this->eBookId = eBookId;
-//         ifstream in;
-//         in.open("borrowInfos.txt");
-//         string tmp ;
-//         int cnt = 0 ; 
-//         while( getline( in , tmp ) )cnt ++ ; // dem so luong borrowInfos
-//         in.close();
-//         this->id = cnt + 1 ;
-//     }
-//     void addInfo(){
-//         ofstream out("borrowInfos.txt", ios::app) ; 
-//         out << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]" << " " << '[' << this->eBookId << ']' << endl;
-//         out.close();
-//     }
-//     int getId(){
-//         return this->id;
-//     }
-//     int getPersonId(){
-//         return this->personId;
-//     }
-//     int getBookId(){
-//         return this->bookId;
-//     }
-//     int getEbookId(){
-//         return this->eBookId;
-//     }
-// };
  
 class BookInfor{ // dung 1 class rieng cho thong tin cua sach
  
@@ -481,7 +391,10 @@ class Users{
         
         // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
         Person login(string email, string password){ // check thong tin dang nhap
-            if(!checkUser(UserInfos(0, email, password))) cout << "nhap du thong tin!\n";
+            if(!checkUser(UserInfos(0, email, password))){
+                 cout << "nhap du thong tin!\n";
+                 return Person("", "", "", "", "", "", "");
+            }
             else{
                 ifstream ifs("people.txt");
                 if(ifs.is_open()){
@@ -580,7 +493,8 @@ void delete_Book(){ // chi admin
  
 int main()
 {
-    
+    // Person a("nguyen TIEN trong", "trongbg2692004@gmail.com", "male", "9/9/2004", "Bac Giang", "0838947749", "admin"  );
+    // a.addInfo();
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
         cout << "dang nhap - bam \"a\"\n";
