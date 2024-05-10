@@ -1,8 +1,12 @@
 #include <bits/stdc++.h>
+#include "../function/getSmallestId.cpp"
 
 using namespace std;
 
-int getSmallestID();
+const string BorrowInfosFile = "../data/borrowInfos.txt";
+const string PeopleFile = "../data/people.txt";
+const string BooksFile = "../data/books.txt";
+const string EBooksFile = "../data/ebooks.txt";
 
 class Book {
     private:
@@ -20,7 +24,7 @@ class Book {
 };
 
 Book::Book(string title, string author, int quantity){
-    this -> id = getSmallestID();
+    this -> id = getSmallestId(BooksFile);
     this -> title = title;
     this -> author = author;
     this -> quantity = quantity;
@@ -39,31 +43,6 @@ void Book::deleteBook(int bookId){
 }
 int Book::getBookID(){
     return this -> id;
-}
-
-
-int getSmallestID(){
-    vector<int> bookIdList;
-    ifstream inFile;
-    inFile.open("../books.txt");
-    string s;
-    while (getline(inFile, s)){
-        stringstream ss(s);
-        string tmp;
-        ss >> tmp;
-        int id = stoi(tmp.substr(1, tmp.size()-2));
-        bookIdList.push_back(id);
-    }
-
-    int present[bookIdList.size()] = {0};
-    for (auto id : bookIdList)
-        present[id] = 1;
-    for (int i = 1; i <= bookIdList.size(); i++){
-        if (!present[i]){
-            return i;
-        } 
-    }
-    return bookIdList.size()+1;
 }
 
 // int main(){

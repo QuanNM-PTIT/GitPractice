@@ -1,8 +1,12 @@
 #include <bits/stdc++.h>
+#include "../function/getSmallestId.cpp"
 
 using namespace std;
 
-int getSmallestId();
+const string BorrowInfosFile = "../data/borrowInfos.txt";
+const string PeopleFile = "../data/people.txt";
+const string BooksFile = "../data/books.txt";
+const string EBooksFile = "../data/ebooks.txt";
 
 class Person {
     private:
@@ -20,7 +24,7 @@ class Person {
 };
 
 Person::Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role){
-    this -> id = getSmallestId();
+    this -> id = getSmallestId(PeopleFile);
     this -> name = name;
     this -> email = email;
     this -> sex = sex;
@@ -33,8 +37,6 @@ int Person::getPersonId(){
     return this -> id;
 }
 
-
-
 // int main()
 // {
 //     // Insert code here
@@ -43,27 +45,3 @@ int Person::getPersonId(){
 //     cout << hieu.getPersonId();
 //     return 0;
 // }
-
-int getSmallestId(){
-    vector<int> peopleIdList;
-    ifstream inFile;
-    inFile.open("../people.txt");
-    string s;
-    while (getline(inFile, s)){
-        stringstream ss(s);
-        string tmp;
-        ss >> tmp;
-        int id = stoi(tmp.substr(1, tmp.size()-2));
-        peopleIdList.push_back(id);
-    }
-
-    int present[peopleIdList.size()] = {0};
-    for (auto id : peopleIdList)
-        present[id] = 1;
-    for (int i = 1; i <= peopleIdList.size(); i++){
-        if (!present[i]){
-            return i;
-        } 
-    }
-    return peopleIdList.size()+1;
-}

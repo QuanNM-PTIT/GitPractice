@@ -1,9 +1,16 @@
 #include <bits/stdc++.h>
+#include "../function/getSmallestId.cpp"
+#include "../function/getKeyId.cpp"
+#include "../function/validate.cpp"
 
 using namespace std;
 
-int getSmallestId();
-int getId(string borrow);
+const string BorrowInfosFile = "../data/borrowInfos.txt";
+const string PeopleFile = "../data/people.txt";
+const string BooksFile = "../data/books.txt";
+const string EBooksFile = "../data/ebooks.txt";
+
+bool validate(int borrowId, int personId, int bookId, int eBookId);
 
 class BorrowInfo {
     private:
@@ -13,8 +20,8 @@ class BorrowInfo {
         int eBookId;
     public:
         BorrowInfo(int personId, int bookId, int eBookId);
-        friend void addInfo(BorrowInfo newBorrowInfo);
-        friend void updateInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId);
+        friend void addBorrowInfo(BorrowInfo newBorrowInfo);
+        friend void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId);
         int getBorrowId();
         int getPersonId();
         int getBookId();
@@ -22,42 +29,57 @@ class BorrowInfo {
 };
 
 BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId){
-    this -> id = getSmallestId();
+    this -> id = getSmallestId(BorrowInfosFile);
     this -> personId = personId;
     this -> bookId = bookId;
     this -> eBookId = eBookId;
 }
-void addInfo(BorrowInfo newBorrowInfo){
-    ofstream outFile("../borrowInfos.txt", ios::app);
-    outFile << "[" << newBorrowInfo.getBorrowId() << "] ";
-    outFile << "[" << newBorrowInfo.getPersonId() << "] ";
-    outFile << "[" << newBorrowInfo.getBookId() << "] ";
-    outFile << "[" << newBorrowInfo.getEBookId() << "]\n";
-    outFile.close();
+void addBorrowInfo(BorrowInfo newBorrowInfo){
+    int borrowId = newBorrowInfo.getBorrowId();
+    int personId = newBorrowInfo.getPersonId();
+    int bookId = newBorrowInfo.getBookId();
+    int eBookId = newBorrowInfo.getEBookId();
+    if (validate(borrowId, personId, bookId, eBookId)){
+        ofstream outFile(BorrowInfosFile, ios::app);
+        outFile << "[" << borrowId << "] ";
+        outFile << "[" << personId << "] ";
+        outFile << "[" << bookId << "] ";
+        outFile << "[" << eBookId << "]\n";
+        outFile.close();
+    }
+    else {
+        cout << "Invalid Data!\n";
+    }
     return;
 }
-void updateInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId){
-    vector<string> borrowList;
-    ifstream inFile("../borrowInfos.txt");
-    string tmp;
-    while (getline(inFile, tmp)){
-        borrowList.push_back(tmp);
-    }
-    for (int i = 0; i < borrowList.size(); i++){
-        int borrowId = getId(borrowList[i]);
-        if (borrowId == updateBorrowId){
-            borrowList[i] = "[" + to_string(updateBorrowId) + "] ";
-            borrowList[i] += "[" + to_string(newPersonId) + "] ";
-            borrowList[i] += "[" + to_string(newBookId) + "] ";
-            borrowList[i] += "[" + to_string(newEBookId) + "]";
-            break;
+void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId){
+    if (validateId(updateBorrowId, BorrowInfosFile) && validate(-1, newPersonId, newBookId, newEBookId)){
+        vector<string> borrowList;
+        ifstream inFile(BorrowInfosFile);
+        string tmp;
+        while (getline(inFile, tmp)){
+            borrowList.push_back(tmp);
         }
+        inFile.close();
+        for (int i = 0; i < borrowList.size(); i++){
+            int borrowId = getKeyId(borrowList[i]);
+            if (borrowId == updateBorrowId){
+                borrowList[i] = "[" + to_string(updateBorrowId) + "] ";
+                borrowList[i] += "[" + to_string(newPersonId) + "] ";
+                borrowList[i] += "[" + to_string(newBookId) + "] ";
+                borrowList[i] += "[" + to_string(newEBookId) + "]";
+                break;
+            }
+        }
+        ofstream outFile(BorrowInfosFile);
+        for (int i = 0; i < borrowList.size(); i++){
+            outFile << borrowList[i] << "\n";
+        }
+        outFile.close();
+    }   
+    else {
+        cout << "Invalid Data!!\n";
     }
-    ofstream outFile("../borrowInfos.txt");
-    for (int i = 0; i < borrowList.size(); i++){
-        outFile << borrowList[i] << "\n";
-    }
-    outFile.close();
     return;
 }
 int BorrowInfo::getBorrowId(){
@@ -73,47 +95,43 @@ int BorrowInfo::getEBookId(){
     return this -> eBookId;
 }
 
-// int main(){
-//     // Insert code here
-//     cout << "Hello BorrowInfo\n";
-//     BorrowInfo borrow1 = BorrowInfo(1, 1, 1);
-//     addInfo(BorrowInfo(11, 12, 13));
-//     cout << borrow1.getBorrowId() << "\n";
-//     updateInfor(10, 1, 2, 5);
-//     return 0;
-// }
+int main(){
+    // Insert code here
+    cout << "Hello BorrowInfo\n";
+    int borrowId = 1;
+    int personId = 1;
+    int bookId = 1;
+    int eBookId = 1;
 
-int getSmallestId(){
-    vector<int> borrowIdList;
-    ifstream inFile("../borrowInfos.txt");
-    if (!inFile.good()) {
-        cout << "Khong the mo tep tin." << endl;
-        return -1;
+    if (validate(-1, 1, 1, 1)){
+        cout << "Khoi tao Thanh cong!\n";
+        BorrowInfo newBorrow = BorrowInfo(personId, bookId, eBookId);
+        cout << "BorrowID: " << newBorrow.getBorrowId() << "\n";
+        addBorrowInfo(newBorrow);
+        updateBorrowInfor(11, 2, 3, 4);
     }
-    string s;
-    while (getline(inFile, s)){
-        stringstream ss(s);
-        string tmp;
-        ss >> tmp;
-        int id = stoi(tmp.substr(1, tmp.size()-2));
-        borrowIdList.push_back(id);
+    else {
+        cout << "Hay nhap lai thong tin!!\n";
     }
-
-    int present[borrowIdList.size()] = {0};
-    for (auto id : borrowIdList){
-        present[id] = 1;
-    }
-    for (int i = 1; i <= borrowIdList.size(); i++){
-        if (!present[i]){
-            return i;
-        } 
-    }
-    return borrowIdList.size()+1;
+    return 0;
 }
-int getId(string borrow){
-    stringstream ss(borrow);
-    string tmp;
-    ss >> tmp;
-    int id = stoi(tmp.substr(1, tmp.size()-2));
-    return id;
+
+bool validate(int borrowId, int personId, int bookId, int eBookId){
+    if (validateId(borrowId, BorrowInfosFile)){
+        cout << "ID muon sach da ton tai!\n";
+        return false;
+    }
+    if (!validateId(personId, PeopleFile)){
+        cout << "ID nguoi muon sach khong hop le!\n";
+        return false;
+    }
+    if (!validateId(bookId, BooksFile)){
+        cout << "ID sach khong hop le!\n";
+        return false;
+    }
+    if (!validateId(eBookId, EBooksFile)){
+        cout << "ID sach dien tu khong hop le!\n";
+        return false;
+    }
+    return true;
 }

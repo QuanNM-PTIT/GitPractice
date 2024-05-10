@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "./Book.cpp"
+#include "../function/getSmallestId.cpp"
 
 using namespace std;
 
