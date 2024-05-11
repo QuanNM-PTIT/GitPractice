@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "iosfwd": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "array": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp"
     }
 }
