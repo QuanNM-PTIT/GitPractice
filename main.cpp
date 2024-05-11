@@ -292,6 +292,7 @@ class Users{ // Làm vc với users.txt
         }
 
     public:
+
         Users(){
             ifstream ifs("users.txt");
 
@@ -370,61 +371,66 @@ class Users{ // Làm vc với users.txt
 
 
         //Kiem tra thong tin dang nhap , trả ve Person voi email tuong ung
-        Person login(User &Login,string email, string pw){ // check thong tin dang nhap
+        Person login(User &Login,string email, string pw){ 
+            // check thong tin dang nhap
+            // string email, pw;
+            // cout<<"Nhap email cua ban: "; cin>>email;
+            // cout<<"Nhap password: "; cin>>pw;
             email = Login.getEmail();
             pw = Login.getPassWord();
-            if(!checkUser(Login)) cout << "nhap du thong tin!\n";
+            if(!checkUser(Login)) cout << "Chua nhap du thong tin!\n";
             else{
-                //Kiem tra thong tin dang nhap (Your profile - User)
-                ifstream ifs("people.txt");
-                if(ifs.is_open()){
-                    string line;
-                    while(getline(ifs, line)){
-                        int id;
-                        string name, emailPerson , sex, birthday, address, phoneNumber, role;
-                        char s;
-                        ifs >> s >> id >> s >> s;
-                        getline(ifs, name, ']');
-                        ifs >> s;
-                        getline(ifs, emailPerson, ']');
-                        ifs >> s;
-                        getline(ifs, sex, ']');
-                        ifs >> s;
-                        getline(ifs, birthday, ']');
-                        ifs >> s;
-                        getline(ifs, address, ']');
-                        ifs >> s;
-                        getline(ifs, phoneNumber, ']');
-                        ifs >> s;
-                        getline(ifs, role, ']');
+                bool check = false;
+                for(auto s : dsUsers){
+                    if(email == s.getEmail()){
+                        if(pw != s.getPassWord()){
+                            cout<<"Mat khau khong dung !\n";
+                            return Person("","","","","","",""); // Sai du lieu / du lieu trong
+                        }
+                        else{
+                            cout<<"Dang nhap thanh cong !\n";
 
-                        if(emailPerson == email){
-                            ifs.close();
-                            return Person(name,emailPerson,sex,birthday,address,phoneNumber,role);
+                            // Your Profile
+                            ifstream ifs("people.txt");
+                            if(ifs.is_open()){
+                                string line;
+                                while(getline(ifs, line)){
+                                    int id;
+                                    string name, emailPerson , sex, birthday, address, phoneNumber, role;
+                                    char s;
+                                    ifs >> s >> id >> s >> s;
+                                    getline(ifs, name, ']');
+                                    ifs >> s;
+                                    getline(ifs, emailPerson, ']');
+                                    ifs >> s;
+                                    getline(ifs, sex, ']');
+                                    ifs >> s;
+                                    getline(ifs, birthday, ']');
+                                    ifs >> s;
+                                    getline(ifs, address, ']');
+                                    ifs >> s;
+                                    getline(ifs, phoneNumber, ']');
+                                    ifs >> s;
+                                    getline(ifs, role, ']');
+
+                                    if(emailPerson == email){
+                                        ifs.close();
+                                        check = true;
+                                        cout<<"Welcome "<<name<<" !\n";
+                                        return Person(name,emailPerson,sex,birthday,address,phoneNumber,role);
+                                    }
+                                }
+                            }
+                            if(!check){
+                                ifs.close();
+                                return Person("","","","","","",""); // Chua co du lieu trong people.txt
+                            }
                         }
                     }
                 }
-
-        }   
-
-        void LogIn(Person &Info, Users &Login, string email, string pw){
-            bool check = false;
-            for(auto s : dsUsers){
-                if(email == s.getEmail()){
-                    if(pw != s.getPassWord()){
-                        cout<<"Mat khau khong dung !\n";
-                        return;
-                    }
-                    else{
-                        Info = Login.login(Login,email,pw);
-                        cout<<"Dang nhap thanh cong !\n";
-                        cout<<"Welcome "<<Info.getName()<<"!\n";
-                        check = true;
-                        break;
-                    }
-                }
-            }
+            }   
         }
+
 
         //Dang xuat
         Person logout(Person &logOutUser){
@@ -521,8 +527,8 @@ class BorrowInfo{
         int geteBookId(){
             return this->eBookId;
         }
-
 };
+
 
 int main() {
     cout<<"Hello world !";
