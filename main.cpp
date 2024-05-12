@@ -188,25 +188,22 @@ private:
         address, phoneNumber, role;
 
 public:
-    Person(string, string, string, string, string, string, string);
-    string getName() const { return name; }    // Phương thức để lấy tên
-    void logout() { /* Phương thức logout */ } // Phương thức logout
-};
+    Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role)
+        : id(id), name(name), email(email), sex(sex), birthdate(birthdate), address(address), phoneNumber(phoneNumber), role(role) {}
 
-Person::Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role)
-{
-    this->name = name;
-    this->email = email;
-    this->sex = sex;
-    this->birthdate = birthdate;
-    this->address = address;
-    this->phoneNumber = phoneNumber;
-    this->role = role;
-}
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getEmail() const { return email; }
+    string getSex() const { return sex; }
+    string getBirthdate() const { return birthdate; }
+    string getAddress() const { return address; }
+    string getPhoneNumber() const { return phoneNumber; }
+    string getRole() const { return role; }
+};
 
 // End Person
 
-// Begin Users
+// Begin User
 class User
 {
 private:
@@ -217,7 +214,8 @@ private:
 
 public:
     User(int _id, const string &_email, const string &_password) : id(_id), email(_email), password(_password), isLoggedIn(false) {}
-
+    string getEmail() const { return email; }
+    string getPassword() const { return password; }
     // check email trùng
     bool validateEmail()
     {
@@ -286,8 +284,100 @@ public:
         return 1; // Trả về 1 nếu không mở được file
     }
 };
-// End Users
+// End User
+class Users
+{
+private:
+    vector<User> users;
 
+    bool checkUser(const User &user)
+    {
+        for (const auto &u : users)
+        {
+            if (u.getEmail() == user.getEmail() && u.getPassword() == user.getPassword())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+public:
+    Users()
+    {
+        ifstream ifs("users.txt");
+        if (ifs.is_open())
+        {
+            string line;
+            while (getline(ifs, line))
+            {
+                stringstream ss(line);
+                char s;
+                int id;
+                string email, password;
+                ss >> s >> id >> s >> s;
+                getline(ss, email, ']');
+                ss >> s;
+                getline(ss, password, ']');
+                users.push_back(User(id, email, password));
+            }
+            ifs.close();
+        }
+    }
+
+    Person login(User &login, const string &email, const string &password)
+    {
+        if (!checkUser(login))
+        {
+            cout << "Error !" << endl;
+            return Person(0, "", "", "", "", "", "", "");
+        }
+
+        ifstream ifs("people.txt");
+        if (!ifs.is_open())
+        {
+            cout << "Can not open file people.txt." << endl;
+            return Person(0, "", "", "", "", "", "", "");
+        }
+
+        string line;
+        while (getline(ifs, line))
+        {
+            stringstream ss(line);
+            char s;
+            int id;
+            string emailPerson, name, sex, birthdate, address, phoneNumber, role;
+            ss >> s >> id >> s;
+            getline(ss, name, ']');
+            ss >> s;
+            getline(ss, emailPerson, ']');
+            ss >> s;
+            getline(ss, sex, ']');
+            ss >> s;
+            getline(ss, birthdate, ']');
+            ss >> s;
+            getline(ss, address, ']');
+            ss >> s;
+            getline(ss, phoneNumber, ']');
+            ss >> s;
+            getline(ss, role, ']');
+            if (emailPerson == email)
+            {
+                ifs.close();
+                cout << "Login successfully!" << endl;
+                return Person(id, name, emailPerson, sex, birthdate, address, phoneNumber, role);
+            }
+        }
+        ifs.close();
+        cout << "Invalid!" << endl;
+        return Person(0, "", "", "", "", "", "", "");
+    }
+    void logout()
+    {
+
+        cout << "Logout successful." << endl;
+    }
+};
 // Begin BorrowInfo
 class BorrowInfo
 {
@@ -321,41 +411,6 @@ void BorrowInfo::addInfo()
     fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
             << " " << '[' << this->eBookId << ']' << endl;
     fileout.close();
-}
-
-Person login()
-{
-    if (!validateEmail() || !validatePassword())
-    {
-        cout << "Invalid email or password." << endl;
-        return Person("", "", "", "", "", "", ""); // Return empty Person object
-    }
-
-    ifstream ifs("users.txt");
-    if (ifs.is_open())
-    {
-        string line;
-        while (getline(ifs, line))
-        {
-            int userId;
-            string userEmail, userPassword;
-            char c;
-            ifs >> c >> userId >> c >> c;
-            getline(ifs, userEmail, ']');
-            ifs >> c;
-            getline(ifs, userPassword, ']');
-
-            if (userEmail == email && userPassword == password)
-            {
-                ifs.close();
-                isLoggedIn = true;
-                return Person(id, email, ""); // Assuming Person constructor takes ID, email, and role
-            }
-        }
-        ifs.close();
-    }
-    cout << "Invalid email or password." << endl;
-    return Person("", "", "", "", "", "", ""); // Return empty Person object
 }
 
 void themthongtinmuonsach()
@@ -476,65 +531,76 @@ void capnhatthongtinmuonsach()
 // Ket thuc khai bao cac ham thao tac
 int main()
 {
-    // Book book;
-    // book.addBook(); // Thêm một sách vào file books.txt
-    // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
+    Book book;
+    book.addBook(); // Thêm một sách vào file books.txt
+    // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
-    // EBook ebook;
-    // ebook.addBook(); // Thêm một Ebook vào file books.txt
-    //    int idToUpdate;
-    //    cout << "Enter ID want to update: ";
-    //    cin >> idToUpdate;
-    //    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+    EBook ebook;
+    ebook.addBook(); // Thêm một Ebook vào file books.txt
+    int idToUpdate;
+    cout << "Enter ID want to update: ";
+    cin >> idToUpdate;
+    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
 
-    //	themthongtinmuonsach(); --> done
+    // themthongtinmuonsach();
+    // -- > done
 
-    // int id = User::getNextAvailableId();
-    // string email = "example@example.com";
-    // string password = "PTITd22@";
-    // User user(id, email, password);
-    // user.registerUser();
-    // cout << "Register Successfully" << endl;
+    int id = User::getNextAvailableId();
+    string email = "example@example.com";
+    string password = "PTITd22@";
+    User user(id, email, password);
+    user.registerUser();
+    cout << "Register Successfully" << endl;
 
-    //    capnhatthongtinmuonsach();--> done
+    // capnhatthongtinmuonsach();
+    // -- > done
 
-    //    int id = User::getNextAvailableId();
-    //    string email = "example@example.com";
-    //    string password = "PTITd22@";
-    //    User user(id, email, password);
-    //    user.registerUser();
-    //    cout << "Register Successfully" << endl;
+    int id = User::getNextAvailableId();
+    string email = "example@example.com";
+    string password = "PTITd22@";
+    User user(id, email, password);
+    user.registerUser();
+    cout << "Register Successfully" << endl;
 
-    return 0;
-    //    int idToUpdate;
-    //    cout << "Enter ID want to update: ";
-    //    cin >> idToUpdate;
-    //    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
+    int idToUpdate;
+    cout << "Enter ID want to update: ";
+    cin >> idToUpdate;
+    book.updateBook(idToUpdate); // Cập nhật thông tin của sách
 
-    //	themthongtinmuonsach(); --> done
+    // themthongtinmuonsach();
+    // -- > done
 
-    // Tạo một đối tượng User
+    //  Tạo một đối tượng User
     User user1(1, "john.smith@gmail.com", "pass1234");
     User user2(2, "jane.doe@gmail.com", "abcD1234");
     User user3(3, "alice.johnson@gmail.com", "MyP@ssw0rd");
     User user4(4, "example@example.com", "PTITd22@");
 
-    // Đăng nhập người dùng
-    Person currentUser = user4.login();
-    if (currentUser.getName() != "")
-    {
-        cout << "Logged in as " << currentUser.getName() << endl;
-        // Thực hiện các hoạt động khi đăng nhập thành công
-    }
-    else
-    {
-        cout << "Failed to login." << endl;
-        return 1; // Thoát chương trình với mã lỗi
-    }
+    // Kiểm tra thông tin đăng nhập và trả về Person với email tương ứng.
 
-    // Thực hiện các hoạt động khác ở đây với người dùng đã đăng nhập
+    Users users;
+    string email, password;
+    cout << "Nhap email: ";
+    cin >> email;
+    cout << "Nhap mat khau: ";
+    cin >> password;
 
-    // Đăng xuất người dùng
-    currentUser.logout();
-    cout << "Logged out." << endl;
+    User loginUser(0, email, password);
+    Person loggedInPerson = users.login(loginUser, email, password);
+
+    if (loggedInPerson.getId() != 0)
+    {
+        cout << "Thong tin cua ban:" << endl;
+        cout << "ID: " << loggedInPerson.getId() << endl;
+        cout << "Ten: " << loggedInPerson.getName() << endl;
+        cout << "Email: " << loggedInPerson.getEmail() << endl;
+        cout << "Gioi tinh: " << loggedInPerson.getSex() << endl;
+        cout << "Ngay sinh: " << loggedInPerson.getBirthdate() << endl;
+        cout << "Dia chi: " << loggedInPerson.getAddress() << endl;
+        cout << "So dien thoai: " << loggedInPerson.getPhoneNumber() << endl;
+        cout << "Vai tro: " << loggedInPerson.getRole() << endl;
+    }
+    // Đăng xuất
+    users.logout();
+    return 0;
 }
