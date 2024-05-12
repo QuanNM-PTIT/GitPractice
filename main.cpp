@@ -268,6 +268,8 @@ class Person{
 		
 	public:
 		Person(string, string, string, string, string, string, string);
+        int getNextAvailableId();
+        bool addPerson();
 };
 
 Person::Person(string name, string email, string sex, string birthday, string address, string phoneNumber, string role)
@@ -275,10 +277,46 @@ Person::Person(string name, string email, string sex, string birthday, string ad
     this->name = name;
     this->email = email;
     this->sex = sex;
-    this->birthdate = birthdate;
+    this->birthdate = birthday;
     this->address = address;
     this->phoneNumber = phoneNumber;
     this->role = role;
+    this->id = getNextAvailableId();
+}
+
+int Person::getNextAvailableId()
+{
+    ifstream file("people.txt");
+    if (file.is_open())
+    {
+        int lineCount = 0;
+        string line;
+        while (getline(file, line))
+        {
+            lineCount++;
+        }
+        file.close();
+        return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+    }
+    return 1; // Trả về 1 nếu không mở được file
+}
+
+bool Person::addPerson()
+{
+	ofstream fileout("people.txt", ios::app);
+	if(fileout.is_open())
+	{
+		fileout << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << ']'
+        << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']'
+		<< " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
+    	fileout.close();
+    	return true;
+	}
+	else
+	{
+		return false;
+	}
+	fileout.close();
 }
 
 // End Person
@@ -291,7 +329,7 @@ private:
 
 public:
     BorrowInfo(int, int, int);
-    void addInfo();
+    bool addInfo();
     int getNextAvailableId();
     void setId(int);
     void setpersonId(int);
@@ -310,12 +348,19 @@ BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
     this->eBookId = eBookId;
 }
 
-void BorrowInfo::addInfo()
+bool BorrowInfo::addInfo()
 {
     ofstream fileout("borrowInfos.txt", ios::app);
-    fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
+    if(fileout.is_open())
+    {
+    	id = getNextAvailableId();
+    	fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
             << " " << '[' << this->eBookId << ']' << endl;
-    fileout.close();
+    	fileout.close();
+    	return true;
+    	fileout.close();
+	}
+	else return false;
 }
 
 int BorrowInfo::getNextAvailableId()
@@ -390,7 +435,6 @@ void themthongtinmuonsach()
     cout << "Nhap id quyen sach dien tu duoc muon: ";
     cin >> eBookId;
     BorrowInfo x(persionId, bookId, eBookId);
-    x.setId(x.getNextAvailableId());
     x.addInfo();
 }
 
@@ -504,7 +548,30 @@ void Signup()
 	bool check = a.registerUser();
 	if(check)
 	{
-		cout << "Dang ky thanh cong\n";
+		string name, email, sex, birthday, address, phoneNumber, role;
+		cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
+		cout << "Nhap Ho va ten: \n";
+		scanf("\n");
+		getline(cin, name);
+		cout << "Nhap email: \n";
+		cin >> email;
+		cout << "Nhap gioi tinh: \n";
+		cin >> sex;
+		cout << "Nhap ngay thang nam sinh: \n";
+		cin >> birthday;
+		cout << "Nhap dia chi noi o: \n";
+		scanf("\n");
+		getline(cin, address);
+		cout << "Nhap so dien thoai: \n";
+		cin >> phoneNumber;
+		role = "User";
+		Person a(name, email, sex, birthday, address, phoneNumber, role);
+		bool check = a.addPerson();
+		if(check)
+		{
+			cout << "Them thong tin thanh cong\n";
+		}
+		else cout << "Khong the mo tep people.txt de them thong tin\n";
 	}
 	return;
 }
