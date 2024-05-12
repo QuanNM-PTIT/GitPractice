@@ -386,7 +386,7 @@ private:
 
 public:
     BorrowInfo(int, int, int);
-    void addInfo();
+    bool addInfo();
     int getNextAvailableId();
     void setId(int);
     void setpersonId(int);
@@ -405,12 +405,19 @@ BorrowInfo::BorrowInfo(int personId, int bookId, int eBookId)
     this->eBookId = eBookId;
 }
 
-void BorrowInfo::addInfo()
+bool BorrowInfo::addInfo()
 {
     ofstream fileout("borrowInfos.txt", ios::app);
-    fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
+    if(fileout.is_open())
+    {
+    	id = getNextAvailableId();
+    	fileout << '[' << this->id << ']' << " " << '[' << this->personId << ']' << " " << '[' << this->bookId << "]"
             << " " << '[' << this->eBookId << ']' << endl;
-    fileout.close();
+    	fileout.close();
+    	return true;
+    	fileout.close();
+	}
+	else return false;
 }
 
 void themthongtinmuonsach()
@@ -423,7 +430,6 @@ void themthongtinmuonsach()
     cout << "Nhap id quyen sach dien tu duoc muon: ";
     cin >> eBookId;
     BorrowInfo x(persionId, bookId, eBookId);
-    x.setId(x.getNextAvailableId());
     x.addInfo();
 }
 
@@ -528,12 +534,119 @@ void capnhatthongtinmuonsach()
     filein.close();
 }
 
+void Signup()
+{
+	string userName, password;
+	cout << "Nhap userName: \n";
+	cin >> userName;
+	cout << "Nhap password: \n";
+	cin >> password;
+	User x(0,userName,password);
+	int id = x.getNextAvailableId();
+	User a(id, userName, password);
+	bool check = a.registerUser();
+	if(check)
+	{
+		string name, email, sex, birthday, address, phoneNumber, role;
+		cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
+		cout << "Nhap Ho va ten: \n";
+		scanf("\n");
+		getline(cin, name);
+		cout << "Nhap email: \n";
+		cin >> email;
+		cout << "Nhap gioi tinh: \n";
+		cin >> sex;
+		cout << "Nhap ngay thang nam sinh: \n";
+		cin >> birthday;
+		cout << "Nhap dia chi noi o: \n";
+		scanf("\n");
+		getline(cin, address);
+		cout << "Nhap so dien thoai: \n";
+		cin >> phoneNumber;
+		role = "User";
+		Person a(name, email, sex, birthday, address, phoneNumber, role);
+		bool check = a.addPerson();
+		if(check)
+		{
+			cout << "Them thong tin thanh cong\n";
+		}
+		else cout << "Khong the mo tep people.txt de them thong tin\n";
+	}
+	return;
+}
+
 // Ket thuc khai bao cac ham thao tac
+
+
+
+// Start bien toan cuc
+char option;
+bool active;
+
+// End bien toan cuc
 int main()
 {
     Book book;
     book.addBook(); // Thêm một sách vào file books.txt
     // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
+	while(true)
+	{
+		cout << "dang nhap - bam \"a\"\n";
+        cout << "dang ki - bam \"b\"\n";
+        cout << "thoat chuong trinh - bam \"r\"\n";
+        cin >> option;
+        if(option == 'r') return 0;
+	    if(option == 'b'){
+	        Signup();
+	    }
+        if(option == 'a'){
+            //Dang nhap
+            while(active){
+                cout << "CHON CAC CHUC NANG:\n";
+                cout << "bam \"c\" de them sach - quyen cua admin\n";
+                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
+                cout << "bam \"e\" de xoa sach - quyen cua admin\n";
+                cout << "bam \"f\" de muon sach\n";
+                cout << "bam \"g\" de tra sach\n";
+                cout << "bam \"h\" de hien thi tat ca sach\n";
+                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n";
+                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
+                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n";
+                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
+                cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi - quyen cua admin\n";
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n";
+                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
+                cout << "bam \"q\" de dang suat\n";
+                cout << "bam \"r\" de thoat chuong trinh\n";
+                cout << endl;
+                cin >> option;
+                if(option == 'r') return 0; // dang ki
+                if(option == 'q') break; // dang xuat
+//                if(option == 'c')
+//                if(option == 'e')
+                // if(option == 'f')
+                // if(option == 'g')
+                // if(option == 'h')
+                // if(option == 'i')
+                // if(option == 'j')
+                // if(option == 'k')
+                // if(option == 'm')
+                // if(option == 'n')
+                // if(option == 'o')
+                // if(option == 'p')
+            }
+        } 
+	}
+	
+	
+	
+	
+	
+	
+	
+//    Book book;
+    // book.addBook(); // Thêm một sách vào file books.txt
+    // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
 
     EBook ebook;
     ebook.addBook(); // Thêm một Ebook vào file books.txt
