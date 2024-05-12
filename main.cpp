@@ -45,17 +45,16 @@ class Person{
         out.close();
     }
     void chuanHoa(){
-        // chuan hoa ten 
-        stringstream ss ( this->name );
-        string tmp;
-        string res="";
+        // chuan hoa ten
+        stringstream ss( this->name );
+        string tmp ;
+        this->name = "";
         while( ss >> tmp ){
             for( auto &x : tmp ) x = tolower( x );
             tmp[ 0 ] = toupper( tmp[ 0 ] );
-            res += tmp + " ";
+            this->name += tmp + " ";
         }
-        res.pop_back();
-        this->name = res ; 
+        this->name.pop_back();
         // chuan hoa ngay sinh
         if(this->birthdate[ 1 ] == '/') this->birthdate = "0" + this->birthdate;
         if(this->birthdate[ 4 ] == '/') this->birthdate.insert( 3 , "0" ); 
@@ -176,38 +175,43 @@ class BorrowInfo{
         return this->eBookId;
     }
 };
-
+ 
 class BookInfor{ // dung 1 class rieng cho thong tin cua sach
-
+ 
     private:
         int id;
         string title;
         string author;
         int quantity;
-
+ 
     public:
-
+ 
         BookInfor(int id, string title, string author, int quantity) : id(id), title(title), author(author), quantity(quantity) {}
-
+ 
         int getId() {return id;} // lay ra id
         string getTitle() {return title;} // lay ra title
         string getAuthor() {return author;} // lay ra author
         int getQuantity() {return quantity;} // lay ra quantity
 };
+ 
+bool cmp(BookInfor a, BookInfor b){ // sap xep theo thu tu tu be den lon
+    return a.getId() < b.getId();
+}
 
 class Books{ // class chua nhung thuoc tinh theo yeu cau
 
     private:
 
-        vector<BookInfor> dsBooks ;
+        vector<BookInfor> dsBooks;
+
 
         int getNextId(){
-            if(dsBooks.empty())  return 1;
-            return dsBooks.size() + 1;
+            if(dsBooks.empty()) return 1;
+            return dsBooks[dsBooks.size() - 1].getId() + 1;
         }
 
-        bool checkBook(BookInfor &Books){
-            if(Books.getTitle().empty() || Books.getAuthor().empty() || Books.getQuantity() <= 0)
+        bool checkBook(BookInfor &Bookcheck){
+            if(Bookcheck.getTitle().empty() || Bookcheck.getAuthor().empty() || Bookcheck.getQuantity() <= 0)
                 return false;
             return true;
         }
@@ -232,23 +236,29 @@ class Books{ // class chua nhung thuoc tinh theo yeu cau
                     dsBooks.push_back(BookInfor(id, title, author, quantity));
                 }
                 ifs.close();
+                sort(dsBooks.begin(), dsBooks.end(), cmp);
             }
         }
 
-        void AddBook(BookInfor &Books){ // chi user co tai khoan admin moi su dung duoc
-            if(!checkBook(Books)){
+        void Sx_dsBooks(){
+            sort(dsBooks.begin(), dsBooks.end(), cmp);
+        }
+
+        void AddBook(BookInfor &addBook){ // chi user co tai khoan admin moi su dung duoc
+            if(!checkBook(addBook)){
                 cout << "thong tin sach con thieu! \n";
                 return;
             }
             else{
                 int id = getNextId();
-                string title = Books.getTitle();
-                string author = Books.getAuthor();
-                int quantity = Books.getQuantity();
+                string title = addBook.getTitle();
+                string author = addBook.getAuthor();
+                int quantity = addBook.getQuantity();
                 dsBooks.push_back(BookInfor(id, title, author, quantity)); // them data vao vector
-                ofstream ofs("books.txt", ios::app) ; 
+                ofstream ofs("books.txt");
                 if(ofs.is_open()){
-                    ofs << '[' << id << ']' << ' ' << '[' << title << ']' << ' ' << '[' << author << ']' << ' ' << '[' << quantity << ']' << endl;
+                    for(auto x : dsBooks)
+                        ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << endl;
                     ofs.close();
                     cout << "sach duoc them vao thanh cong!\n";
                 } 
@@ -306,10 +316,6 @@ class Books{ // class chua nhung thuoc tinh theo yeu cau
             }
         }
 };
-
-bool cmp(BookInfor a, BookInfor b){ // sap xep theo thu tu tu be den lon
-    return a.getId() < b.getId();
-}
 
 class UserInfos{
     private:
@@ -385,7 +391,10 @@ class Users{
         
         // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
         Person login(string email, string password){ // check thong tin dang nhap
-            if(!checkUser(UserInfos(0, email, password))) cout << "nhap du thong tin!\n";
+            if(!checkUser(UserInfos(0, email, password))){
+                 cout << "nhap du thong tin!\n";
+                 return Person("", "", "", "", "", "", "");
+            }
             else{
                 ifstream ifs("people.txt");
                 if(ifs.is_open()){
@@ -431,15 +440,15 @@ class Users{
 
 // khai bao cac bien he thong
 Users acesstUsers; // class he thong => khai bao 1 lan
-Books acesstUsersBooks;
+Books acesstBooks;
 Person infoUser("", "", "", "", "", "", "");
 bool checkInfoUser; // check xem dang nhap thanh cong khong?
 char option; // cac thao tac khi dang nhap thanh cong
+ 
 
-
-
+ 
 // funtion chuc nang
-
+ 
 void Login(){
     checkInfoUser = false;
     // infoUser = Person("", "", "", "", "", "", ""); // moi khi dang nhap lai tu dau
@@ -454,25 +463,48 @@ void Login(){
         cout << "vui long dang ki tai khoan!\n";
     }
     else{
-        cout << "Welcome \n" << infoUser.getName() << endl;
+        cout << "Welcome " << infoUser.getName() << '\n' << endl;
         checkInfoUser = true;
     }
 }
 
+void add_Book(){ // chi admin
+    cout << "nhap thong tin cuon sach muon them\n";
+    int id = 0;
+    string name, author;
+    int quantity;
+    cout << "nhap ten sach:\n";
+    cin.ignore();
+    getline(cin, name);
+    cout << "nhap tac gia:\n";
+    getline(cin, author);
+    cout << "nhap so luong:\n";
+    cin >> quantity;
+    BookInfor add(id, name, author, quantity);
+    acesstBooks.AddBook(add);
+}
+
+void delete_Book(){ // chi admin
+    int id;
+    cout << "nhap id cua sach muon xoa:\n";
+    cin >> id;
+    acesstBooks.deleteBook(id);
+}
+ 
 int main()
 {
-
-    // freopen("output.txt", "w", stdout);
-
+    // Person a("nguyen TIEN trong", "trongbg2692004@gmail.com", "male", "9/9/2004", "Bac Giang", "0838947749", "admin"  );
+    // a.addInfo();
+    acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
         cout << "dang nhap - bam \"a\"\n";
         cout << "dang ki - bam \"b\"\n";
         cout << "thoat chuong trinh - bam \"r\"\n";
         cin >> option;
         if(option == 'r') return 0;
-        if(option == 'b'){
-            // code thu tuc dang ki
-        }
+        // if(option == 'b'){
+        //     // code thu tuc dang ki
+        // }
         if(option == 'a'){
             Login();
             while(checkInfoUser){
@@ -496,9 +528,21 @@ int main()
                 cin >> option;
                 if(option == 'r') return 0; // dang ki
                 if(option == 'q') break; // dang xuat
-                // if(option == 'c')
+                if(option == 'c'){
+                    if(infoUser.getRole() == "Admin") add_Book();
+                    else{
+                        cout << "ban khong phai admin!\n";
+                        cout << "option khac:\n";
+                    }
+                }
                 // if(option == 'd')
-                // if(option == 'e')
+                if(option == 'e'){
+                    if(infoUser.getRole() == "Admin") delete_Book();
+                    else{
+                        cout << "ban khong phai admin!\n";
+                        cout << "option khac:\n";
+                    }
+                }
                 // if(option == 'f')
                 // if(option == 'g')
                 // if(option == 'h')
@@ -512,8 +556,8 @@ int main()
             }
         }
     }
-    
-
+ 
+ 
     // Books test1;
     // Users test2;
  
@@ -522,7 +566,7 @@ int main()
     // test1.AddBook(info1);
  
     // // test updateBook => oke
-    // BookInfor info2(10, "To Kill a Mockingbird", "Harper Lee", 2);
+    // BookInfor info2(17, "To Kill a Mockingbird", "Harper Lee", 2);
     // test1.updateBook(info2);
  
     // // test getBooks => oke
