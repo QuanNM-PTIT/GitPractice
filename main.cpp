@@ -13,6 +13,7 @@ class Person{
         string phoneNumber;
         string role;
 
+
     public:
         Person(){
             this->id = autoId();
@@ -473,6 +474,7 @@ class Users{ // Làm vc với users.txt
 
     public:
 
+
         Users(){
             ifstream ifs("users.txt");
 
@@ -488,6 +490,7 @@ class Users{ // Làm vc với users.txt
                     ss>>s;
                     getline(ss,pw,']');
                     
+                    dsUsers.push_back(User(email,pw));
                     dsUsers.push_back(User(email,pw));
                 }
                 
