@@ -580,7 +580,36 @@ void Signup()
     }
     return;
 }
+bool loggedIn = false;
 
+void Login()
+{
+    string userName, password;
+    cout << "Nhap Email: \n";
+    cin >> userName;
+    cout << "Nhap password: \n";
+    cin >> password;
+    ifstream filein("users.txt");
+    if (!filein.is_open())
+    {
+        cout << "Khong the mo tep users.txt\n";
+    }
+    else
+    {
+        string tmp;
+        while (getline(filein, tmp))
+        {
+            if (tmp.find(userName) != string::npos && tmp.find(password) != string::npos)
+            {
+                cout << "Dang nhap thanh cong\n";
+                loggedIn = true;
+                return;
+            }
+        }
+        cout << "Dang nhap that bai\n";
+    }
+    filein.close();
+}
 // Ket thuc khai bao cac ham thao tac
 
 // Start bien toan cuc
@@ -604,8 +633,8 @@ int main()
         }
         if (option == 'a')
         {
-            // Dang nhap
-            while (active)
+            Login();
+            while (loggedIn)
             {
                 cout << "CHON CAC CHUC NANG:\n";
                 cout << "bam \"c\" de them sach - quyen cua admin\n";
@@ -626,21 +655,13 @@ int main()
                 cout << endl;
                 cin >> option;
                 if (option == 'r')
-                    return 0; // dang ki
+                    return 0; // Thoát chương trình
                 if (option == 'q')
-                    break; // dang xuat
-                           //                if(option == 'c')
-                           //                if(option == 'e')
-                // if(option == 'f')
-                // if(option == 'g')
-                // if(option == 'h')
-                // if(option == 'i')
-                // if(option == 'j')
-                // if(option == 'k')
-                // if(option == 'm')
-                // if(option == 'n')
-                // if(option == 'o')
-                // if(option == 'p')
+                { // Đăng xuất
+                    loggedIn = false;
+                    break;
+                }
+                // Thực thi các chức năng khác
             }
         }
     }
