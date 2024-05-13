@@ -251,7 +251,6 @@ class Book{
 			}
 			return v;	
 		} 
- 
 		void updateBook(int id, string title, string author, int quality){
 				int check = 0;
 				for(int i= 0; i<v.size(); i++){
@@ -290,31 +289,37 @@ class Book{
 		}
 		
 }; 
-
 class EBook : public Book{
 	private:
 		string fileFormat;
 		int fileSize;
 };
-void DisplayMenu(){
-	cout << "--------------------MENU--------------------" << endl;
-	cout << "2. Dang ky." << endl;
-	cout << "4. Sua thong tin sach." << endl;
-	cout << "6. Muon sach." << endl;
-	cout << "8. Lay thong tin cac quyen sach." << endl;
-	cout << "10. Lay thong tin tat ca cac Ebook hien co." << endl;
-	cout << "12. Hien thi thong tin tat ca cac quyen sach da muon." << endl;
-	cout << "14. Chinh sua thong tin ca nhan" << endl;
-	cout << "16. Dang xuat." << endl;
-	cout << "---------------------------------------------" << endl;
-	
 
+void DisplayMenu(){
+	cout << "-----------------------------------------------MENU--------------------------------------------" << endl;
+	cout << "	1. Dang nhap.																			" << endl;
+	cout << "	2. Dang ky.																				" << endl;
+	cout << "	3. Them sach.																			" << endl;
+	cout << "	4. Sua thong tin sach.																	" << endl;
+	cout << "	5. Xoa sach.																			" << endl;
+	cout << "	6. Muon sach.																			" << endl;
+	cout << "	7. Tra sach.																			" << endl;
+	cout << "	8. Lay thong tin cac quyen sach.														" << endl;
+	cout << "	9. Lay thong tin 1 quyen sach.															" << endl;
+	cout << "	10. Lay thong tin tat ca cac Ebook hien co.												" << endl;
+	cout << "	11. Hien thi thong tin tat ca cac quyen sach da muon (User).							" << endl;
+	cout << "	12. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon voi id nguoi dung (Admin).	" << endl;
+	cout << "	13. Sua thong tin sach.																	" << endl;
+	cout << "	14. Chinh sua thong tin ca nhan															" << endl;
+	cout << "	15. Chinh sua thong tin ca nhan cua nguoi khac.											" << endl;
+	cout << "	16. Dang xuat.																			" << endl;
+	cout << "	17. Thoat chuong trinh.																	" << endl;
+	cout << "-----------------------------------------------------------------------------------------------" << endl;
 }
 int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
-//	DisplayMenu();
-	BorrowInfo a;
-	a.updateInfo();
+	DisplayMenu();
+	
 	return 0;
 }
