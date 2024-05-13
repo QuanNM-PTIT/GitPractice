@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
+class Book;
+vector<Book> v;
 class Person;
 int UpdateIdPerson(){ // cap nhat ID person
 	ifstream input("people.txt");
@@ -163,6 +165,136 @@ public:
 		}
 		else cout << "Khong mo duoc file!\n";
 	} 
+};
+class Book{
+	private:
+		int id;
+		string title;
+		string author;
+		int quality;
+	public:
+		Book(){
+		} 
+		Book(string title, string author, int quality){
+			this->title = title;
+			this->author = author;
+			this->quality = quality;
+			if(v.size() == 0){
+			 	this->id = 1;
+			 } 
+			else{
+			 	this->id = v[v.size()-1].id + 1;
+			} 
+				
+		} 
+		string Tong_Hop(){
+			return '[' + to_string(this->id) + "] " + '[' + this->title + "] " + '[' + this->author + "] " + '[' + to_string(this->quality) + "] ";
+		}
+		bool operator < ( const Book& y){
+			return this->id < y.id;
+		}
+		void SapXepFileBook(){
+			sort(v.begin(), v.end()); 
+		}	 
+		void GhiDeFileBook(){
+			ofstream output("books.txt");
+			if(output.is_open()){
+				for(auto y : v){
+					output << y.Tong_Hop() << endl;
+				}
+				output.close();
+			}
+			else{
+				cout << "khong mo duoc file\n"; 
+			}
+		} 
+		
+		void addBook(){
+				v.push_back(*this); 
+				ofstream output("books.txt", ios::app);
+				if(output.is_open()){
+					output << '[' << id << "] "  << '[' << title << "] " << '[' << author << "] " << '[' << quality << "] " << endl ;
+					GhiDeFileBook();
+					output.close(); 
+				} 
+				else{
+					cout << "khong mo duoc file\n"; 
+				} 
+		} 
+		vector<Book> getBooks(){
+			v.clear(); 
+			ifstream input("books.txt");
+			
+			if(input.is_open()){
+				string tmp;
+				while(getline(input,tmp)){
+					Book x;
+					int start = 0, end = 0, i = 1;
+					while(tmp.find('[', end) != -1){
+						start =  tmp.find('[', end);
+						end =  tmp.find(']', start);
+						string tmp1 = tmp.substr(start + 1,end - start - 1); 
+						if(i == 1)  x.id = stoi(tmp1) ; 
+						else if (i == 2) x.title = tmp1 ;
+						else if (i == 3) x.author = tmp1;
+						else  x.quality = stoi(tmp1);
+						i++; 
+					} 
+					v.push_back(x); 
+				}
+				SapXepFileBook();
+				GhiDeFileBook(); 
+				input.close();
+			}
+			else{
+				cout << "khong mo duoc file";
+			}
+			return v;	
+		} 
+ 
+		void updateBook(int id, string title, string author, int quality){
+				int check = 0;
+				for(int i= 0; i<v.size(); i++){
+					if(v[i].id == id){
+						check = 1;
+						v[i].title = title;
+						v[i].author = author;
+						v[i].quality = quality;
+						break; 
+					} 
+				}
+				if(check == 1){
+					GhiDeFileBook();
+				} 
+				if(check == 0){
+					cout << "Khong ton tai id sach " << id << "\n";
+				}
+		}
+		
+		void deleteBook(int id){
+			int check = 0;
+			for(int i = 0; i<v.size(); i++){
+				if(v[i].id == id){
+					check = 1;
+					v.erase(v.begin() + i);
+					break; 
+				}
+			}
+			if(check == 1){
+				GhiDeFileBook();
+			}
+			else{
+				cout << "id sach " << id << " khong ton tai" << "\n"; 
+			} 
+		
+		}
+		
+}; 
+
+class EBook : public Book{
+	private:
+		string fileFormat;
+		int fileSize;
 };
 void DisplayMenu(){
 	cout << "--------------------MENU--------------------" << endl;
