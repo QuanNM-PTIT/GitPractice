@@ -7,7 +7,7 @@ class Person{
     int id ; 
     string name , email , sex , birthdate, address, phoneNumber, role;
     public:
-    Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role = "User"){
+    Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role = "User", int id = 0){
         this->name = name ;
         this->email = email;
         this->sex = sex ;
@@ -15,7 +15,8 @@ class Person{
         this->address = address;
         this->phoneNumber = phoneNumber;
         this->role = role;
-        this->id = createId();
+        if( id )this->id = id ; 
+        else this->id = createId();
         chuanHoa();
     }
     int createId(){
@@ -577,7 +578,7 @@ class Users{
                         getline(ifs, role, ']');
                         if(emailCheck == email){
                             ifs.close();
-                            return Person(name, emailCheck, sex, birthday, addre, phone, role);
+                            return Person(name, emailCheck, sex, birthday, addre, phone, role, id );
                         }
                     }
                     ifs.close();
@@ -590,9 +591,6 @@ class Users{
             }
         }
 
-        Person logout(){
-            return Person("", "", "", "", "", "", "");
-        }
 };
 
 
@@ -627,9 +625,6 @@ void Login(){
     }
 }
 
-void logout(){
-    infoUser = acesstUsers.logout();
-}
 
 void add_Book(){ // chi admin
     cout << "ban muon them vao:\n";
@@ -865,7 +860,6 @@ int main()
                 }
                 // if(option == 'p')
                 if(option == 'q'){ // dang xuat
-                    logout();
                     break;
                 }
                 if(option == 'r') return 0; // thoat chuong trinh
