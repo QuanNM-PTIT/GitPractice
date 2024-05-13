@@ -491,7 +491,6 @@ class Users{ // Làm vc với users.txt
                     getline(ss,pw,']');
                     
                     dsUsers.push_back(User(email,pw));
-                    dsUsers.push_back(User(email,pw));
                 }
                 
                 ifs.close();
