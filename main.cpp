@@ -7,7 +7,7 @@ class Person{
     int id ; 
     string name , email , sex , birthdate, address, phoneNumber, role;
     public:
-    Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role ){
+    Person( string name , string email , string sex ,string birthdate,string address,string phoneNumber,string role = "User", int id = 0){
         this->name = name ;
         this->email = email;
         this->sex = sex ;
@@ -15,7 +15,8 @@ class Person{
         this->address = address;
         this->phoneNumber = phoneNumber;
         this->role = role;
-        this->id = createId();
+        if( id )this->id = id ; 
+        else this->id = createId();
         chuanHoa();
     }
     int createId(){
@@ -577,7 +578,7 @@ class Users{
                         getline(ifs, role, ']');
                         if(emailCheck == email){
                             ifs.close();
-                            return Person(name, emailCheck, sex, birthday, addre, phone, role);
+                            return Person(name, emailCheck, sex, birthday, addre, phone, role, id );
                         }
                     }
                     ifs.close();
@@ -590,9 +591,6 @@ class Users{
             }
         }
 
-        Person logout(){
-            return Person("", "", "", "", "", "", "");
-        }
 };
 
 
@@ -627,9 +625,6 @@ void Login(){
     }
 }
 
-void logout(){
-    infoUser = acesstUsers.logout();
-}
 
 void add_Book(){ // chi admin
     cout << "ban muon them vao:\n";
@@ -749,8 +744,6 @@ void update_Infor_User(){
  
 int main()
 {
-    // Person a("nguyen TIEN trong", "trongbg2692004@gmail.com", "male", "9/9/2004", "Bac Giang", "0838947749", "admin"  );
-    // a.addInfo();
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
         cout << "dang nhap - bam \"a\"\n"; // thanh lam
@@ -758,9 +751,28 @@ int main()
         cout << "thoat chuong trinh - bam \"r\"\n"; // xong
         cin >> option;
         if(option == 'r') return 0;
-        // if(option == 'b'){
-        //     // code thu tuc dang ki
-        // }
+        if(option == 'b'){// dang ky tai khoan
+        string name , email, sex , birthdate , address, phoneNumber , password;
+            cout << "DANG KY TAI KHOAN:\n";
+            cout << "Email:\n";
+            cin >> email;
+            cout << "PASSWORD:\n";
+            cin >> password;
+            cout << "HO VA TEN:\n";
+            cin.ignore();
+            getline( cin, name );
+            cout << "NGAY SINH:\n";
+            cin >> birthdate;
+            cout << "GIOI TINH:\n";
+            cin >> sex ; 
+            cout << "DIA CHI\n";
+            cin.ignore();
+            getline( cin , address );
+            cout << "SDT:\n";
+            cin >> phoneNumber;
+            Person person(name, email, sex , birthdate, address, phoneNumber );
+            acesstUsers.regist(person , password);
+        }
         if(option == 'a'){
             Login();
             while(checkInfoUser){
@@ -789,7 +801,33 @@ int main()
                         cout << "option khac:\n";
                     }
                 }
-                // if(option == 'd')
+                if(option == 'd'){
+                    if( infoUser.getRole() != "Admin" ){
+                        cout << "ban khong duoc cap quyen chinh sua thong tin sach\n";
+                    }
+                    else {
+                        while(1){
+                            int id, quantity ;
+                            string title, author;
+                            cout << "DANG CHINH SUA THONG TIN SACH\n";
+                            cout << "nhap id cuon sach:\n";
+                            cin >> id ;
+                            cout << "chinh sua ten sach:\n";
+                            cin.ignore();
+                            getline( cin , title );
+                            cout << "chinh sua tac gia:\n";
+                            getline( cin , author );
+                            cout << "chinh sua so luong sach\n";
+                            cin >> quantity;
+                            BookInfor bookInfor(id, title, author, quantity );
+                            acesstBooks.updateBook(bookInfor);
+                            cout << "tiep tuc chinh sua (yes/no)\n";
+                            string choose;
+                            cin >> choose; 
+                            if ( choose != "yes" )break;;
+                        }
+                    }
+                }
                 if(option == 'e'){
                     if(infoUser.getRole() == "Admin") delete_Book();
                     else{
@@ -822,38 +860,12 @@ int main()
                 }
                 // if(option == 'p')
                 if(option == 'q'){ // dang xuat
-                    logout();
                     break;
                 }
                 if(option == 'r') return 0; // thoat chuong trinh
             }
         }
     }
- 
- 
-    // Ebooks test1;
-    // Users test2;
- 
-    // test addBook => oke
-    // EbookInfor info1(20, "The Great Gatsby", "F. Scott Fitzgerald", 3, "PDF", 2);
-    // test1.AddBook(info1);
- 
-    // // test updateBook => oke
-    // BookInfor info2(17, "To Kill a Mockingbird", "Harper Lee", 2);
-    // test1.updateBook(info2);
- 
-    // // test getBook => oke
-    // test1.getBook(2);
- 
-    // // test deleteBook => okee
-    // test1.deleteBook(12);
- 
-    // // test regist => okee
-    // test2.regist(UserInfos(0, "ahsdfkjbadugh", "safhdakjg"));
- 
-    // // test login() => okee
-    // Person check = test2.login("john.smith@gmail.com", "pass1234");
-    // cout << check.getEmail() << ' ' << check.getName() << ' ' << check.getPhoneNumber() << ' ' << check.getRole();
  
     return 0;
 }
