@@ -1260,6 +1260,8 @@ int main()
                 cout << endl;
             }
             while(checkInfoUser){
+                cout << "CHON CAC CHUC NANG:\n";
+                cout << '\n';
                 cin >> option;
                 if(option == 'c'){
                     if(infoUser.getRole() == "Admin") add_Book();
