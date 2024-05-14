@@ -14,6 +14,24 @@ public:
 
     Book(int id, string title, string author, int quantity) : id(id), title(title), author(author), quantity(quantity) {}
 
+	int getId()
+	{
+		return id;
+	}
+	int getQuantity()
+	{
+		return quantity;
+	}
+	string getTitle()
+	{
+		return title;
+	}
+	string getAuthor()
+	{
+		return author;
+	}
+	
+	
     int getNextAvailableId()
     {
         ifstream file("books.txt");
@@ -58,22 +76,32 @@ public:
         }
     }
 
-    void getBooks()
+    vector<Book> getBooks()
     {
+        vector<Book> ans;
         ifstream file("books.txt");
-        if (file.is_open())
-        {
+        if (file.is_open()) {
             string line;
-            while (getline(file, line))
-            {
-                cout << line << endl;
+            while (getline(file, line)) {
+                stringstream ss(line);
+                int Id, Quantity;
+                string Author, Title;
+                char c;
+
+                ss >> c >> Id >> c >> c;
+                getline(ss, Title, ']');
+                ss >> c;
+                getline(ss, Author, ']');
+                ss >> c >> Quantity; // Sửa lại để đọc Quantity trực tiếp
+                
+                Book book(Id, Author, Title, Quantity);
+                ans.push_back(book);
             }
             file.close();
-        }
-        else
-        {
+        } else {
             cout << "Unable to open file.\n";
         }
+        return ans;
     }
     void updateBook(int idToUpdate)
     {
@@ -132,50 +160,40 @@ public:
     }
 };
 
-class EBook : public Book
-{
+class EBook : public Book {
 protected:
     string fileFormat;
     int fileSize;
-
+ 
 public:
     EBook() : Book(), fileFormat(""), fileSize(0) {}
-
-    EBook(string title, string author, int quantity, string fileFormat, int fileSize)
+ 
+    EBook(int id, string title, string author, int quantity, string fileFormat, int fileSize)
         : Book(id, title, author, quantity), fileFormat(fileFormat), fileSize(fileSize) {}
-
-    void addBook()
+ 
+    string getFileFormat()
     {
-        id = getNextAvailableId(); // Gán id là dòng tiếp theo trong file
-        cout << "Enter title: ";
-        cin.ignore();
-        getline(cin, title);
-        cout << "Enter author: ";
-        getline(cin, author);
-        cout << "Enter quantity: ";
-        cin >> quantity;
-        cout << "Enter file format: ";
-        cin.ignore();
-        getline(cin, fileFormat);
-        cout << "Enter file size: ";
-        cin >> fileSize;
+        return fileFormat;
+    }
 
-        // Kiểm tra và ghi vào file
-        ofstream file("books.txt", ios::app);
-        if (file.is_open())
-        {
+    int getFileSize()
+    {
+        return fileSize;
+    }
+    // Phương thức thêm thông tin cuốn sách vào file ebooks.txt
+    void addBookToFile() {
+        ofstream file("ebooks.txt", ios::app);
+        if (file.is_open()) {
             file << "[" << id << "] "
                  << "[" << title << "] "
                  << "[" << author << "] "
                  << "[" << quantity << "] "
                  << "[" << fileFormat << "] "
-                 << "[" << fileSize << "] " << endl;
+                 << "[" << fileSize << "]" << endl;
             file.close();
-            cout << "Ebook add done!\n";
-        }
-        else
-        {
-            cout << "Error!\n";
+            cout << "EBook added done" << endl;
+        } else {
+            cout << "Error" << endl;
         }
     }
 };
@@ -469,6 +487,16 @@ bool cmpBorrowInfo(BorrowInfo a, BorrowInfo b)
     return a.getId() < b.getId();
 }
 
+bool cmpBooks(Book a, Book b)
+{
+	return a.getId() < b.getId();
+}
+
+bool cmpEBooks(EBook a, EBook b)
+{
+	return a.getId() < b.getId();
+}
+
 void capnhatthongtinmuonsach()
 {
     vector<BorrowInfo> v;
@@ -610,6 +638,63 @@ void Login()
     }
     filein.close();
 }
+
+void showBooks()
+{
+	Book book;
+	vector<Book>ans = book.getBooks();
+	sort(ans.begin(), ans.end(), cmpBooks);
+	for(Book tmpBook : ans)
+	{
+		cout << "ID: " << tmpBook.getId() << " - " << "Title: " <<
+		tmpBook.getTitle() << " - " << "Author: " << tmpBook.getAuthor() <<
+		" - " << "Quantity: " << tmpBook.getQuantity() << endl;
+	}
+	return;
+}
+
+void showEBooks()
+{
+	vector<EBook>ans;
+	ifstream filein("ebooks.txt");
+	if(filein.is_open())
+	{
+		string line;
+		while(getline(filein, line))
+		{
+			stringstream ss(line);
+			char c;
+			int id, quantity, fileSize;
+		    string title, author, fileFormat;
+		    ss >> c >> id >> c >> c;
+		    getline(ss, title, ']');
+		    ss >> c;
+		    getline(ss, author, ']');
+		    ss >> c;
+		    ss >> quantity >> c >> c;
+		    getline(ss, fileFormat, ']');
+		    ss >> c;
+		    ss >> fileSize;
+		    EBook ebook(id, title, author, quantity, fileFormat, fileSize);
+		    ans.push_back(ebook);
+		}
+		sort(ans.begin(), ans.end(), cmpEBooks);
+		for(EBook eb : ans)
+		{
+			cout << "ID: " << eb.getId() << " - " << "Title: " <<
+			eb.getTitle() << " - " << "Author: " << eb.getAuthor() <<
+			" - " << "Quantity: " << eb.getQuantity() << " - " << 
+			"FileFormat: " << eb.getFileFormat() << " - " << "FileSize: "
+			<< eb.getFileSize() << endl;
+		}
+		filein.close();
+	}
+	else
+	{
+		cout << "Khong the mo tep ebooks.txt\n";
+	}
+	return;
+}
 // Ket thuc khai bao cac ham thao tac
 
 // Start bien toan cuc
@@ -619,52 +704,61 @@ bool active;
 // End bien toan cuc
 int main()
 {
-    while (true)
-    {
-        cout << "dang nhap - bam \"a\"\n";
-        cout << "dang ki - bam \"b\"\n";
-        cout << "thoat chuong trinh - bam \"r\"\n";
-        cin >> option;
-        if (option == 'r')
-            return 0;
-        if (option == 'b')
-        {
-            Signup();
-        }
-        if (option == 'a')
-        {
-            Login();
-            while (loggedIn)
-            {
-                cout << "CHON CAC CHUC NANG:\n";
-                cout << "bam \"c\" de them sach - quyen cua admin\n";
-                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
-                cout << "bam \"e\" de xoa sach - quyen cua admin\n";
-                cout << "bam \"f\" de muon sach\n";
-                cout << "bam \"g\" de tra sach\n";
-                cout << "bam \"h\" de hien thi tat ca sach\n";
-                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n";
-                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
-                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n";
-                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
-                cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi - quyen cua admin\n";
-                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n";
-                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
-                cout << "bam \"q\" de dang suat\n";
-                cout << "bam \"r\" de thoat chuong trinh\n";
-                cout << endl;
-                cin >> option;
-                if (option == 'r')
-                    return 0; // Thoát chương trình
-                if (option == 'q')
-                { // Đăng xuất
-                    loggedIn = false;
-                    break;
-                }
-                // Thực thi các chức năng khác
-            }
-        }
-    }
+	showEBooks();
+//    while (true)
+//    {
+//        cout << "dang nhap - bam \"a\"\n";
+//        cout << "dang ki - bam \"b\"\n";
+//        cout << "thoat chuong trinh - bam \"r\"\n";
+//        cin >> option;
+//        if (option == 'r')
+//            return 0;
+//        if (option == 'b')
+//        {
+//            Signup();
+//        }
+//        if (option == 'a')
+//        {
+//            Login();
+//            while (loggedIn)
+//            {
+//                cout << "CHON CAC CHUC NANG:\n";
+//                cout << "bam \"c\" de them sach - quyen cua admin\n";
+//                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
+//                cout << "bam \"e\" de xoa sach - quyen cua admin\n";
+//                cout << "bam \"f\" de muon sach\n";
+//                cout << "bam \"g\" de tra sach\n";
+//                cout << "bam \"h\" de hien thi tat ca sach\n";
+//                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n";
+//                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
+//                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n";
+//                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
+//                cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi - quyen cua admin\n";
+//                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n";
+//                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
+//                cout << "bam \"q\" de dang suat\n";
+//                cout << "bam \"r\" de thoat chuong trinh\n";
+//                cout << endl;
+//                cin >> option;
+//                if (option == 'r')
+//                    return 0; // Thoát chương trình
+//                if (option == 'q')
+//                { // Đăng xuất
+//                    loggedIn = false;
+//                    break;
+//                }
+//                if(option == 'h')
+//                {
+//                	showBooks();
+//				}
+//				if(option == 'j')
+//				{
+//					showEBooks();
+//				}
+//                // Thực thi các chức năng khác
+//            }
+//        }
+//    }
 
     //    Book book;
     // book.addBook(); // Thêm một sách vào file books.txt
