@@ -41,40 +41,6 @@ class Person{
         return cnt + 1 ; 
     }
 
-    Person getInforPeople(int idCheck){
-        ifstream ifs("people.txt");
-        if(ifs.is_open()){
-            string line;
-            while(getline(ifs, line)){
-                int id;
-                string name, email, sex, birthday, address, phone, role;
-                char c;
-                stringstream ss(line);
-                ss >> c >> id >> c >> c;
-                getline(ss, name, ']');
-                ss >> c;
-                getline(ss, email, ']');
-                ss >> c;
-                getline(ss, sex, ']');
-                ss >> c;
-                getline(ss, birthdate, ']');
-                ss >> c;
-                getline(ss, address, ']');
-                ss >> c;
-                getline(ss, phone, ']');
-                ss >> c;
-                getline(ss, role, ']');
-                if(id == idCheck) return Person(name, email, sex, birthdate, address, phone, role, id);
-            }
-            ifs.close();
-            return Person("", "", "", "", "", "", "");
-        }
-        else{
-            cout << "loi truy cap data!\n";
-            return Person("", "", "", "", "", "", "");
-        }
-    }
-
     void addInfo(){ // write into people.txt
         ofstream out("people.txt", ios::app); 
         out << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << "]" << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']' << " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
@@ -905,7 +871,7 @@ void Login(){
     cout << "nhap password:\n";
     cin >> password;
     if(!acesstUsers.checkInfor(email, password)){
-        cout << "dang nhap that bai!\n";
+        cout << "dang nhap that bai!\n" << '\n';
     }
     else{
         infoUser = acesstUsers.login(email, password);
@@ -934,7 +900,7 @@ void add_Book(){ // chi admin
             cin >> quantity;
             BookInfor add(id, name, author, quantity);
             acesstBooks.AddBook(add);
-            cout << '\n' << "them thanh cong!\n";
+            cout << '\n';
             break;
         }
         if(op == 2){
@@ -955,7 +921,7 @@ void add_Book(){ // chi admin
             cin >> fileSize;
             EbookInfor add(id, name, author, quantity, fileFormat, fileSize);
             acesstEbooks.AddBook(add);
-            cout << '\n' << "them thanh cong!\n";
+            cout << '\n';
             break;
         }
         else cout << "vui long nhap dung!\n";
@@ -972,6 +938,7 @@ void delete_Book(){ // chi admin
             cout << "nhap id cua sach muon xoa:\n";
             cin >> id;
             acesstBooks.deleteBook(id);
+            cout << '\n';
             break;
         }
         if(op == 2){
@@ -979,6 +946,7 @@ void delete_Book(){ // chi admin
             cout << "nhap id cua sach muon xoa:\n";
             cin >> id;
             acesstEbooks.deleteBook(id);
+            cout << '\n';
             break;
         }
         else{
@@ -1118,7 +1086,7 @@ void update_Infor_User(){
 }
 
 void edit_Info_User(int id){ // chi admin
-    Person info = infoUser.getInforPeople(id);
+    Person info = infoUser.getPerson(id);
     if(!info.getName().empty()){
         while(1){
             cout << "thay doi role - chon 1\n";
@@ -1258,9 +1226,9 @@ int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
-        cout << "dang nhap - bam \"a\"\n"; // xong
-        cout << "dang ki - bam \"b\"\n"; // xong
-        cout << "thoat chuong trinh - bam \"r\"\n"; // xong
+        cout << "dang nhap - bam \"a\"\n";
+        cout << "dang ki - bam \"b\"\n";
+        cout << "thoat chuong trinh - bam \"r\"\n";
         cin >> option;
         if(option == 'r') return 0;
         if(option == 'b'){// dang ky tai khoan
@@ -1289,21 +1257,21 @@ int main()
             Login();
             if ( checkInfoUser ){
                 cout << "CHON CAC CHUC NANG:\n";
-                cout << "bam \"c\" de them sach - quyen cua admin\n"; // xong
-                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n"; // xong
-                cout << "bam \"e\" de xoa sach - quyen cua admin\n"; // xong
-                cout << "bam \"f\" de muon sach\n"; // xong
-                cout << "bam \"g\" de tra sach\n"; // xong
-                cout << "bam \"h\" de hien thi tat ca sach\n"; // xong
-                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // xong
-                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n"; // xong
-                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // xong
-                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n"; // xong
+                cout << "bam \"c\" de them sach - quyen cua admin\n";
+                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
+                cout << "bam \"e\" de xoa sach - quyen cua admin\n";
+                cout << "bam \"f\" de muon sach\n";
+                cout << "bam \"g\" de tra sach\n";
+                cout << "bam \"h\" de hien thi tat ca sach\n";
+                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n";
+                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
+                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n";
+                cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
                 cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi muon- quyen cua admin\n";
-                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // xong
-                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n"; // xong
-                cout << "bam \"q\" de dang suat\n"; // xong
-                cout << "bam \"r\" de thoat chuong trinh\n"; // xong
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n";
+                cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
+                cout << "bam \"q\" de dang suat\n";
+                cout << "bam \"r\" de thoat chuong trinh\n";
                 cout << endl;
             }
             while(checkInfoUser){
