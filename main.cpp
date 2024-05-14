@@ -549,6 +549,13 @@ class Users{
             }
         }
 
+        bool checkInfor(string email, string password){
+            for(auto x : dsUsers){
+                if(email == x.getEmail() && password == x.getPassword()) return true;
+            }
+            return false;
+        }
+
         void updateUser(UserInfos &UserUpdate){
             bool check = false;
             for(auto &x : dsUsers){
@@ -594,8 +601,8 @@ class Users{
         // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
         Person login(string email, string password){ // check thong tin dang nhap
             if(!checkUser(UserInfos(0, email, password))){
-                 cout << "nhap du thong tin!\n";
-                 return Person("", "", "", "", "", "", "");
+                cout << "thong tin dang nhap sai!\n";
+                return Person("", "", "", "", "", "", "");
             }
             else{
                 ifstream ifs("people.txt");
@@ -652,18 +659,16 @@ char option; // cac thao tac khi dang nhap thanh cong
  
 void Login(){
     checkInfoUser = false;
-    // infoUser = Person("", "", "", "", "", "", ""); // moi khi dang nhap lai tu dau
     string email, password;
     cout << "nhap email:\n";
     cin >> email;
     cout << "nhap password:\n";
     cin >> password;
-    infoUser = acesstUsers.login(email, password);
-    if(infoUser.getEmail().empty()){ // chua dang ki
+    if(!acesstUsers.checkInfor(email, password)){
         cout << "dang nhap that bai!\n";
-        cout << "vui long dang ki tai khoan!\n";
     }
     else{
+        infoUser = acesstUsers.login(email, password);
         cout << '\n' << "Welcome " << infoUser.getName() << '\n' << endl;
         checkInfoUser = true;
     }
@@ -738,7 +743,7 @@ void delete_Book(){ // chi admin
         }
         else{
             cout << "vui long nhap dung!\n";
-    }
+        }
     }
 }
 
@@ -781,6 +786,10 @@ void get_Book(){
     cout << "nhap id cuon sach:\n";
     int id; cin >> id;
     acesstBooks.getBook(id);
+}
+
+void get_All_Ebooks(){
+    acesstEbooks.getAllBooks();
 }
 
 void get_Ebook(){
@@ -862,11 +871,11 @@ int main()
                 cout << "bam \"g\" de tra sach\n";
                 cout << "bam \"h\" de hien thi tat ca sach\n"; // xong
                 cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // xong
-                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
+                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n"; // xong
                 cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // xong
                 cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
                 cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi muon- quyen cua admin\n";
-                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // xong
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // xong 1 nua
                 cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
                 cout << "bam \"q\" de dang suat\n"; // xong
                 cout << "bam \"r\" de thoat chuong trinh\n"; // xong
@@ -927,7 +936,9 @@ int main()
                 if(option == 'i'){
                     get_Book();
                 }
-                // if(option == 'j')
+                if(option == 'j'){
+                    get_All_Ebooks();
+                }
                 if(option == 'k'){
                     get_Ebook();
                 }
