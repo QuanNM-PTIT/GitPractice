@@ -8,3 +8,6 @@
 [4] [Michael Brown] [michael.brown@gmail.com] [Male] [05/12/1992] [101 Maple St, Houston, TX] [0234567890] [User]
 [3] [Alice Johnson] [alice.johnson@gmail.com] [Female] [10/03/1978] [789 Pine St, Chicago, IL] [0112345678] [User]
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
+[10] [John Smith] [john.smith@gmail.com] [Male] [18/08/1990] [606 Aspen St, Denver, CO] [0234156789] [User]
+[11] [Dao Thi Huyen] [huyen@gmail.com] [Female] [22/09/2004] [Ninh Binh]
+[0326678518] [User]

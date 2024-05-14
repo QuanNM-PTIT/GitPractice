@@ -164,6 +164,9 @@ public:
 	int getID(){
 		return this->id;
 	}
+	string getName(){
+		return this->name; 
+	} 
 };
 class BorrowInfo{
 private:
@@ -404,6 +407,9 @@ class User{
 		string getEmail(){
 			return this->email; 
 		} 
+		string getPassword(){
+			return this->password;
+		}
 		string Tong_Hop(){
 			return '[' + to_string(this->id) + "] " + '[' + this->email + "] " + '[' + this->password + "]";
 		}
@@ -463,27 +469,35 @@ class User{
 		// } 
 		
 }; 
-void DisplayMenu(){
+void DisplayMenu1(){
 	cout << "-----------------------------------------------MENU--------------------------------------------" << endl;
-	cout << "	1. Dang nhap.																			" << endl;
-	cout << "	2. Dang ky.																				" << endl;
-	cout << "	3. Them sach.																			" << endl;
-	cout << "	4. Sua thong tin sach.																	" << endl;
-	cout << "	5. Xoa sach.																			" << endl;
-	cout << "	6. Muon sach.																			" << endl;
-	cout << "	7. Tra sach.																			" << endl;
-	cout << "	8. Lay thong tin cac quyen sach.														" << endl;
-	cout << "	9. Lay thong tin 1 quyen sach.															" << endl;
-	cout << "	10. Lay thong tin tat ca cac Ebook hien co.												" << endl;
-	cout << "	11. Hien thi thong tin tat ca cac quyen sach da muon (User).							" << endl;
-	cout << "	12. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon voi id nguoi dung (Admin).	" << endl;
-	cout << "	13. Sua thong tin sach.																	" << endl;
-	cout << "	14. Chinh sua thong tin ca nhan															" << endl;
-	cout << "	15. Chinh sua thong tin ca nhan cua nguoi khac.											" << endl;
-	cout << "	16. Dang xuat.																			" << endl;
-	cout << "	17. Thoat chuong trinh.																	" << endl;
+	cout << "	1. Dang nhap.(H)																			" << endl;
+	cout << "	2. Dang ky.(Y)																			" << endl;
 	cout << "-----------------------------------------------------------------------------------------------" << endl;	
+}	
+void DisplayMenuAdmin(){	
+	cout << "	3. Them sach.(H)																			" << endl;
+	cout << "	4. Sua thong tin sach.(Y)																" << endl;
+	cout << "	5. Xoa sach.(H)																			" << endl;	
+	cout << "	6. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon voi id nguoi dung (H).	" << endl;	
+	cout << "	7. Chinh sua thong tin ca nhan cua nguoi khac.(H)											" << endl;
+	
 }
+void DisplayMenuUser(){
+	cout << "	8. Muon sach.(Y)																			" << endl;
+	cout << "	9. Tra sach.(H)																			" << endl;
+	cout << "	10. Hien thi thong tin tat ca cac quyen sach da muon (Y).							" << endl;
+} 
+void DisplayMenuBoth(){
+	cout << "	11. Lay thong tin cac quyen sach.(Y)														" << endl;
+	cout << "	12. Lay thong tin 1 quyen sach.(H)														" << endl;
+	cout << "	13. Lay thong tin tat ca cac Ebook hien co.(Y)												" << endl;
+	cout << "	14. Lay thong tin 1 Ebook. (H)																" << endl;
+	cout << "	15. Chinh sua thong tin ca nhan. (Y)															" << endl;
+	cout << "	16. Dang xuat. (Y)																			" << endl;
+	cout << "	17. Thoat chuong trinh. (H)																	" << endl;
+	cout << "-----------------------------------------------------------------------------------------------" << endl;	
+} 
 
 void check(string &tmp_email , string &tmp_password){ 
 		while(1){
@@ -557,15 +571,45 @@ void check(string &tmp_email , string &tmp_password){
 		} 
 		
 }
-string DangNhap(){
+Person DangNhap(){
 	string u_email, u_password ;
 	cout << "email cua ban la : ";
-	cin >> u_email;
+	cin >> u_email; 
 	cout << "password cua ban la : ";
 	cin >> u_password;
 	cout << endl;
-	cout << "Dang nhap thanh cong!\n";
-	return u_email;
+	while(1){
+			int check = 0; 
+			for(auto x : v_user){
+				if((x.getEmail() == u_email) && (x.getPassword() != u_password)){
+					cout << "password bi sai" << endl << "vui long nhap lai password" << endl;
+					cin >> u_password; 
+					break; 
+				}
+				else if((x.getEmail() == u_email) && (x.getPassword() == u_password)){
+					check = 1; 
+					break; 
+				}
+			}
+			if(check == 1){
+				cout << "Dang nhap thanh cong\n"; 
+				for(auto x : v_person){
+					if(x.getEmail() == u_email){
+						return x; 
+					} 
+				} 
+				break; 
+			}
+			else{
+					cout << "thong tin dang nhap bi sai" << endl;
+					cout << "email cua ban la : ";
+					cin >> u_email;
+					cout << "password cua ban la : ";
+					cin >> u_password; 
+			} 
+	} 
+	Person y;
+	return y; 
 }
 string DangKy(){
 	cout << "------------------DANG KY------------------\n";
@@ -580,19 +624,19 @@ string DangKy(){
 	Person x(name, email, sex, birthdate, address, phoneNumber, "User");
 	x.addPerson();
 	// add user;
-	string u_email, u_password;
-	cout << "\nEmail dang ky : "; 
-	getline(cin, u_email) ;
+	string  u_password;
+//	cout << "\nEmail dang ky : "; 
+//	getline(cin, u_email) ;
 	cout << "\nPassword: ";
 	getline(cin,u_password);
 	cout << endl; 
-	check(u_email, u_password); 
+	check(email, u_password); 
 	cout << "Dang ky thanh cong!\n";
-	cout << "Email cua ban la : " << u_email << endl;
+	cout << "Email cua ban la : " << email << endl;
 	cout << "Password cua ban la : " << u_password << endl; 
-	User y(u_email, u_password); 
+	User y(email, u_password); 
 	y.addUsers(); 
-	return u_email;
+	return email;
 }
 void ManageBook(string u_email){
 	bool check = false;
@@ -636,54 +680,36 @@ void BorrowBook(string u_email){
 	if(!check) cout << "Loi khong muon duoc sach!\n";
 }
 int main() {
-	DisplayMenu();
+	DisplayMenu1();
 	Person a;
 	a.getPerson();
 //  chuyen vao vector
 	User x;
  	x.getusers(); 
 	Book k;
-	k.getBooks();
+	k.getBooks(); 
 	int input;
-	bool success = false;
-	string u_email;
-	while(!success){
-		cout << "Chon chuc nang ban muon su dung : ";
-		cin >> input;
-		cin.ignore();
-		if(input == 1){
-			u_email = DangNhap();
-			success = true;
-		}
-		else if(input == 2){
-			u_email = DangKy();
-			success = true;
+	cin >> input;
+//	cin.ignore(); 
+	if(input  == 1){
+		Person x =  DangNhap();
+		cout << "Welcome " << x.getName() << endl; 
+		if(x.getRole() == "Admin"){
+			DisplayMenuAdmin();
+			DisplayMenuBoth(); 
 		} 
-		else cout << "Vui long dang nhap/dang ky!\n";
-	}
-	if(success){
-		cout << "Chon chuc nang ban muon su dung : ";
-		cin >> input;
-		switch(input){
-			case 1:
-				//Dang Nhap
-				break;
-			case 2:
-				//Dang ky
-				break;
-			case 3:
-				break; 
-			case 4: // sua thong tin sach
-				ManageBook(u_email);
-				break;
-			case 5:
-				break;
-			case 6: // Muon sach
-				BorrowBook(u_email);
-				break;
-			default: 
-				break;
-		}
-	}
+		else{
+			DisplayMenuUser();
+			DisplayMenuBoth(); 
+		} 
+		cout << "Chon chuc nang ban muon su dung : " << endl;
+		int input2 = 0;
+		cin >> input2;
+		 
+	} 
+	 
+	
 	return 0;
 }
+
+
