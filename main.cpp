@@ -300,7 +300,7 @@ class EBook : public Book{
 		int fileSize;
 };
 
-class User : public Person{
+class User{
 	private:
 		int id;
 		string email;
@@ -320,6 +320,9 @@ class User : public Person{
 			 	this->id = v_user[v_user.size()-1].id + 1;
 			} 		
 		}
+		string getEmail(){
+			return this->email; 
+		} 
 		string Tong_Hop(){
 			return '[' + to_string(this->id) + "] " + '[' + this->email + "] " + '[' + this->password + "]";
 		}
@@ -360,51 +363,8 @@ class User : public Person{
 				cout << "khong mo duoc file";
 			}
 		} 
-		bool check(){
-			string tmp = this->email; 
-			for(auto y : v_user){
-				if(y.email == tmp){
-					cout << "email da ton tai! \nVui long chon email khac\n";
-					return 0;
-				}
-			}
-			int n = tmp.size();
-			if(tmp.substr(n-10,10) != "@gmail.com"){
-				cout << "duoi email khong hop le\n";
-				return 0;
-			}
-			if(tmp.substr(0,10) == "@gmail.com"){
-				cout << "ten email khong hop le\n";
-				return 0;
-			}
-			
-			int check_password = 0;
-			string tmp2 = this->password;
-			for(int i=0; i<tmp2.size(); i++){
-				if(tmp2[i] >= '0' && tmp2[i] <= '9'){
-					check_password = 1;
-					break;
-				}
-			}
-			if(check_password == 0){
-				cout << "mat khau bao gom ca chu va so\n";
-				return 0;
-			}
-			for(int i=0; i<=tmp2.size(); i++){
-				if((tmp2[i] >= 'a' && tmp2[i] <= 'z') || (tmp2[i] >= 'A' && tmp2[i] <= 'Z')){
-					check_password = 2;
-					break;
-				}
-			}
-			if(check_password != 2){
-				cout << "mat khau bao gom ca chu va so\n";
-				return 0;
-			}
-			return 1;
-		}
 				
 		void addUsers(){
-			if(this->check() != 0){
 				v_user.push_back(*this); 
 				ofstream output("users.txt", ios::app);
 				if(output.is_open()){
@@ -414,8 +374,7 @@ class User : public Person{
 				} 
 				else{
 					cout << "khong mo duoc file\n"; 
-				} 
-			} 	
+				}  	
 		}  
 		Person login(){
 			
@@ -444,22 +403,111 @@ void DisplayMenu(){
 	cout << "---------------------------------------------" << endl;
 
 }
+
+void check(string &tmp_email , string &tmp_password){ 
+		while(1){
+			int n = tmp_email.size();
+			int check_email = 1; 
+			for(auto y : v_user){
+				if(y.getEmail() == tmp_email){
+					check_email = 0; 
+					cout << "email da ton tai! \nVui long chon email khac\n";
+					break; 
+				}
+			}
+			if(check_email == 0){
+				cout << "Email dang ky : "; 
+				cin >> tmp_email;
+				cout << endl; 
+			}	 
+			else{ 
+				if(tmp_email.size() <= 10){
+					cout << "email khong hop le \nVui long chon email khac\n";
+					check_email = 0; 
+					cout << "Email dang ky : "; 
+					cin >> tmp_email;
+					cout << endl;
+				} 
+				if(check_email == 1 && tmp_email.substr(n-10,10) != "@gmail.com"){
+					cout << "duoi email khong hop le \nVui long chon email khac\n";
+					check_email = 0; 
+					cout << "Email dang ky : "; 
+					cin >> tmp_email;
+					cout << endl;  
+				}
+			}
+			if(check_email == 1){
+				break; 
+			} 
+		}		
+		while(1){
+			int check_password = 0;
+			string tmp2 = tmp_password;
+			for(int i=0; i<tmp2.size(); i++){
+				if(tmp2[i] >= '0' && tmp2[i] <= '9'){
+					check_password = 1;
+					break;
+				}
+			}
+			if(check_password == 0){
+				cout << "mat khau bao gom ca chu va so \nVui long chon password khac\n";
+				cout << "Password : "; 
+				cin >> tmp_password;
+				cout << endl; 
+			}
+			else{
+				for(int i=0; i<=tmp2.size(); i++){
+					if((tmp2[i] >= 'a' && tmp2[i] <= 'z') || (tmp2[i] >= 'A' && tmp2[i] <= 'Z')){
+						check_password = 2;
+						break;
+					}
+				}
+				if(check_password != 2){
+					cout << "mat khau bao gom ca chu va so \nVui long chon password khac\n";
+					cout << "Password : "; 
+					cin >> tmp_password;
+					cout << endl;
+				}
+			} 
+			if(check_password == 2){
+				break; 
+			} 
+			
+		} 
+		
+}
 int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
 	DisplayMenu();
-	BorrowInfo a;
-	a.updateInfo();
+//	BorrowInfo a;
+//	a.updateInfo();
+	User x;
+ 	x.getusers(); 
 	cout << "Chon chuc nang ban muon su dung : ";
 	int input ; cin >> input;
 	if(input == 1){
-		string email, password ;
+		string u_email, u_password ;
 	 	cout << "email cua ban la : ";
-		cin >> email;
-		cout << endl << "password cua ban la : ";
-		cin >> password;
+		cin >> u_email;
+		cout << "password cua ban la : ";
+		cin >> u_password;
 		cout << endl;
 		 
+	}
+	else if(input == 2){
+		string u_email,u_password;
+		cout << "Email dang ky : "; 
+		cin >> u_email;
+		cout << "Password: ";
+		cin >> u_password;
+		cout << endl; 
+		check(u_email, u_password); 
+		cout << "Dang ky thanh cong \n";
+		cout << "Email cua ban la : " << u_email << endl;
+		cout << "Password cua ban la : " << u_password << endl; 
+		User y(u_email, u_password); 
+		y.addUsers(); 
 	} 
 
 
