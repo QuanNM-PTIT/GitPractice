@@ -5,7 +5,7 @@ class User;
 class Person;
 vector<Book> v;
 vector<User> v_user;
-static vector<Person> v_person; 
+vector<Person> v_person; 
 int UpdateIdPerson(){ // cap nhat ID person
 	ifstream input("people.txt");
 	set<int> se;
@@ -76,7 +76,7 @@ public:
         cout << x.id << ' ' << x.name << ' ' << x.email << ' ' << x.sex << endl;
     }
 	string Tong_Hop(){
-		return '[' + this->id + "] " + '[' + this->name + "] " + '[' + this->email + "] " + '[' + sex + "] " + '[' + this->birthdate + "] " + '[' + this->address + "] " + '[' + this->phoneNumber + "] "+ '[' + this->role + "] ";
+		return '[' + to_string(this->id) + "] " + '[' + this->name + "] " + '[' + this->email + "] " + '[' + sex + "] " + '[' + this->birthdate + "] " + '[' + this->address + "] " + '[' + this->phoneNumber + "] "+ '[' + this->role + "] ";
 	}
 	bool operator < ( const Person& y){
 		return this->id < y.id;
@@ -108,7 +108,7 @@ public:
 			cout << "khong mo duoc file\n"; 
 		} 
 	} 
-	static vector<Person> getPerson(){
+	void getPerson(){
 		v_person.clear(); 
 		ifstream input("people.txt");
 		if(input.is_open()){
@@ -154,9 +154,16 @@ public:
 		else{
 			cout << "khong mo duoc file";
 		}
-		return v_person;	
 	}
-
+	string getRole(){
+		return this->role;
+	}
+	string getEmail(){
+		return this->email;
+	}
+	int getID(){
+		return this->id;
+	}
 };
 class BorrowInfo{
 private:
@@ -171,14 +178,7 @@ public:
         this->bookId = bookId;
         this->ebookId = ebookId;
     }
-    void addInfo(){ // them thong tin muon sach 
-    	int Id1, Id2, Id3;
-    	cout << "Nhap ID nguoi muon: ";
-    	cin >> Id1;
-   		cout << "Nhap ID sach: ";
-   		cin >> Id2;
-   		cout << "Nhap ID Ebook: ";
-   		cin >> Id3;
+    void addInfo(int Id1, int Id2, int Id3){ // them thong tin muon sach 
         ofstream output("borrowInfos.txt", ios::app);
 		if (output.is_open()){
 			output << endl;
@@ -381,7 +381,7 @@ class EBook : public Book{
 		int fileSize;
 };
 
-class User : public Person{
+class User{
 	private:
 		int id;
 		string email;
@@ -401,6 +401,9 @@ class User : public Person{
 			 	this->id = v_user[v_user.size()-1].id + 1;
 			} 		
 		}
+		string getEmail(){
+			return this->email; 
+		} 
 		string Tong_Hop(){
 			return '[' + to_string(this->id) + "] " + '[' + this->email + "] " + '[' + this->password + "]";
 		}
@@ -441,51 +444,8 @@ class User : public Person{
 				cout << "khong mo duoc file";
 			}
 		} 
-		bool check(){
-			string tmp = this->email; 
-			for(auto y : v_user){
-				if(y.email == tmp){
-					cout << "email da ton tai! \nVui long chon email khac\n";
-					return 0;
-				}
-			}
-			int n = tmp.size();
-			if(tmp.substr(n-10,10) != "@gmail.com"){
-				cout << "duoi email khong hop le\n";
-				return 0;
-			}
-			if(tmp.substr(0,10) == "@gmail.com"){
-				cout << "ten email khong hop le\n";
-				return 0;
-			}
-			
-			int check_password = 0;
-			string tmp2 = this->password;
-			for(int i=0; i<tmp2.size(); i++){
-				if(tmp2[i] >= '0' && tmp2[i] <= '9'){
-					check_password = 1;
-					break;
-				}
-			}
-			if(check_password == 0){
-				cout << "mat khau bao gom ca chu va so\n";
-				return 0;
-			}
-			for(int i=0; i<=tmp2.size(); i++){
-				if((tmp2[i] >= 'a' && tmp2[i] <= 'z') || (tmp2[i] >= 'A' && tmp2[i] <= 'Z')){
-					check_password = 2;
-					break;
-				}
-			}
-			if(check_password != 2){
-				cout << "mat khau bao gom ca chu va so\n";
-				return 0;
-			}
-			return 1;
-		}
 				
 		void addUsers(){
-			if(this->check() != 0){
 				v_user.push_back(*this); 
 				ofstream output("users.txt", ios::app);
 				if(output.is_open()){
@@ -497,7 +457,7 @@ class User : public Person{
 					cout << "khong mo duoc file\n"; 
 				} 
 			} 	
-		}  
+  
 		// Person login(){
 			
 		// } 
@@ -522,41 +482,208 @@ void DisplayMenu(){
 	cout << "	15. Chinh sua thong tin ca nhan cua nguoi khac.											" << endl;
 	cout << "	16. Dang xuat.																			" << endl;
 	cout << "	17. Thoat chuong trinh.																	" << endl;
-	cout << "-----------------------------------------------------------------------------------------------" << endl;
+	cout << "-----------------------------------------------------------------------------------------------" << endl;	
+}
+
+void check(string &tmp_email , string &tmp_password){ 
+		while(1){
+			int n = tmp_email.size();
+			int check_email = 1; 
+			for(auto y : v_user){
+				if(y.getEmail() == tmp_email){
+					check_email = 0; 
+					cout << "email da ton tai! \nVui long chon email khac\n";
+					break; 
+				}
+			}
+			if(check_email == 0){
+				cout << "Email dang ky : "; 
+				cin >> tmp_email;
+				cout << endl; 
+			}	 
+			else{ 
+				if(tmp_email.size() <= 10){
+					cout << "email khong hop le \nVui long chon email khac\n";
+					check_email = 0; 
+					cout << "Email dang ky : "; 
+					cin >> tmp_email;
+					cout << endl;
+				} 
+				if(check_email == 1 && tmp_email.substr(n-10,10) != "@gmail.com"){
+					cout << "duoi email khong hop le \nVui long chon email khac\n";
+					check_email = 0; 
+					cout << "Email dang ky : "; 
+					cin >> tmp_email;
+					cout << endl;  
+				}
+			}
+			if(check_email == 1){
+				break; 
+			} 
+		}		
+		while(1){
+			int check_password = 0;
+			string tmp2 = tmp_password;
+			for(int i=0; i<tmp2.size(); i++){
+				if(tmp2[i] >= '0' && tmp2[i] <= '9'){
+					check_password = 1;
+					break;
+				}
+			}
+			if(check_password == 0){
+				cout << "mat khau bao gom ca chu va so \nVui long chon password khac\n";
+				cout << "Password : "; 
+				cin >> tmp_password;
+				cout << endl; 
+			}
+			else{
+				for(int i=0; i<=tmp2.size(); i++){
+					if((tmp2[i] >= 'a' && tmp2[i] <= 'z') || (tmp2[i] >= 'A' && tmp2[i] <= 'Z')){
+						check_password = 2;
+						break;
+					}
+				}
+				if(check_password != 2){
+					cout << "mat khau bao gom ca chu va so \nVui long chon password khac\n";
+					cout << "Password : "; 
+					cin >> tmp_password;
+					cout << endl;
+				}
+			} 
+			if(check_password == 2){
+				break; 
+			} 
+			
+		} 
+		
+}
+string DangNhap(){
+	string u_email, u_password ;
+	cout << "email cua ban la : ";
+	cin >> u_email;
+	cout << "password cua ban la : ";
+	cin >> u_password;
+	cout << endl;
+	cout << "Dang nhap thanh cong!\n";
+	return u_email;
+}
+string DangKy(){
+	cout << "------------------DANG KY------------------\n";
+	// add person 
+	string name, email, sex, birthdate, address, phoneNumber;
+	cout << "Ho va ten: "; getline(cin, name);
+	cout << "\nEmail: "; getline(cin, email);
+	cout << "\nGioi tinh: "; getline(cin, sex);
+	cout << "\nNgay sinh: "; getline(cin, birthdate);
+	cout << "\nDia chi: "; getline(cin, address);
+	cout << "\nSo dien thoai: "; getline(cin, phoneNumber);
+	Person x(name, email, sex, birthdate, address, phoneNumber, "User");
+	x.addPerson();
+	// add user;
+	string u_email, u_password;
+	cout << "\nEmail dang ky : "; 
+	getline(cin, u_email) ;
+	cout << "\nPassword: ";
+	getline(cin,u_password);
+	cout << endl; 
+	check(u_email, u_password); 
+	cout << "Dang ky thanh cong!\n";
+	cout << "Email cua ban la : " << u_email << endl;
+	cout << "Password cua ban la : " << u_password << endl; 
+	User y(u_email, u_password); 
+	y.addUsers(); 
+	return u_email;
+}
+void ManageBook(string u_email){
+	bool check = false;
+	for(auto person: v_person){
+		if(person.getEmail() == u_email){
+			if(person.getRole() == "Admin"){
+				string title, author;
+				int id, quality;
+				cout << "Nhap ID sach: "; cin >> id; cin.ignore();
+				cout << "\nNhap ten sach: "; getline(cin, title);
+				cout << "\nNhap tac gia: "; getline(cin, author);
+				cout << "\nNhap so luong: "; cin >> quality;
+				Book x;
+				x.updateBook(id, title, author, quality);
+				check = true;
+				return;
+			}
+		}
+	}
+	if(!check) cout << "Loi khong sua duoc sach!\n";
+}
+void BorrowBook(string u_email){
+	bool check = false;
+	for(auto person: v_person){
+		if(person.getEmail() == u_email){
+			if(person.getRole() == "User"){
+				int id1 = person.getID();
+				int id2 = -1, id3 = -1;
+				cout << "Nhap ID sach: "; cin >> id2;
+				// Need: check id sach co ton tai khong
+				cout << "\nNhap Id ebook: "; cin >> id3; 	
+				// Need: check xem id ebook co ton tai khong 
+				BorrowInfo x;
+				x.addInfo(id1, id2, id3);
+				check = true;
+				cout << "\nMuon sach thanh cong!\n";
+				return;
+			}
+		}
+	}
+	if(!check) cout << "Loi khong muon duoc sach!\n";
 }
 int main() {
-	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
-	// a.In(a);
 	DisplayMenu();
-	// BorrowInfo a;
-	// a.updateInfo();
-	// cout << "Chon chuc nang ban muon su dung : ";
-	// int input ; cin >> input;
-	// cin.ignore();
-	// if(input == 1){
-	// 	string email, password ;
-	//  	cout << "email cua ban la : ";
-	// 	cin >> email;
-	// 	cout << endl << "password cua ban la : ";
-	// 	cin >> password;
-	// 	cout << endl; 
-	// }
-	if (input == 2){
-		cout << "------------------DANG KY------------------\n";
-		string name, email, sex, birthdate, address, phoneNumber;
-		cout << "Ho va ten: "; getline(cin, name);
-		cout << "\nEmail: "; getline(cin, email);
-		cout << "\nGioi tinh: "; getline(cin, sex);
-		cout << "\nNgay sinh: "; getline(cin, birthdate);
-		cout << "\nDia chi: "; getline(cin, address);
-		cout << "\nSo dien thoai: "; getline(cin, phoneNumber);
-		Person x(name, email, sex, birthdate, address, phoneNumber, "user");
-		x.addPerson();
+	Person a;
+	a.getPerson();
+//  chuyen vao vector
+	User x;
+ 	x.getusers(); 
+	Book k;
+	k.getBooks();
+	int input;
+	bool success = false;
+	string u_email;
+	while(!success){
+		cout << "Chon chuc nang ban muon su dung : ";
+		cin >> input;
+		cin.ignore();
+		if(input == 1){
+			u_email = DangNhap();
+			success = true;
+		}
+		else if(input == 2){
+			u_email = DangKy();
+			success = true;
+		} 
+		else cout << "Vui long dang nhap/dang ky!\n";
 	}
-	vector<Person> people = Person::getPerson();
-	// for(auto x: people){
-	// 	x.In(x);
-	// 	cout << endl;
-	// }
-	// return 0;
+	if(success){
+		cout << "Chon chuc nang ban muon su dung : ";
+		cin >> input;
+		switch(input){
+			case 1:
+				//Dang Nhap
+				break;
+			case 2:
+				//Dang ky
+				break;
+			case 3:
+				break; 
+			case 4: // sua thong tin sach
+				ManageBook(u_email);
+				break;
+			case 5:
+				break;
+			case 6: // Muon sach
+				BorrowBook(u_email);
+				break;
+			default: 
+				break;
+		}
+	}
+	return 0;
 }
