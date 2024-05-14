@@ -449,6 +449,50 @@ class Ebooks{
             }
             else cout << "khong co cuon sach ban can!\n";
         }
+
+        void updateBook(EbookInfor &bookUpdate){ // update theo id cua sach
+            bool check = false;
+            for(auto &x : dsEbooks){
+                if(x.getId() == bookUpdate.getId()){
+                    check = true;
+                    if(!checkBook(bookUpdate)) cout << "thong tin update khong hop le\n";
+                    else x = bookUpdate; // cap nhat trong vector dsBooks
+                    break;
+                }
+            }
+            if(!check) cout << "khong tim thay thong tin!\n";
+            else{
+                ofstream ofs("ebooks.txt", ios::trunc); // mo tep trong che đo ghi đe
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
+                    for(auto x : dsEbooks)
+                        cout << x.getId() << ' ' << x.getTitle() << ' ' << x.getAuthor() << ' ' << x.getQuantity() << ' ' << x.getFileFormat() << ' ' << x.getFileSize() << '\n';
+                    cout << "update thanh cong!\n";
+                }
+                else cout << "loi khi khong truy cap duoc vao data.\n";
+            }
+        }
+
+        void deleteBook(int id){
+            bool check = false;
+            for(int i = 0; i < dsEbooks.size(); i ++){
+                if(dsEbooks[i].getId() == id){
+                    check = true;
+                    dsEbooks.erase(dsEbooks.begin() + i); // xoa data tren vector dsBooks
+                    break;
+                }
+            }
+            if(!check) cout << "khong tim thay thong tin!\n";
+            else{
+                ofstream ofs("ebooks.txt", ios::trunc); // mo tep trong che đo ghi đe
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
+                    for(auto x : dsEbooks)
+                        ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << ' ' << '[' << x.getFileFormat() << ']' << ' ' << '[' << x.getFileSize() << ']' << endl;
+                    ofs.close();
+                    cout << "delete thanh cong!\n";
+                }
+                else cout << "loi khi khong truy cap duoc vao data.\n";
+            }
+        }
 };
 
 
@@ -628,75 +672,104 @@ void Login(){
 
 void add_Book(){ // chi admin
     cout << "ban muon them vao:\n";
-    cout << "books -> chon1    ----------    ebooks -> chon2\n";
-    int op; cin >> op;
-    if(op == 1){
-        cout << "nhap thong tin cuon sach muon them\n";
-        int id = 0;
-        string name, author;
-        int quantity;
-        cout << "nhap ten sach:\n";
-        cin.ignore();
-        getline(cin, name);
-        cout << "nhap tac gia:\n";
-        getline(cin, author);
-        cout << "nhap so luong:\n";
-        cin >> quantity;
-        BookInfor add(id, name, author, quantity);
-        acesstBooks.AddBook(add);
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            cout << "nhap thong tin cuon sach muon them\n";
+            int id = 0;
+            string name, author;
+            int quantity;
+            cout << "nhap ten sach:\n";
+            cin.ignore();
+            getline(cin, name);
+            cout << "nhap tac gia:\n";
+            getline(cin, author);
+            cout << "nhap so luong:\n";
+            cin >> quantity;
+            BookInfor add(id, name, author, quantity);
+            acesstBooks.AddBook(add);
+            cout << '\n' << "them thanh cong!\n";
+            break;
+        }
+        if(op == 2){
+            cout << "nhap thong tin cuon sach muon them\n";
+            int id = 0;
+            string name, author, fileFormat;
+            int quantity, fileSize;
+            cout << "nhap ten sach:\n";
+            cin.ignore();
+            getline(cin, name);
+            cout << "nhap tac gia:\n";
+            getline(cin, author);
+            cout << "nhap so luong:\n";
+            cin >> quantity;
+            cout << "nhap fileFormat:\n";
+            cin >> fileFormat;
+            cout << "nhap fileSize:\n";
+            cin >> fileSize;
+            EbookInfor add(id, name, author, quantity, fileFormat, fileSize);
+            acesstEbooks.AddBook(add);
+            cout << '\n' << "them thanh cong!\n";
+            break;
+        }
+        else cout << "vui long nhap dung!\n";
     }
-    else{
-        cout << "nhap thong tin cuon sach muon them\n";
-        int id = 0;
-        string name, author, fileFormat;
-        int quantity, fileSize;
-        cout << "nhap ten sach:\n";
-        cin.ignore();
-        getline(cin, name);
-        cout << "nhap tac gia:\n";
-        getline(cin, author);
-        cout << "nhap so luong:\n";
-        cin >> quantity;
-        cout << "nhap fileFormat:\n";
-        cin >> fileFormat;
-        cout << "nhap fileSize:\n";
-        cin >> fileSize;
-        EbookInfor add(id, name, author, quantity, fileFormat, fileSize);
-        acesstEbooks.AddBook(add);
-    }
-    cout << '\n' << "them thanh cong!\n";
 }
 
 void delete_Book(){ // chi admin
-    int id;
-    cout << "nhap id cua sach muon xoa:\n";
-    cin >> id;
-    acesstBooks.deleteBook(id);
+    cout << "ban muon xoa?\n";
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            int id;
+            cout << "nhap id cua sach muon xoa:\n";
+            cin >> id;
+            acesstBooks.deleteBook(id);
+            break;
+        }
+        if(op == 2){
+            int id;
+            cout << "nhap id cua sach muon xoa:\n";
+            cin >> id;
+            acesstEbooks.deleteBook(id);
+            break;
+        }
+        else{
+            cout << "vui long nhap dung!\n";
+    }
+    }
 }
 
 void borrow_Book(){ // chi user
     cout << "ban muon muon loai sach gi?\n";
-    cout << "1-book     2-Ebook\n";
-    int op; cin >> op;
-    if(op == 1){
-        cout << "nhap id sach ban muon muon:\n";
-        int id; cin >> id;
-        BorrowInfo borrow(infoUser.getId(), id, -1);
-        if(borrow.checkBook()){
-            borrow.addInfo();
-            cout << "thanh cong!\n";
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            cout << "nhap id sach ban muon muon:\n";
+            int id; cin >> id;
+            BorrowInfo borrow(infoUser.getId(), id, -1);
+            if(borrow.checkBook()){
+                borrow.addInfo();
+                cout << "thanh cong!\n";
+            }
+            else cout << "khong co sach ma ban muon!\n";
+            break;
         }
-        else cout << "khong co sach ma ban muon!\n";
-    }
-    else{
-        cout << "nhap id sach ban muon muon:\n";
-        int id; cin >> id;
-        BorrowInfo borrow(infoUser.getId(), -1, id);
-        if(borrow.checkEbook()){
-            borrow.addInfo();
-            cout << "muon thanh cong!\n";
+        if(op == 2){
+            cout << "nhap id sach ban muon muon:\n";
+            int id; cin >> id;
+            BorrowInfo borrow(infoUser.getId(), -1, id);
+            if(borrow.checkEbook()){
+                borrow.addInfo();
+                cout << "muon thanh cong!\n";
+            }
+            else cout << "khong co sach ma ban muon muon!\n";
+            break;
         }
-        else cout << "khong co sach ma ban muon muon!\n";
+        else cout << "vui long nhap dung!\n";
     }
 }
 
@@ -717,28 +790,33 @@ void get_Ebook(){
 }
 
 void update_Infor_User(){
-    cout << "thay doi mat khau - chon1\n";
-    cout << "thay doi thong tin ca nhan - chon2\n";
-    int op; cin >> op;
-    UserInfos update(0, "", "");
-    if(op == 1){
-        cout << "nhap id:\n";
-        int id; cin >> id; // trong ham updateUser co yeu cau xac nhan id roi nen o day khong can check id
-        cout << "nhap email:\n";
-        string email; cin >> email;
-        cout << "nhap password moi:\n";
-        string password; cin >> password;
-        cout << "xac nhan lai password:\n";
-        string newPass; cin >> newPass;
-        if(password == newPass){
-            update = UserInfos(id, email, password);
-            acesstUsers.updateUser(update);
-            cout << "thanh cong!\n";
+    while(1){
+        cout << "thay doi mat khau - chon1\n";
+        cout << "thay doi thong tin ca nhan - chon2\n";
+        int op; cin >> op;
+        UserInfos update(0, "", "");
+        if(op == 1){
+            cout << "nhap id:\n";
+            int id; cin >> id; // trong ham updateUser co yeu cau xac nhan id roi nen o day khong can check id
+            cout << "nhap email:\n";
+            string email; cin >> email;
+            cout << "nhap password moi:\n";
+            string password; cin >> password;
+            cout << "xac nhan lai password:\n";
+            string newPass; cin >> newPass;
+            if(password == newPass){
+                update = UserInfos(id, email, password);
+                acesstUsers.updateUser(update);
+                cout << "thanh cong!\n";
+            }
+            else cout << "mat khau khong giong nhau!\n";
+            break;
         }
-        else cout << "mat khau khong giong nhau!\n";
-    }
-    else{
-        // code update people
+        if(op == 2){
+            // code update people
+            break;
+        }
+        else cout << "vui long nhap dung!\n";
     }
 }
  
