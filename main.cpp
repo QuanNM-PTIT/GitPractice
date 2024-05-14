@@ -52,6 +52,7 @@ int UpdateIdBorrowInfo(){ // cap nhat ID muon sach
 	}
 	return NextId;
 }
+
 class Person{
 private:
     int id;
@@ -441,15 +442,14 @@ void DisplayMenu(){
 	cout << "16. Dang xuat." << endl;
 	cout << "17. Thoat chuong trinh." << endl; 
 	cout << "---------------------------------------------" << endl;
-	
 
 }
 int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
 	DisplayMenu();
-//	BorrowInfo a;
-//	a.updateInfo();
+	BorrowInfo a;
+	a.updateInfo();
 	cout << "Chon chuc nang ban muon su dung : ";
 	int input ; cin >> input;
 	if(input == 1){
@@ -461,5 +461,6 @@ int main() {
 		cout << endl;
 		 
 	} 
+
 	return 0;
 }
