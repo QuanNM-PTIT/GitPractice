@@ -824,8 +824,8 @@ int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
-        cout << "dang nhap - bam \"a\"\n"; // thanh lam
-        cout << "dang ki - bam \"b\"\n";
+        cout << "dang nhap - bam \"a\"\n"; // xong
+        cout << "dang ki - bam \"b\"\n"; // xong
         cout << "thoat chuong trinh - bam \"r\"\n"; // xong
         cin >> option;
         if(option == 'r') return 0;
@@ -855,18 +855,18 @@ int main()
             Login();
             while(checkInfoUser){
                 cout << "CHON CAC CHUC NANG:\n";
-                cout << "bam \"c\" de them sach - quyen cua admin\n"; // thanh lam
-                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
-                cout << "bam \"e\" de xoa sach - quyen cua admin\n"; // thanh lam
-                cout << "bam \"f\" de muon sach\n"; // thanh lam
+                cout << "bam \"c\" de them sach - quyen cua admin\n"; // xong
+                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n"; // xong
+                cout << "bam \"e\" de xoa sach - quyen cua admin\n"; // xong
+                cout << "bam \"f\" de muon sach\n"; // xong
                 cout << "bam \"g\" de tra sach\n";
-                cout << "bam \"h\" de hien thi tat ca sach\n"; // thanh lam
-                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // thanh lam
+                cout << "bam \"h\" de hien thi tat ca sach\n"; // xong
+                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // xong
                 cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
-                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // thanh lam
+                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // xong
                 cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
                 cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi muon- quyen cua admin\n";
-                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // thanh lam
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // xong
                 cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
                 cout << "bam \"q\" de dang suat\n"; // xong
                 cout << "bam \"r\" de thoat chuong trinh\n"; // xong
