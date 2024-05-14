@@ -1330,6 +1330,7 @@ int main()
                     showBook();
                     cout << "cac ebook ban da muon:\n";
                     showEbook();
+                    cout << '\n';
                 }
                 // if(option == 'n')
                 if(option == 'o'){
