@@ -38,7 +38,7 @@ int main(){
         }
 
     	if (isLogged) {
-    		cout << "WELCOME " << person.getPersonName() << "\n\n";
+    		cout << "WELCOME " << person.getPersonName() << " " << person.getPersonRole() << "\n\n";
 		}
         else {
             cout << "Ban chua dang nhap!!!\n\n";
@@ -132,8 +132,20 @@ int main(){
             }
             getEnterKey();
             break;
-        case 6:
-            cout << "6. Muon sach.\n";
+        case 6: //cout << "6. Muon sach.\n";
+            if (!isLogged) {
+                cout << "Ban chua dang nhap!!\n";
+                cout << "Hay dang nhap de su dung tinh nang nay!!\n";
+            }
+            else {
+                if (person.getPersonRole() == "User") {
+                    addBorrowInfo();
+                }
+                else {
+                    cout << "Chuc nang nay chi danh cho User!!\n";
+                }
+            }
+            getEnterKey();
             break;
         case 7:
             cout << "7. Tra sach.\n";

@@ -48,6 +48,7 @@ void addBorrowInfo(){
     // int bookId = newBorrowInfo.getBookId();
     // int eBookId = newBorrowInfo.getEBookId();
     while (1) {
+        system("cls");
         int borrowId, personId, bookId, eBookId;
         cout << "Hay nhap thong tin!\n";
         borrowId = getSmallestId(BorrowInfosFile);
@@ -64,17 +65,16 @@ void addBorrowInfo(){
             outFile << "[" << bookId << "] ";
             outFile << "[" << eBookId << "]\n";
             outFile.close();
+            cout << "Them thong tin muon sach thanh cong!!\n";
             break;
         }
         else {
             cout << "Invalid Data!\n";
-            cout << "Ban co muon nhap lai thong tin? (Y/N)";
-            char c;
-            cin >> c;
-            if (c == 'Y'){
-                system("cls");
-            }
-            else {
+            cout << "Ban co muon nhap lai thong tin? (1/0) ";
+            int choose;
+            cin >> choose;
+            if (!choose) {
+                cout << "Ban da huy yeu cau them thong tin muon!\n";
                 break;
             }
         }

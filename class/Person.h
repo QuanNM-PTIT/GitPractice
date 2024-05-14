@@ -40,7 +40,7 @@ Person::Person(){
     this -> birthdate = "";
     this -> address = "";
     this -> phoneNumber = "";
-    this -> role = "Admin";
+    this -> role = "User";
 }
 Person::Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role){
     this -> id = id;
