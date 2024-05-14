@@ -1,5 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
+class Book;
+class User;
+vector<Book> v;
+vector<User> v_user;
 class Person;
 int UpdateIdPerson(){ // cap nhat ID person
 	ifstream input("people.txt");
@@ -48,6 +52,7 @@ int UpdateIdBorrowInfo(){ // cap nhat ID muon sach
 	}
 	return NextId;
 }
+
 class Person{
 private:
     int id;
@@ -164,25 +169,299 @@ public:
 		else cout << "Khong mo duoc file!\n";
 	} 
 };
+class Book{
+	private:
+		int id;
+		string title;
+		string author;
+		int quality;
+	public:
+		Book(){
+		} 
+		Book(string title, string author, int quality){
+			this->title = title;
+			this->author = author;
+			this->quality = quality;
+			if(v.size() == 0){
+			 	this->id = 1;
+			 } 
+			else{
+			 	this->id = v[v.size()-1].id + 1;
+			} 
+				
+		} 
+		string Tong_Hop(){
+			return '[' + to_string(this->id) + "] " + '[' + this->title + "] " + '[' + this->author + "] " + '[' + to_string(this->quality) + "] ";
+		}
+		bool operator < ( const Book& y){
+			return this->id < y.id;
+		}
+		void SapXepFileBook(){
+			sort(v.begin(), v.end()); 
+		}	 
+		void GhiDeFileBook(){
+			ofstream output("books.txt");
+			if(output.is_open()){
+				for(auto y : v){
+					output << y.Tong_Hop() << endl;
+				}
+				output.close();
+			}
+			else{
+				cout << "khong mo duoc file\n"; 
+			}
+		} 
+		
+		void addBook(){
+				v.push_back(*this); 
+				ofstream output("books.txt", ios::app);
+				if(output.is_open()){
+					output << '[' << id << "] "  << '[' << title << "] " << '[' << author << "] " << '[' << quality << "] " << endl ;
+					GhiDeFileBook();
+					output.close(); 
+				} 
+				else{
+					cout << "khong mo duoc file\n"; 
+				} 
+		} 
+		vector<Book> getBooks(){
+			v.clear(); 
+			ifstream input("books.txt");
+			
+			if(input.is_open()){
+				string tmp;
+				while(getline(input,tmp)){
+					Book x;
+					int start = 0, end = 0, i = 1;
+					while(tmp.find('[', end) != -1){
+						start =  tmp.find('[', end);
+						end =  tmp.find(']', start);
+						string tmp1 = tmp.substr(start + 1,end - start - 1); 
+						if(i == 1)  x.id = stoi(tmp1) ; 
+						else if (i == 2) x.title = tmp1 ;
+						else if (i == 3) x.author = tmp1;
+						else  x.quality = stoi(tmp1);
+						i++; 
+					} 
+					v.push_back(x); 
+				}
+				SapXepFileBook();
+				GhiDeFileBook(); 
+				input.close();
+			}
+			else{
+				cout << "khong mo duoc file";
+			}
+			return v;	
+		} 
+ 
+		void updateBook(int id, string title, string author, int quality){
+				int check = 0;
+				for(int i= 0; i<v.size(); i++){
+					if(v[i].id == id){
+						check = 1;
+						v[i].title = title;
+						v[i].author = author;
+						v[i].quality = quality;
+						break; 
+					} 
+				}
+				if(check == 1){
+					GhiDeFileBook();
+				} 
+				if(check == 0){
+					cout << "Khong ton tai id sach " << id << "\n";
+				}
+		}
+		
+		void deleteBook(int id){
+			int check = 0;
+			for(int i = 0; i<v.size(); i++){
+				if(v[i].id == id){
+					check = 1;
+					v.erase(v.begin() + i);
+					break; 
+				}
+			}
+			if(check == 1){
+				GhiDeFileBook();
+			}
+			else{
+				cout << "id sach " << id << " khong ton tai" << "\n"; 
+			} 
+		
+		}
+		
+}; 
+
+class EBook : public Book{
+	private:
+		string fileFormat;
+		int fileSize;
+};
+
+class User : public Person{
+	private:
+		int id;
+		string email;
+		string password;
+		
+	public:
+		User(){
+		} 
+		User(string email, string password){
+			this->email = email;
+			this->password = password;
+			
+			if(v_user.size() == 0){
+			 	this->id = 1;
+			 } 
+			else{
+			 	this->id = v_user[v_user.size()-1].id + 1;
+			} 		
+		}
+		string Tong_Hop(){
+			return '[' + to_string(this->id) + "] " + '[' + this->email + "] " + '[' + this->password + "]";
+		}
+		void GhiDeFileUser(){
+			ofstream output("users.txt");
+			if(output.is_open()){
+				for(auto y : v_user){
+					output << y.Tong_Hop() << endl;
+				}
+				output.close();
+			}
+			else{
+				cout << "khong mo duoc file\n"; 
+			}
+		}
+		void getusers(){
+			v_user.clear(); 
+			ifstream input("users.txt");
+			if(input.is_open()){
+				string tmp;
+				while(getline(input,tmp)){
+					User x;
+					int start = 0, end = 0, i = 1;
+					while(tmp.find('[', end) != -1){
+						start =  tmp.find('[', end);
+						end =  tmp.find(']', start);
+						string tmp1 = tmp.substr(start + 1,end - start - 1); 
+						if(i == 1)  x.id = stoi(tmp1) ; 
+						else if (i == 2) x.email = tmp1 ;
+						else x.password = tmp1;
+						i++; 
+					} 
+					v_user.push_back(x); 
+				} 
+				input.close();
+			}
+			else{
+				cout << "khong mo duoc file";
+			}
+		} 
+		bool check(){
+			string tmp = this->email; 
+			for(auto y : v_user){
+				if(y.email == tmp){
+					cout << "email da ton tai! \nVui long chon email khac\n";
+					return 0;
+				}
+			}
+			int n = tmp.size();
+			if(tmp.substr(n-10,10) != "@gmail.com"){
+				cout << "duoi email khong hop le\n";
+				return 0;
+			}
+			if(tmp.substr(0,10) == "@gmail.com"){
+				cout << "ten email khong hop le\n";
+				return 0;
+			}
+			
+			int check_password = 0;
+			string tmp2 = this->password;
+			for(int i=0; i<tmp2.size(); i++){
+				if(tmp2[i] >= '0' && tmp2[i] <= '9'){
+					check_password = 1;
+					break;
+				}
+			}
+			if(check_password == 0){
+				cout << "mat khau bao gom ca chu va so\n";
+				return 0;
+			}
+			for(int i=0; i<=tmp2.size(); i++){
+				if((tmp2[i] >= 'a' && tmp2[i] <= 'z') || (tmp2[i] >= 'A' && tmp2[i] <= 'Z')){
+					check_password = 2;
+					break;
+				}
+			}
+			if(check_password != 2){
+				cout << "mat khau bao gom ca chu va so\n";
+				return 0;
+			}
+			return 1;
+		}
+				
+		void addUsers(){
+			if(this->check() != 0){
+				v_user.push_back(*this); 
+				ofstream output("users.txt", ios::app);
+				if(output.is_open()){
+					output << '[' << id << "] "  << '[' << email << "] " << '[' << password << "] "<< endl ;
+					GhiDeFileUser();
+					output.close(); 
+				} 
+				else{
+					cout << "khong mo duoc file\n"; 
+				} 
+			} 	
+		}  
+		Person login(){
+			
+		} 
+		
+}; 
 void DisplayMenu(){
 	cout << "--------------------MENU--------------------" << endl;
+	cout << "1. Dang nhap." << endl; 
 	cout << "2. Dang ky." << endl;
+	cout << "3. Them sach." << endl; 
 	cout << "4. Sua thong tin sach." << endl;
+	cout << "5. Xoa sach." << endl; 
 	cout << "6. Muon sach." << endl;
+	cout << "7. Tra sach." << endl; 
 	cout << "8. Lay thong tin cac quyen sach." << endl;
+	cout << "9. Lay thong tin 1 quyen sach" << endl; 
 	cout << "10. Lay thong tin tat ca cac Ebook hien co." << endl;
+	cout << "11. Lay thong tin 1 eBook co id nam trong eBooks.txt" << endl; 
 	cout << "12. Hien thi thong tin tat ca cac quyen sach da muon." << endl;
+	cout << "13. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon voi id nguoi dung." << endl; 
 	cout << "14. Chinh sua thong tin ca nhan" << endl;
+	cout << "15. Chinh sua thong tin ca nhan cua nguoi khac." << endl; 
 	cout << "16. Dang xuat." << endl;
+	cout << "17. Thoat chuong trinh." << endl; 
 	cout << "---------------------------------------------" << endl;
-	
 
 }
 int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
-//	DisplayMenu();
+	DisplayMenu();
 	BorrowInfo a;
 	a.updateInfo();
+	cout << "Chon chuc nang ban muon su dung : ";
+	int input ; cin >> input;
+	if(input == 1){
+		string email, password ;
+	 	cout << "email cua ban la : ";
+		cin >> email;
+		cout << endl << "password cua ban la : ";
+		cin >> password;
+		cout << endl;
+		 
+	} 
+
+
 	return 0;
 }
