@@ -3,67 +3,25 @@ using namespace std;
 class Book;
 class User;
 class Person;
+class BorrowInfo;
 vector<Book> v;
 vector<User> v_user;
 vector<Person> v_person; 
-int UpdateIdPerson(){ // cap nhat ID person
-	ifstream input("people.txt");
-	set<int> se;
-	if(input.is_open()){
-		string s;
-		while(getline(input, s)){
-			int i = 0;
-			string tmp = "";
-			while(s[i] != ']'){
-				if(isdigit(s[i])) tmp += s[i];
-				i++;
-			}
-			se.insert(stoi(tmp));
-		}
-		input.close();
-	}
-	else cout << "Khong mo duoc file!" << endl;
-	int NextId = 1;
-	while(se.count(NextId)){
-		NextId++;
-	}
-	return NextId;
-}
-int UpdateIdBorrowInfo(){ // cap nhat ID muon sach
-	ifstream input("borrowInfos.txt");
-	set<int> se;
-	if(input.is_open()){
-		string s;
-		while(getline(input, s)){
-			int i = 0;
-			string tmp = "";
-			while(s[i] != ']'){
-				if(isdigit(s[i])) tmp += s[i];
-				i++;
-			}
-			se.insert(stoi(tmp));
-		}
-		input.close();
-	}
-	else cout << "Khong mo duoc file!" << endl;
-	
-	int NextId = 1;
-	while(se.count(NextId)){
-		NextId++;
-	}
-	return NextId;
-}
-
+vector<BorrowInfo> v_borrowInfo;
 class Person{
 private:
     int id;
     string name = "", email = "", sex = "", birthdate = "", phoneNumber = "", role = "", address = "";
 public:
 	Person(){
-		this->id = UpdateIdPerson();
 	}
     Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role){
-        this->id = UpdateIdPerson();
+        if(v_person.size() == 0){
+			 	this->id = 1;
+			 } 
+		else{
+			this->id = v_person[v_person.size()-1].id + 1;
+		} 
         this->name = name;
         this->email = email;
         this->sex = sex;
@@ -149,6 +107,8 @@ public:
 				} 
 				v_person.push_back(x); 
 			}
+			SapXepFilePeople();
+			GhiDeFilePeople(); 
 			input.close();
 		}
 		else{
@@ -173,87 +133,98 @@ private:
     int id, personId = 0, bookId = 0, ebookId = 0;
 public:
 	BorrowInfo() {
-        this->id = UpdateIdBorrowInfo();
     }
     BorrowInfo(int personId, int bookId, int ebookId ){
-        this->id = UpdateIdBorrowInfo();
+       if(v_borrowInfo.size() == 0){
+			 	this->id = 1;
+			} 
+		else{
+			this->id = v_borrowInfo[v_borrowInfo.size()-1].id + 1;
+		} 
         this->personId = personId;
         this->bookId = bookId;
         this->ebookId = ebookId;
     }
-    void addInfo(int Id1, int Id2, int Id3){ // them thong tin muon sach 
+	string Tong_Hop(){
+			return '[' + to_string(this->id) + "] " + '[' + to_string(this->personId) + "] " + '[' + to_string(this->bookId) + "] " + '[' + to_string(this->ebookId) + "] ";
+		}
+	bool operator < ( const BorrowInfo& y){
+		return this->id < y.id;
+	}
+	void SapXepFileBorrow(){
+		sort(v_borrowInfo.begin(), v_borrowInfo.end()); 
+	}	 
+	void GhiDeFileBorrow(){
+		ofstream output("borrowInfos.txt");
+		if(output.is_open()){
+			for(auto y : v_borrowInfo){
+				output << y.Tong_Hop() << endl;
+			}
+			output.close();
+		}
+		else{
+			cout << "khong mo duoc file\n"; 
+		}
+	} 
+	void addInfo(){ // them thong tin muon sach 
+		v_borrowInfo.push_back(*this);
         ofstream output("borrowInfos.txt", ios::app);
 		if (output.is_open()){
 			output << endl;
-			output << '[' << id  << ']'  << ' '  << '[' << Id1 << ']' << ' '  << '[' << Id2 << ']' << ' '  << '[' << Id3 << ']';
+			output << '[' << to_string(id)  << ']'  << ' '  << '[' <<  to_string(personId) << ']' << ' '  << '[' << to_string(bookId) << ']' << ' '  << '[' << to_string(ebookId) << ']';
         	output.close();
 		}
         else {
         	cout << "Khong mo duoc file\n";
 		}
     }
-	void updateInfo(){
-		BorrowInfo update;
-		cout << "__Cap nhat thong tin muon sach__\n";
-		cout << "Nhap ID muon sach: ";
-		cin >> update.id;
-		cout << "\nNhap ID nguoi muon: ";
-		cin >> update.personId;
-		cout << "\nNhap ID sach: ";
-		cin >> update.bookId;
-		cout << "\nNhap ID Ebook: ";
-		cin >> update.ebookId;
-		// Doc du lieu tu file BorrowInfos.txt
+	void getBorrowInfo(){
+		v_borrowInfo.clear(); 
 		ifstream input("borrowInfos.txt");
-		// doc du lieu tu file borrowInfos.txt 
-		vector<BorrowInfo> info;
+		
 		if(input.is_open()){
-			string s; 
-			while(getline(input, s)){
-				BorrowInfo oldInfo;
-				string tmp;
-				stringstream ss(s);
-				int cnt = 0;
-				while(ss >> tmp){
-					if(!tmp.empty()){
-						// xoa dau []
-						cnt++;
-						tmp.erase(0, 1);
-						tmp.erase(tmp.size() - 1, 1);
-						if(cnt == 1){
-							oldInfo.id = stoi(tmp);
-						} 
-						else if(cnt == 2) oldInfo.personId = stoi(tmp);
-						else if(cnt == 3) oldInfo.bookId = stoi(tmp);
-						else if(cnt == 4){
-							oldInfo.ebookId = stoi(tmp);
-							info.push_back(oldInfo);
-						}
-					}
-				}
+			string tmp;
+			while(getline(input,tmp)){
+				BorrowInfo x;
+				int start = 0, end = 0, i = 1;
+				while(tmp.find('[', end) != -1){
+					start =  tmp.find('[', end);
+					end =  tmp.find(']', start);
+					string tmp1 = tmp.substr(start + 1,end - start - 1); 
+					if(i == 1)  x.id = stoi(tmp1) ; 
+					else if (i == 2) x.personId = stoi(tmp1) ;
+					else if (i == 3) x.bookId = stoi(tmp1);
+					else  x.ebookId = stoi(tmp1);
+					i++; 
+				} 
+				v_borrowInfo.push_back(x); 
 			}
+			SapXepFileBorrow();
+			GhiDeFileBorrow(); 
 			input.close();
 		}
-		else cout << "Khong mo duoc file!\n";
-		// ghi lai vao file
-		ofstream output("borrowInfos.txt");
-		if(output.is_open()){
-			bool check = true;
-			for(auto borrowRecord: info){
-				if(borrowRecord.id == update.id){
-					borrowRecord.personId = update.personId;
-					borrowRecord.bookId = update.bookId;
-					borrowRecord.ebookId = update.ebookId;
-					check = false;
-					cout << "Cap nhat thong tin thanh cong!\n";
-				}
-				output << "[" << borrowRecord.id << "] [" << borrowRecord.personId << "] [" << borrowRecord.bookId << "] [" << borrowRecord.ebookId << "]" << endl;
-			}
-			if(check) cout << "Khong tim thay thong tin muon cap nhat!\n"; 
-			output.close();
+		else{
+			cout << "khong mo duoc file";
 		}
-		else cout << "Khong mo duoc file!\n";
 	} 
+	void updateBook(int id, int personId, int bookId, int ebookId){
+		int check = 0;
+		for(int i= 0; i< v_borrowInfo.size(); i++){
+			if(v_borrowInfo[i].id == id){
+				check = 1;
+				v_borrowInfo[i].personId = personId;
+				v_borrowInfo[i].bookId= bookId;
+				v_borrowInfo[i].ebookId = ebookId;
+				break; 
+			} 
+		}
+		if(check == 1){
+			GhiDeFileBorrow();
+		} 
+		if(check == 0){
+			cout << "Khong tim thay ID muon\n";
+		}
+	}
 };
 class Book{
 	private:
@@ -273,8 +244,7 @@ class Book{
 			 } 
 			else{
 			 	this->id = v[v.size()-1].id + 1;
-			} 
-				
+			} 	
 		} 
 		string Tong_Hop(){
 			return '[' + to_string(this->id) + "] " + '[' + this->title + "] " + '[' + this->author + "] " + '[' + to_string(this->quality) + "] ";
@@ -669,8 +639,8 @@ void BorrowBook(string u_email){
 				// Need: check id sach co ton tai khong
 				cout << "\nNhap Id ebook: "; cin >> id3; 	
 				// Need: check xem id ebook co ton tai khong 
-				BorrowInfo x;
-				x.addInfo(id1, id2, id3);
+				BorrowInfo x(id1, id2, id3);
+				x.addInfo();
 				check = true;
 				cout << "\nMuon sach thanh cong!\n";
 				return;
@@ -683,6 +653,11 @@ int main() {
 	DisplayMenu1();
 	Person a;
 	a.getPerson();
+	BorrowInfo b;
+	b.getBorrowInfo();
+	// BorrowBook ("james.anderson@gmail.com");
+	// Person b("Yen", "abc@gmail.com", "fermale", "10/02", "Van Quan", "123434", "user");
+	// b.addPerson();
 //  chuyen vao vector
 	User x;
  	x.getusers(); 
@@ -707,9 +682,55 @@ int main() {
 		cin >> input2;
 		 
 	} 
-	 
+
+	// User x;
+ 	// x.getusers(); 
+	// Book k;
+	// k.getBooks();
+	// int input;
+	// bool success = false;
+	// string u_email;
+	// while(!success){
+	// 	cout << "Chon chuc nang ban muon su dung : ";
+	// 	cin >> input;
+	// 	cin.ignore();
+	// 	if(input == 1){
+	// 		u_email = DangNhap();
+	// 		success = true;
+	// 	}
+	// 	else if(input == 2){
+	// 		u_email = DangKy();
+	// 		success = true;
+	// 	} 
+	// 	else cout << "Vui long dang nhap/dang ky!\n";
+	// }
+	// if(success){
+	// 	cout << "Chon chuc nang ban muon su dung : ";
+	// 	cin >> input;
+	// 	switch(input){
+	// 		case 1:
+	// 			//Dang Nhap
+	// 			break;
+	// 		case 2:
+	// 			//Dang ky
+	// 			break;
+	// 		case 3:
+	// 			break; 
+	// 		case 4: // sua thong tin sach
+	// 			ManageBook(u_email);
+	// 			break;
+	// 		case 5:
+	// 			break;
+	// 		case 6: // Muon sach
+	// 			BorrowBook(u_email);
+	// 			break;
+	// 		default: 
+	// 			break;
+	// 	}
+	// }
+	// return 0;
+		 
 	
 	return 0;
 }
-
 
