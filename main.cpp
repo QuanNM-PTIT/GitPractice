@@ -602,6 +602,50 @@ class Ebooks{
             }
             else cout << "khong co cuon sach ban can!\n";
         }
+
+        void updateBook(EbookInfor &bookUpdate){ // update theo id cua sach
+            bool check = false;
+            for(auto &x : dsEbooks){
+                if(x.getId() == bookUpdate.getId()){
+                    check = true;
+                    if(!checkBook(bookUpdate)) cout << "thong tin update khong hop le\n";
+                    else x = bookUpdate; // cap nhat trong vector dsBooks
+                    break;
+                }
+            }
+            if(!check) cout << "khong tim thay thong tin!\n";
+            else{
+                ofstream ofs("ebooks.txt", ios::trunc); // mo tep trong che đo ghi đe
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
+                    for(auto x : dsEbooks)
+                        cout << x.getId() << ' ' << x.getTitle() << ' ' << x.getAuthor() << ' ' << x.getQuantity() << ' ' << x.getFileFormat() << ' ' << x.getFileSize() << '\n';
+                    cout << "update thanh cong!\n";
+                }
+                else cout << "loi khi khong truy cap duoc vao data.\n";
+            }
+        }
+
+        void deleteBook(int id){
+            bool check = false;
+            for(int i = 0; i < dsEbooks.size(); i ++){
+                if(dsEbooks[i].getId() == id){
+                    check = true;
+                    dsEbooks.erase(dsEbooks.begin() + i); // xoa data tren vector dsBooks
+                    break;
+                }
+            }
+            if(!check) cout << "khong tim thay thong tin!\n";
+            else{
+                ofstream ofs("ebooks.txt", ios::trunc); // mo tep trong che đo ghi đe
+                if(ofs.is_open()){ // cap nhat lai trong file Books.txt
+                    for(auto x : dsEbooks)
+                        ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getTitle() << ']' << ' ' << '[' << x.getAuthor() << ']' << ' ' << '[' << x.getQuantity() << ']' << ' ' << '[' << x.getFileFormat() << ']' << ' ' << '[' << x.getFileSize() << ']' << endl;
+                    ofs.close();
+                    cout << "delete thanh cong!\n";
+                }
+                else cout << "loi khi khong truy cap duoc vao data.\n";
+            }
+        }
 };
 
 
@@ -658,6 +702,13 @@ class Users{
             }
         }
 
+        bool checkInfor(string email, string password){
+            for(auto x : dsUsers){
+                if(email == x.getEmail() && password == x.getPassword()) return true;
+            }
+            return false;
+        }
+
         void updateUser(UserInfos &UserUpdate){
             bool check = false;
             for(auto &x : dsUsers){
@@ -703,8 +754,8 @@ class Users{
         // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
         Person login(string email, string password){ // check thong tin dang nhap
             if(!checkUser(UserInfos(0, email, password))){
-                 cout << "nhap du thong tin!\n";
-                 return Person("", "", "", "", "", "", "");
+                cout << "thong tin dang nhap sai!\n";
+                return Person("", "", "", "", "", "", "");
             }
             else{
                 ifstream ifs("people.txt");
@@ -761,18 +812,16 @@ char option; // cac thao tac khi dang nhap thanh cong
  
 void Login(){
     checkInfoUser = false;
-    // infoUser = Person("", "", "", "", "", "", ""); // moi khi dang nhap lai tu dau
     string email, password;
     cout << "nhap email:\n";
     cin >> email;
     cout << "nhap password:\n";
     cin >> password;
-    infoUser = acesstUsers.login(email, password);
-    if(infoUser.getEmail().empty()){ // chua dang ki
+    if(!acesstUsers.checkInfor(email, password)){
         cout << "dang nhap that bai!\n";
-        cout << "vui long dang ki tai khoan!\n";
     }
     else{
+        infoUser = acesstUsers.login(email, password);
         cout << '\n' << "Welcome " << infoUser.getName() << '\n' << endl;
         checkInfoUser = true;
     }
@@ -781,75 +830,104 @@ void Login(){
 
 void add_Book(){ // chi admin
     cout << "ban muon them vao:\n";
-    cout << "books -> chon1    ----------    ebooks -> chon2\n";
-    int op; cin >> op;
-    if(op == 1){
-        cout << "nhap thong tin cuon sach muon them\n";
-        int id = 0;
-        string name, author;
-        int quantity;
-        cout << "nhap ten sach:\n";
-        cin.ignore();
-        getline(cin, name);
-        cout << "nhap tac gia:\n";
-        getline(cin, author);
-        cout << "nhap so luong:\n";
-        cin >> quantity;
-        BookInfor add(id, name, author, quantity);
-        acesstBooks.AddBook(add);
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            cout << "nhap thong tin cuon sach muon them\n";
+            int id = 0;
+            string name, author;
+            int quantity;
+            cout << "nhap ten sach:\n";
+            cin.ignore();
+            getline(cin, name);
+            cout << "nhap tac gia:\n";
+            getline(cin, author);
+            cout << "nhap so luong:\n";
+            cin >> quantity;
+            BookInfor add(id, name, author, quantity);
+            acesstBooks.AddBook(add);
+            cout << '\n' << "them thanh cong!\n";
+            break;
+        }
+        if(op == 2){
+            cout << "nhap thong tin cuon sach muon them\n";
+            int id = 0;
+            string name, author, fileFormat;
+            int quantity, fileSize;
+            cout << "nhap ten sach:\n";
+            cin.ignore();
+            getline(cin, name);
+            cout << "nhap tac gia:\n";
+            getline(cin, author);
+            cout << "nhap so luong:\n";
+            cin >> quantity;
+            cout << "nhap fileFormat:\n";
+            cin >> fileFormat;
+            cout << "nhap fileSize:\n";
+            cin >> fileSize;
+            EbookInfor add(id, name, author, quantity, fileFormat, fileSize);
+            acesstEbooks.AddBook(add);
+            cout << '\n' << "them thanh cong!\n";
+            break;
+        }
+        else cout << "vui long nhap dung!\n";
     }
-    else{
-        cout << "nhap thong tin cuon sach muon them\n";
-        int id = 0;
-        string name, author, fileFormat;
-        int quantity, fileSize;
-        cout << "nhap ten sach:\n";
-        cin.ignore();
-        getline(cin, name);
-        cout << "nhap tac gia:\n";
-        getline(cin, author);
-        cout << "nhap so luong:\n";
-        cin >> quantity;
-        cout << "nhap fileFormat:\n";
-        cin >> fileFormat;
-        cout << "nhap fileSize:\n";
-        cin >> fileSize;
-        EbookInfor add(id, name, author, quantity, fileFormat, fileSize);
-        acesstEbooks.AddBook(add);
-    }
-    cout << '\n' << "them thanh cong!\n";
 }
 
 void delete_Book(){ // chi admin
-    int id;
-    cout << "nhap id cua sach muon xoa:\n";
-    cin >> id;
-    acesstBooks.deleteBook(id);
+    cout << "ban muon xoa?\n";
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            int id;
+            cout << "nhap id cua sach muon xoa:\n";
+            cin >> id;
+            acesstBooks.deleteBook(id);
+            break;
+        }
+        if(op == 2){
+            int id;
+            cout << "nhap id cua sach muon xoa:\n";
+            cin >> id;
+            acesstEbooks.deleteBook(id);
+            break;
+        }
+        else{
+            cout << "vui long nhap dung!\n";
+        }
+    }
 }
 
 void borrow_Book(){ // chi user
     cout << "ban muon muon loai sach gi?\n";
-    cout << "1-book     2-Ebook\n";
-    int op; cin >> op;
-    if(op == 1){
-        cout << "nhap id sach ban muon muon:\n";
-        int id; cin >> id;
-        BorrowInfo borrow(infoUser.getId(), id, -1);
-        if(borrow.checkBook()){
-            borrow.addInfo();
-            cout << "thanh cong!\n";
+    while(1){
+        cout << "books -> chon1    ----------    ebooks -> chon2\n";
+        int op; cin >> op;
+        if(op == 1){
+            cout << "nhap id sach ban muon muon:\n";
+            int id; cin >> id;
+            BorrowInfo borrow(infoUser.getId(), id, -1);
+            if(borrow.checkBook()){
+                borrow.addInfo();
+                cout << "thanh cong!\n";
+            }
+            else cout << "khong co sach ma ban muon!\n";
+            break;
         }
-        else cout << "khong co sach ma ban muon!\n";
-    }
-    else{
-        cout << "nhap id sach ban muon muon:\n";
-        int id; cin >> id;
-        BorrowInfo borrow(infoUser.getId(), -1, id);
-        if(borrow.checkEbook()){
-            borrow.addInfo();
-            cout << "muon thanh cong!\n";
+        if(op == 2){
+            cout << "nhap id sach ban muon muon:\n";
+            int id; cin >> id;
+            BorrowInfo borrow(infoUser.getId(), -1, id);
+            if(borrow.checkEbook()){
+                borrow.addInfo();
+                cout << "muon thanh cong!\n";
+            }
+            else cout << "khong co sach ma ban muon muon!\n";
+            break;
         }
-        else cout << "khong co sach ma ban muon muon!\n";
+        else cout << "vui long nhap dung!\n";
     }
 }
 
@@ -861,6 +939,10 @@ void get_Book(){
     cout << "nhap id cuon sach:\n";
     int id; cin >> id;
     acesstBooks.getBook(id);
+}
+
+void get_All_Ebooks(){
+    acesstEbooks.getAllBooks();
 }
 
 void get_Ebook(){
@@ -968,8 +1050,8 @@ int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
     while(1){
-        cout << "dang nhap - bam \"a\"\n"; // thanh lam
-        cout << "dang ki - bam \"b\"\n";
+        cout << "dang nhap - bam \"a\"\n"; // xong
+        cout << "dang ki - bam \"b\"\n"; // xong
         cout << "thoat chuong trinh - bam \"r\"\n"; // xong
         cin >> option;
         if(option == 'r') return 0;
@@ -999,18 +1081,18 @@ int main()
             Login();
             while(checkInfoUser){
                 cout << "CHON CAC CHUC NANG:\n";
-                cout << "bam \"c\" de them sach - quyen cua admin\n"; // thanh lam
-                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n";
-                cout << "bam \"e\" de xoa sach - quyen cua admin\n"; // thanh lam
-                cout << "bam \"f\" de muon sach\n"; // thanh lam
+                cout << "bam \"c\" de them sach - quyen cua admin\n"; // xong
+                cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n"; // xong
+                cout << "bam \"e\" de xoa sach - quyen cua admin\n"; // xong
+                cout << "bam \"f\" de muon sach\n"; // xong
                 cout << "bam \"g\" de tra sach\n";
-                cout << "bam \"h\" de hien thi tat ca sach\n"; // thanh lam
-                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // thanh lam
-                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n";
-                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // thanh lam
+                cout << "bam \"h\" de hien thi tat ca sach\n"; // xong
+                cout << "bam \"i\" de lay thong tin cuon sach trong Books\n"; // xong
+                cout << "bam \"j\" de hien thi tat ca sach trong Ebooks\n"; // xong
+                cout << "bam \"k\" de lay thong tin cuon sach trong Ebooks\n"; // xong
                 cout << "bam \"m\" de hien thi tat ca sach ban da muon\n";
                 cout << "bam \"n\" de hien thi tat ca sach cua mot nguoi muon- quyen cua admin\n";
-                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // thanh lam
+                cout << "bam \"o\" de chinh sua thong tin ca nhan cua ban\n"; // xong 1 nua
                 cout << "bam \"p\" de chinh sua thong tin ca nhan cua mot nguoi - quyen cua admin\n";
                 cout << "bam \"q\" de dang suat\n"; // xong
                 cout << "bam \"r\" de thoat chuong trinh\n"; // xong
@@ -1073,7 +1155,9 @@ int main()
                 if(option == 'i'){
                     get_Book();
                 }
-                // if(option == 'j')
+                if(option == 'j'){
+                    get_All_Ebooks();
+                }
                 if(option == 'k'){
                     get_Ebook();
                 }
