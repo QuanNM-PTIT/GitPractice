@@ -1,5 +1,5 @@
 [5] [Emily Davis] [emily.davis@gmail.com] [Female] [18/09/1982] [202 Oak St, San Francisco, CA] [0765432109] [Admin]
-[1] [John Smith] [john.smith@gmail.com] [Male] [15/01/1990] [123 Main St, New York, NY] [0123456789] [User]
+[1] [Ha Duy Long] [haduylong@gmail.com] [Male] [25/01/2005] [Hung Yen] [0987654321] [Admin]
 [6] [David Wilson] [david.wilson@gmail.com] [Male] [22/04/1975] [303 Cedar St, Seattle, WA] [0654321098] [User]
 [2] [Jane Doe] [jane.doe@gmail.com] [Female] [22/06/1985] [456 Elm St, Los Angeles, CA] [0987654321] [Admin]
 [10] [Liam Thomas] [liam.thomas@gmail.com] [Male] [05/05/1977] [707 Willow St, Phoenix, AZ] [0678901234] [Admin]
@@ -8,3 +8,6 @@
 [4] [Michael Brown] [michael.brown@gmail.com] [Male] [05/12/1992] [101 Maple St, Houston, TX] [0234567890] [User]
 [3] [Alice Johnson] [alice.johnson@gmail.com] [Female] [10/03/1978] [789 Pine St, Chicago, IL] [0112345678] [User]
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
+[10] [John Smith] [john.smith@gmail.com] [Male] [18/08/1990] [606 Aspen St, Denver, CO] [0234156789] [User]
+[11] [Dao Thi Huyen] [huyen@gmail.com] [Female] [22/09/2004] [Ninh Binh]
+[0326678518] [User]
