@@ -171,6 +171,36 @@ class Person{
         if( cnt == data.size() )cout << "khong tim thay thong tin!\n";
         else cout << "tra ebook thanh cong!\n";
     }
+    vector<int> getBooks(){
+        ifstream in ;
+        in.open("borrowInfos.txt");
+        vector<int> data;
+        string line;
+        while( getline(in , line) ){
+            int id, person_Id, book_Id, eBook_Id;
+            for( auto &x : line )if ( x == '[' or x == ']' )x = ' ';
+            stringstream ss( line );
+            ss >> id >> person_Id >> book_Id >> eBook_Id;
+            if( person_Id == this->id and book_Id != -1 )data.push_back( book_Id );
+        }
+        in.close();
+        return data;
+    }
+    vector<int> getEbooks(){
+        ifstream in ;
+        in.open("borrowInfos.txt");
+        vector<int> data;
+        string line;
+        while( getline(in , line) ){
+            int id, person_Id, book_Id, eBook_Id;
+            for( auto &x : line )if ( x == '[' or x == ']' )x = ' ';
+            stringstream ss( line );
+            ss >> id >> person_Id >> book_Id >> eBook_Id;
+            if( person_Id == this->id and eBook_Id != -1 )data.push_back( eBook_Id );
+        }
+        in.close();
+        return data;
+    }
     int getId(){
         return this->id;
     }
@@ -1164,9 +1194,19 @@ void bookBack(){
     }else{
         cout << "chon khong hop le!\n";
     }
-}
-
-
+ }
+ void showBook(){
+    vector<int> books = infoUser.getBooks();
+    for( auto x : books ){
+        acesstBooks.getBook( x );
+    }
+ }
+ void showEbook(){
+    vector<int> ebooks = infoUser.getEbooks();
+    for( auto x : ebooks ){
+        acesstEbooks.getBook( x );
+    }
+ }
 int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
@@ -1200,7 +1240,7 @@ int main()
         }
         if(option == 'a'){
             Login();
-            while(checkInfoUser){
+            if ( checkInfoUser ){
                 cout << "CHON CAC CHUC NANG:\n";
                 cout << "bam \"c\" de them sach - quyen cua admin\n"; // xong
                 cout << "bam \"d\" de sua thong tin sach - quyen cua admin\n"; // xong
@@ -1218,6 +1258,8 @@ int main()
                 cout << "bam \"q\" de dang suat\n"; // xong
                 cout << "bam \"r\" de thoat chuong trinh\n"; // xong
                 cout << endl;
+            }
+            while(checkInfoUser){
                 cin >> option;
                 if(option == 'c'){
                     if(infoUser.getRole() == "Admin") add_Book();
@@ -1287,7 +1329,14 @@ int main()
                     get_Ebook();
                     cout << '\n';
                 }
-                // if(option == 'm')
+                if(option == 'm'){
+                    cin.ignore();
+                    cout << "cac sach ban da muon:\n";
+                    showBook();
+                    cout << "cac ebook ban da muon:\n";
+                    showEbook();
+                    cout << '\n';
+                }
                 // if(option == 'n')
                 if(option == 'o'){
                     update_Infor_User();
