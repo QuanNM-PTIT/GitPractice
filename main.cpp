@@ -2,9 +2,10 @@
 using namespace std;
 class Book;
 class User;
+class Person;
 vector<Book> v;
 vector<User> v_user;
-class Person;
+static vector<Person> v_person; 
 int UpdateIdPerson(){ // cap nhat ID person
 	ifstream input("people.txt");
 	set<int> se;
@@ -69,10 +70,92 @@ public:
         this->birthdate = birthdate;
         this->address = address;
         this->phoneNumber = phoneNumber;
+		this->role = role;
     }
     void In(Person x){
         cout << x.id << ' ' << x.name << ' ' << x.email << ' ' << x.sex << endl;
     }
+	string Tong_Hop(){
+		return '[' + this->id + "] " + '[' + this->name + "] " + '[' + this->email + "] " + '[' + sex + "] " + '[' + this->birthdate + "] " + '[' + this->address + "] " + '[' + this->phoneNumber + "] "+ '[' + this->role + "] ";
+	}
+	bool operator < ( const Person& y){
+		return this->id < y.id;
+	}
+	void SapXepFilePeople(){
+		sort(v_person.begin(), v_person.end()); 
+	}	 
+	void GhiDeFilePeople(){
+		ofstream output("people.txt");
+		if(output.is_open()){
+			for(auto y : v_person){
+				output << y.Tong_Hop() << endl;
+			}
+			output.close();
+		}
+		else{
+			cout << "khong mo duoc file\n"; 
+		}
+	} 
+	void addPerson(){
+		v_person.push_back(*this); 
+		ofstream output("people.txt", ios::app);
+		if(output.is_open()){
+			output << '[' << id << "] "  << '[' << name << "] " << '[' << email << "] " << '[' << sex << "] " << '[' << birthdate << "] " << '[' << address << "] " << '[' << phoneNumber << "] "  << '[' << role << "] " << endl ;
+			GhiDeFilePeople();
+			output.close(); 
+		} 
+		else{
+			cout << "khong mo duoc file\n"; 
+		} 
+	} 
+	static vector<Person> getPerson(){
+		v_person.clear(); 
+		ifstream input("people.txt");
+		if(input.is_open()){
+			string tmp;
+			while(getline(input,tmp)){
+				Person x;
+				int start = 0, end = 0, i = 1;
+				while(tmp.find('[', end) != -1){
+					start =  tmp.find('[', end);
+					end =  tmp.find(']', start);
+					string tmp1 = tmp.substr(start + 1,end - start - 1); 
+					switch (i){
+						case 1:  
+							x.id = stoi(tmp1) ; 
+							break;
+						case 2: 
+							x.name = tmp1 ;
+							break;
+						case 3: 
+							x.email = tmp1;
+							break;
+						case 4: 
+							x.sex = tmp1;
+							break;
+						case 5: 
+							x.birthdate = tmp1;
+							break;
+						case 6: 
+							x.address = tmp1;
+							break;
+						case 7: 
+							x.phoneNumber = tmp1;
+							break;
+						default: 
+							x.role = tmp1;
+					}
+					i++; 
+				} 
+				v_person.push_back(x); 
+			}
+			input.close();
+		}
+		else{
+			cout << "khong mo duoc file";
+		}
+		return v_person;	
+	}
 
 };
 class BorrowInfo{
@@ -415,9 +498,9 @@ class User : public Person{
 				} 
 			} 	
 		}  
-		Person login(){
+		// Person login(){
 			
-		} 
+		// } 
 		
 }; 
 void DisplayMenu(){
@@ -445,20 +528,35 @@ int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
 	DisplayMenu();
-	BorrowInfo a;
-	a.updateInfo();
-	cout << "Chon chuc nang ban muon su dung : ";
-	int input ; cin >> input;
-	if(input == 1){
-		string email, password ;
-	 	cout << "email cua ban la : ";
-		cin >> email;
-		cout << endl << "password cua ban la : ";
-		cin >> password;
-		cout << endl;
-		 
-	} 
-
-
-	return 0;
+	// BorrowInfo a;
+	// a.updateInfo();
+	// cout << "Chon chuc nang ban muon su dung : ";
+	// int input ; cin >> input;
+	// cin.ignore();
+	// if(input == 1){
+	// 	string email, password ;
+	//  	cout << "email cua ban la : ";
+	// 	cin >> email;
+	// 	cout << endl << "password cua ban la : ";
+	// 	cin >> password;
+	// 	cout << endl; 
+	// }
+	if (input == 2){
+		cout << "------------------DANG KY------------------\n";
+		string name, email, sex, birthdate, address, phoneNumber;
+		cout << "Ho va ten: "; getline(cin, name);
+		cout << "\nEmail: "; getline(cin, email);
+		cout << "\nGioi tinh: "; getline(cin, sex);
+		cout << "\nNgay sinh: "; getline(cin, birthdate);
+		cout << "\nDia chi: "; getline(cin, address);
+		cout << "\nSo dien thoai: "; getline(cin, phoneNumber);
+		Person x(name, email, sex, birthdate, address, phoneNumber, "user");
+		x.addPerson();
+	}
+	vector<Person> people = Person::getPerson();
+	// for(auto x: people){
+	// 	x.In(x);
+	// 	cout << endl;
+	// }
+	// return 0;
 }
