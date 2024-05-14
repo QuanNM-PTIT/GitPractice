@@ -45,6 +45,26 @@ class Person{
         out << '[' << this->id << ']' << " " << '[' << this->name << ']' << " " << '[' << this->email << "]" << " " << '[' << this->sex << ']' << " " << '[' << this->birthdate << ']' << " " << '[' << this->address << ']' << " " << '[' << this->phoneNumber << ']' << " " << '[' << this->role << ']' << endl;
         out.close();
     }
+    void deleteInfo(){
+        ifstream in ;
+        in.open("people.txt");
+        vector<string> data;
+        string line;
+        while( getline(in , line) ){
+            stringstream ss( line );
+            int oldId;
+            char c ; 
+            ss >> c >> oldId;
+            if ( this->id != oldId )data.push_back( line );
+        }
+        in.close();
+        ofstream out;
+        out.open("people.txt", ios::trunc);
+        for( auto x : data ){
+            out << x << endl;
+        }
+        out.close();
+    }
     void chuanHoa(){
         // chuan hoa ten
         stringstream ss( this->name );
@@ -65,6 +85,56 @@ class Person{
         // chuan hoa role
         for( auto &x : this->role )x = tolower( x );
         this->role[ 0 ] = toupper( this->role[ 0 ] );
+    }
+    void giveBookback( int bookId ){
+        ifstream in ;
+        in.open("borrowInfos.txt");
+        vector<vector<int>> data;
+        string line;
+        int cnt = 0;// dem so dong
+        cin.ignore();
+        while( getline(in , line) ){
+            cnt ++; 
+            stringstream ss( line );
+            int id, person_Id, book_Id, eBook_Id;
+            char c;
+            ss >> c >> id >> c >> c >> person_Id >> c >> c >> book_Id >> c >> c >> eBook_Id;
+            if( bookId != book_Id or person_Id != this->id )data.push_back( { id, person_Id, book_Id, eBook_Id } );
+        }
+        in.close();
+        ofstream out;
+        out.open("borrowInfos.txt", ios::trunc);
+        for( auto x : data ){
+            out << '[' << x[ 0 ] << ']' << " " << '[' << x[ 1 ] << ']' << " " << '[' << x[ 2 ] << "]" << " " << '[' << x[ 3 ] << ']' << endl;
+        }
+        out.close();
+        if( cnt == data.size() )cout << "khong tim thay thong tin!\n";
+        else cout << "tra sach thanh cong!\n";
+    }
+    void giveEbookback( int ebookId ){
+        ifstream in ;
+        in.open("borrowInfos.txt");
+        vector<vector<int>> data;
+        string line;
+        int cnt = 0;// dem so dong
+        cin.ignore();
+        while( getline(in , line) ){
+            cnt ++ ; 
+            stringstream ss( line );
+            int id, person_Id, book_Id, eBook_Id;
+            char c;
+            ss >> c >> id >> c >> c >> person_Id >> c >> c >> book_Id >> c >> c >> eBook_Id;
+            if( ebookId != eBook_Id or person_Id != this->id )data.push_back( { id, person_Id, book_Id, eBook_Id } );
+        }
+        in.close();
+        ofstream out;
+        out.open("borrowInfos.txt", ios::trunc);
+        for( auto x : data ){
+            out << '[' << x[ 0 ] << ']' << " " << '[' << x[ 1 ] << ']' << " " << '[' << x[ 2 ] << "]" << " " << '[' << x[ 3 ] << ']' << endl;
+        }
+        out.close();
+        if( cnt == data.size() )cout << "khong tim thay thong tin!\n";
+        else cout << "tra ebook thanh cong!\n";
     }
     int getId(){
         return this->id;
@@ -90,6 +160,89 @@ class Person{
     string getRole(){
         return this->role;
     }
+    void setName( string name ){
+        // sua name trong people.txt
+        this->deleteInfo();
+        this->name = name;
+        this->chuanHoa();
+        this->addInfo();
+    }
+    void setEmail( string newEmail ){
+        // sua email trong user.txt
+        ifstream in;
+        in.open("users.txt");
+        string line;
+        vector<vector<string>> data;
+        while( getline( in, line ) ){
+            string oldEmail , oldPassword , userId;
+            char c;
+            for( auto &x : line )if ( x == '[' or x == ']' )x = ' ';
+            stringstream ss ( line );
+            ss >> userId >> oldEmail >> oldPassword;
+            if ( oldEmail == this->email )data.push_back( { userId, newEmail, oldPassword } );
+            else data.push_back( { userId, oldEmail, oldPassword } );
+        }
+        in.close();
+        ofstream out;
+        out.open("users.txt", ios::trunc);
+        for( auto x : data ){
+            out << '[' << x[ 0 ] << ']' << " " << '[' << x[ 1 ] << ']' << " " << '[' << x[ 2 ] << ']' << endl;
+        }
+        out.close();
+        // sua email trong people.txt
+        this->deleteInfo();
+        this->email = newEmail;
+        this->addInfo();
+    }
+    void setPassword( string newPassword ){
+        // sua password trong user.txt
+        ifstream in;
+        in.open("users.txt");
+        string line;
+        vector<vector<string>> data;
+        while( getline( in, line ) ){
+            string oldEmail , oldPassword , userId;
+            for( auto &x : line )if ( x == '[' or x == ']' )x = ' ';
+            stringstream ss ( line );
+            ss >> userId >> oldEmail >> oldPassword;
+            if ( oldEmail == this->email )data.push_back( { userId, oldEmail, newPassword } );
+            else data.push_back( { userId, oldEmail, oldPassword } );
+        }
+        in.close();
+        ofstream out;
+        out.open("users.txt", ios::trunc);
+        for( auto x : data ){
+            out << '[' << x[ 0 ] << ']' << " " << '[' << x[ 1 ] << ']' << " " << '[' << x[ 2 ] << ']' << endl;
+        }
+        out.close();
+    }
+    void setSex( string sex ){
+        //sua sex trong people.txt
+        this->deleteInfo();
+        this->sex = sex;
+        this->chuanHoa();
+        this->addInfo();
+    }
+    void setBirthdate( string birthdate ){
+        //sua birthdate trong people.txt
+        this->deleteInfo();
+        this->birthdate = birthdate;
+        this->chuanHoa();
+        this->addInfo();
+    }
+    void setAddress( string address ){
+        //sua address trong people.txt
+        this->deleteInfo();
+        this->address = address;
+        this->addInfo();
+    }
+    void setPhoneNumber( string phoneNumber ){
+        //sua phoneNumber trong people.txt
+        this->deleteInfo();
+        this->phoneNumber = phoneNumber;
+        this->addInfo();
+    }
+
 };
 
 class BorrowInfo{
@@ -717,31 +870,100 @@ void get_Ebook(){
 }
 
 void update_Infor_User(){
-    cout << "thay doi mat khau - chon1\n";
-    cout << "thay doi thong tin ca nhan - chon2\n";
-    int op; cin >> op;
-    UserInfos update(0, "", "");
-    if(op == 1){
-        cout << "nhap id:\n";
-        int id; cin >> id; // trong ham updateUser co yeu cau xac nhan id roi nen o day khong can check id
-        cout << "nhap email:\n";
-        string email; cin >> email;
-        cout << "nhap password moi:\n";
-        string password; cin >> password;
-        cout << "xac nhan lai password:\n";
-        string newPass; cin >> newPass;
-        if(password == newPass){
-            update = UserInfos(id, email, password);
-            acesstUsers.updateUser(update);
-            cout << "thanh cong!\n";
+    while(1){
+        cout << "thay doi mat khau - chon 1\n";
+        cout << "thay doi email - chon 2\n";
+        cout << "thay doi ten - chon 3\n";
+        cout << "thay doi gioi tinh - chon 4\n";
+        cout << "thay doi ngay sinh - chon 5\n";
+        cout << "thay doi dia chi - chon 6\n";
+        cout << "thay doi so dien thoai - chon 7\n";
+        cout << "thoat - chon 8\n";
+        int op; cin >> op;
+        UserInfos update(0, "", "");
+        if(op == 1){
+            string newPassword1, newPassword2;
+            cout << "nhap mat khau moi:\n";
+            cin >> newPassword1;
+            cout << "nhap lai mat khau moi:\n";
+            cin >> newPassword2;
+            if ( newPassword1 != newPassword2 ){
+                cout << "nhap lai dung mat khau!\n";
+                continue;
+            }
+            cin.ignore();
+            infoUser.setPassword(newPassword1);
+            cout << "doi mat khau thanh cong!\n";
         }
-        else cout << "mat khau khong giong nhau!\n";
-    }
-    else{
-        // code update people
+        else if(op == 2){
+            cout << "nhap email moi:\n";
+            string newEmail;
+            cin >> newEmail;
+            cin.ignore();
+            infoUser.setEmail(newEmail);
+            cout << "doi email thanh cong!\n";
+        }
+        else if(op == 3){
+            cout << "nhap ten moi:\n";
+            string newName;
+            cin.ignore();
+            getline(cin, newName);
+            infoUser.setName(newName);
+            cout << "doi ten thanh cong!\n";
+        }
+        else if(op == 4){
+            cout << "nhap gioi tinh moi:\n";
+            string newSex;
+            cin >> newSex;
+            cin.ignore();
+            infoUser.setSex(newSex);
+            cout << "doi gioi tinh thanh cong!\n";
+        }
+        else if(op == 5){
+            cout << "nhap ngay sinh moi:\n";
+            string newBirthdate;
+            cin >> newBirthdate;
+            cin.ignore();
+            infoUser.setBirthdate(newBirthdate);
+            cout << "doi ngay sinh thanh cong!\n";
+        }
+        else if(op == 6){
+            cout << "nhap dia chi moi:\n";
+            string newAddress;
+            cin.ignore();
+            getline(cin, newAddress);
+            infoUser.setAddress(newAddress);
+            cout << "doi dia chi thanh cong!\n";
+        }
+        else if(op == 7){
+            cout << "nhap so dien thoai moi:\n";
+            string newPhoneNumber;
+            cin >> newPhoneNumber;
+            cin.ignore();
+            infoUser.setPhoneNumber(newPhoneNumber);
+            cout << "doi so dien thoai thanh cong!\n";
+        }
+        else if(op == 8) break;
+        else cout << "chon khong hop le!\n";
     }
 }
- 
+ void bookBack(){
+    cout << "ban muon tra:\n";
+    cout << "books -> chon1    ----------    ebooks -> chon2\n";
+    int op; cin >> op;
+    if ( op == 1 ){
+        cout << "nhap id cuon sach ban muon tra:\n";
+        int idBook; cin >> idBook;
+        infoUser.giveBookback( idBook );
+    }
+    else if ( op == 2 ){
+        cout << "nhap id ebook ban muon tra:\n";
+        int idEbook; cin >> idEbook;
+        infoUser.giveEbookback( idEbook );
+    }else{
+        cout << "chon khong hop le!\n";
+    }
+ }
 int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
@@ -842,7 +1064,9 @@ int main()
                         cout << "option khac:\n";
                     }
                 }
-                // if(option == 'g')
+                if(option == 'g'){
+                    bookBack();
+                }
                 if(option == 'h'){
                     get_All_Books();
                 }
