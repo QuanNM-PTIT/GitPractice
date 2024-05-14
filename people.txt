@@ -9,4 +9,4 @@
 [3] [Alice Johnson] [alice.johnson@gmail.com] [Female] [10/03/1978] [789 Pine St, Chicago, IL] [0112345678] [User]
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
 [12] [Thanh] [thanh@gmail.com] [Male] [02/09/1004] [Ha Noi] [0123] [User]
-[11] [Trong Nguyen Tien] [trongbgbg] [Male] [01/01/2004] [Ha Noi] [0838947749] [User]
+[11] [Trong Nguyen Tien] [trongbgbg] [Male] [01/01/2004] [Ha Noi] [0838947749] [Admin]

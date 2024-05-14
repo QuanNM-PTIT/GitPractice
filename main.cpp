@@ -201,6 +201,22 @@ class Person{
         in.close();
         return data;
     }
+    Person getPerson( int newId ){
+        ifstream in ; 
+        in.open("people.txt");
+        string line;
+        while( getline( in , line ) ){
+            for( auto &x : line )if ( x == '[' or x == ']' )x = '|';
+            stringstream ss ( line );
+            string item;
+            vector<string> data;
+            while( getline( ss , item , '|' )){
+                if ( item != " " and item != "" )data.push_back( item );
+            }
+            if( stoi( data[ 0 ] ) == newId )return Person( {data[ 1 ], data[ 2 ], data[ 3 ], data[ 4 ], data[ 5 ], data[ 6 ] , data[ 7 ], newId} );
+        }
+        return Person( "", "", "", "", "", "", "" );
+    }
     int getId(){
         return this->id;
     }
@@ -1207,6 +1223,37 @@ void bookBack(){
         acesstEbooks.getBook( x );
     }
  }
+void showBookUser(){
+    cout << "nhap id nguoi dung:\n";
+    int id; cin >> id;
+    cin.ignore();
+    Person person = infoUser.getPerson( id );
+    if( person.getId() == 0 ){
+        cout << "khong ton nguoi dung nay!\n";
+        return;
+    }
+    vector<int> books = person.getBooks();
+    vector<int> ebooks = person.getEbooks();
+    if ( books.size() == 0 ){
+        cout << "nguoi dung nay chua muon sach nao!\n";
+    }
+    else {
+        cout << "sach " << person.getName() << " da muon:\n";
+        for( auto x : books ){
+            acesstBooks.getBook( x );
+        }
+    }
+    if( ebooks.size() == 0){
+        cout << "nguoi dung nay chua muon ebook nao!\n";
+    }
+    else {
+        cout << "ebooks " << person.getName() << " da muon:\n";
+        for( auto x : ebooks ){
+            acesstEbooks.getBook( x );
+        }
+    }
+    cout << "da in xong!\n";
+}
 int main()
 {
     acesstBooks.Sx_dsBooks(); // sap xep lai dsBooks
@@ -1339,7 +1386,14 @@ int main()
                     showEbook();
                     cout << '\n';
                 }
-                // if(option == 'n')
+                if(option == 'n'){
+                    if( infoUser.getRole() != "Admin" ){
+                        cout << "ban khong duoc cap quyen truy cap tinh nang nay\n";
+                    }
+                    else{
+                        showBookUser();
+                    }
+                }
                 if(option == 'o'){
                     update_Infor_User();
                     cout << '\n';
