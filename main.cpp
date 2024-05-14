@@ -445,8 +445,6 @@ int main() {
 	// Person a("Tui", "Tui@gmail.com", "Nu", "14/02/2004", "Van Quan - Ha Dong", "0122345", "Sv");
 	// a.In(a);
 	DisplayMenu();
-	BorrowInfo a;
-	a.updateInfo();
 	cout << "Chon chuc nang ban muon su dung : ";
 	int input ; cin >> input;
 	if(input == 1){
@@ -456,7 +454,6 @@ int main() {
 		cout << endl << "password cua ban la : ";
 		cin >> password;
 		cout << endl;
-		 
 	} 
 
 
