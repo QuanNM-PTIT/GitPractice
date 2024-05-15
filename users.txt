@@ -5,11 +5,8 @@
 [5] [emily.davis@gmail.com] [ss45]
 [6] [haduylong@gmail.com] [ss46]
 [7] [david.wilson@gmail.com] [ss47]
-[8] liam.thomas@gmail.com[] [ss48]
+[8] [] [ss48]
 [9] [james.anderson@gmail.com] [ss49]
 [10] [sophia.garcia@gmail.com] [ss50]
 [11] [michael.brown@gmail.com] [ss51]
 [12] [olivia.martinez@gmail.com] [ss52]
-
-
-  

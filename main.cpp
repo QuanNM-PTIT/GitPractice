@@ -8,54 +8,6 @@ vector<Book> v;
 vector<User> v_user;
 vector<Person> v_person; 
 vector<BorrowInfo> v_borrowInfo; 
-int UpdateIdPerson(){ // cap nhat ID person
-	ifstream input("people.txt");
-	set<int> se;
-	if(input.is_open()){
-		string s;
-		while(getline(input, s)){
-			int i = 0;
-			string tmp = "";
-			while(s[i] != ']'){
-				if(isdigit(s[i])) tmp += s[i];
-				i++;
-			}
-			se.insert(stoi(tmp));
-		}
-		input.close();
-	}
-	else cout << "Khong mo duoc file!" << endl;
-	int NextId = 1;
-	while(se.count(NextId)){
-		NextId++;
-	}
-	return NextId;
-}
-int UpdateIdBorrowInfo(){ // cap nhat ID muon sach
-	ifstream input("borrowInfos.txt");
-	set<int> se;
-	if(input.is_open()){
-		string s;
-		while(getline(input, s)){
-			int i = 0;
-			string tmp = "";
-			while(s[i] != ']'){
-				if(isdigit(s[i])) tmp += s[i];
-				i++;
-			}
-			se.insert(stoi(tmp));
-		}
-		input.close();
-	}
-	else cout << "Khong mo duoc file!" << endl;
-	
-	int NextId = 1;
-	while(se.count(NextId)){
-		NextId++;
-	}
-	return NextId;
-}
-
 class Person{
 private:
     int id;
@@ -106,7 +58,7 @@ public:
 		v_person.push_back(*this); 
 		ofstream output("people.txt", ios::app);
 		if(output.is_open()){
-			output << '[' << id << "] "  << '[' << name << "] " << '[' << email << "] " << '[' << sex << "] " << '[' << birthdate << "] " << '[' << address << "] " << '[' << phoneNumber << "] "  << '[' << role << "] " << endl ;
+			output << '[' << to_string(id) << "] "  << '[' << name << "] " << '[' << email << "] " << '[' << sex << "] " << '[' << birthdate << "] " << '[' << address << "] " << '[' << phoneNumber << "] "  << '[' << role << "] " << endl ;
 			GhiDeFilePeople();
 			output.close(); 
 		} 
@@ -162,6 +114,27 @@ public:
 		}
 		else{
 			cout << "khong mo duoc file";
+		}
+	}
+	void updatePerson(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber){
+		int check = 0;
+		for(int i= 0; i< v_person.size(); i++){
+			if(v_person[i].id == id){
+				check = 1;
+				v_person[i].name = name;
+				v_person[i].email= email;
+				v_person[i].sex = sex;
+				v_person[i].birthdate = birthdate;
+				v_person[i].address = address;
+				v_person[i].phoneNumber = phoneNumber;
+				break; 
+			} 
+		}
+		if(check == 1){
+			GhiDeFilePeople();
+		} 
+		if(check == 0){
+			cout << "Khong tim thay thong tin\n";
 		}
 	}
 	string getRole(){
@@ -259,7 +232,7 @@ public:
 			cout << "khong mo duoc file";
 		}
 	} 
-	void updateBook(int id, int personId, int bookId, int ebookId){
+	void updateBorrowInfo(int id, int personId, int bookId, int ebookId){
 		int check = 0;
 		for(int i= 0; i< v_borrowInfo.size(); i++){
 			if(v_borrowInfo[i].id == id){
@@ -276,6 +249,15 @@ public:
 		if(check == 0){
 			cout << "Khong tim thay ID muon\n";
 		}
+	}
+	int getPersonId(){
+		return this->personId;
+	}
+	int getBookId(){
+		return this->bookId;
+	}
+	int getEbookId(){
+		return this->ebookId;
 	}
 };
 class Book{
@@ -396,7 +378,15 @@ class Book{
 			else{
 				cout << "id sach " << id << " khong ton tai" << "\n"; 
 			} 
-		
+		}
+		void print(){
+			cout <<this->id << ' ' << this->title << ' ' << this->author << ' ' << this->quality << endl;
+		}
+		void print1(){
+			cout << "ID sach: " <<this->id << "\nTen sach: " << this->title << "\nTac gia: " << this->author << endl;
+		}
+		int getId(){
+			return this->id;
 		}
 		
 }; 
@@ -634,8 +624,7 @@ Person DangNhap(){
 	Person y;
 	return y; 
 }
-string DangKy(){
-	cout << "------------------DANG KY------------------\n";
+Person DangKy(){
 	// add person 
 	string name, email, sex, birthdate, address, phoneNumber;
 	cout << "Ho va ten: "; getline(cin, name);
@@ -659,64 +648,118 @@ string DangKy(){
 	cout << "Password cua ban la : " << u_password << endl; 
 	User y(u_email, u_password); 
 	y.addUsers(); 
-	return u_email;
+	return x;
 }
-void ManageBook(string u_email){
+void ManageBook(int ID){
 	bool check = false;
 	for(auto person: v_person){
-		if(person.getEmail() == u_email){
-			if(person.getRole() == "Admin"){
-				string title, author;
-				int id, quality;
-				cout << "Nhap ID sach: "; cin >> id; cin.ignore();
-				cout << "\nNhap ten sach: "; getline(cin, title);
-				cout << "\nNhap tac gia: "; getline(cin, author);
-				cout << "\nNhap so luong: "; cin >> quality;
-				Book x;
-				x.updateBook(id, title, author, quality);
-				check = true;
-				return;
-			}
+		if(person.getID() == ID){
+			string title, author;
+			int id, quality;
+			cout << "Nhap ID sach: "; cin >> id; cin.ignore();
+			cout << "\nNhap ten sach: "; getline(cin, title);
+			cout << "\nNhap tac gia: "; getline(cin, author);
+			cout << "\nNhap so luong: "; cin >> quality;
+			Book x;
+			x.updateBook(id, title, author, quality);
+			check = true;
+			return;
 		}
 	}
 	if(!check) cout << "Loi khong sua duoc sach!\n";
 }
-void BorrowBook(string u_email){
+void BorrowBook(int ID){
 	bool check = false;
 	for(auto person: v_person){
-		if(person.getEmail() == u_email){
-			if(person.getRole() == "User"){
-				int id1 = person.getID();
-				int id2 = -1, id3 = -1;
-				cout << "Nhap ID sach: "; cin >> id2;
-				// Need: check id sach co ton tai khong
-				cout << "\nNhap Id ebook: "; cin >> id3; 	
-				// Need: check xem id ebook co ton tai khong 
-				BorrowInfo x(id1, id2, id3);
-				x.addInfo();
-				check = true;
-				cout << "\nMuon sach thanh cong!\n";
-				return;
-			}
+		if(person.getID() == ID){
+			int id1 = ID;
+			int id2 = -1, id3 = -1;
+			cout << "Nhap ID sach: "; cin >> id2;
+			// Need: check id sach co ton tai khong
+			cout << "\nNhap Id ebook: "; cin >> id3; 	
+			// Need: check xem id ebook co ton tai khong 
+			BorrowInfo x(id1, id2, id3);
+			x.addInfo();
+			check = true;
+			cout << "\nMuon sach thanh cong!\n";
+			return;
 		}
 	}
 	if(!check) cout << "Loi khong muon duoc sach!\n";
+}
+void GetInfoBook(){
+	cout << "Danh sach cac sach co trong thu vien:\n";
+	for(auto temp: v){
+		temp.print();
+	}
+}
+void UpdatePersonInfo(Person x){
+	cin.ignore();
+	string name, email, sex, birthdate, address, phoneNumber;
+	cout << "Nhap ho va ten: "; getline(cin, name);
+	cout << "\nNhap email: "; getline(cin, email);
+	cout << "\nNhap gioi tinh: "; getline(cin, sex);
+	cout << "\nNhap ngay sinh: "; getline(cin, birthdate);
+	cout << "\nNhap dia chi: "; getline(cin, address);
+	cout << "\nNhap so dien thoai: "; getline(cin, phoneNumber);
+	int id = x.getID();
+	x.updatePerson(id, name, email, sex, birthdate, address, phoneNumber);
+}
+void ShowBorrowInfoU(int personID){
+	vector<int> IdB;
+	vector<int> IdEb;
+	for(BorrowInfo temp: v_borrowInfo){
+		if(temp.getPersonId() == personID){
+			if(temp.getBookId() > 0) IdB.push_back(temp.getBookId());
+			if(temp.getEbookId() > 0) IdEb.push_back(temp.getEbookId());
+		}
+	}
+	if (!IdB.empty()){
+		cout << "Danh sach cac sach da muon:\n";
+		for(int x: IdB){
+			for(auto temp: v){
+				if (temp.getId() == x){
+					temp.print1();
+				}
+			}
+		}
+	}
+	// in ra thong tin ebook
+	// if(IdEb.size() > 0){
+	// 	cout << "Danh sach cac ebook da muon:\n";
+	// 	for(int x: IdEb){
+	// 		for(auto temp: v_ebook){
+	// 			if (temp.getId() == x){
+	// 				temp.print();
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 int main() {
 	DisplayMenu1();
 	Person a;
 	a.getPerson();
-//  chuyen vao vector
-	User x;
- 	x.getusers(); 
+	User b;
+ 	b.getusers(); 
 	Book k;
 	k.getBooks(); 
+	BorrowInfo c;
+	c.getBorrowInfo();
 	int input;
-	cin >> input;
+	cout << "Chon chuc nang muon su dung: ";
+	cin >> input; cout << endl;
 //	cin.ignore(); 
-	if(input  == 1){
-		Person x =  DangNhap();
-		cout << "Welcome " << x.getName() << endl; 
+	if(input == 1 || input == 2 ){
+		Person x;
+		if(input == 1){
+			x =  DangNhap();
+			cout << "Welcome " << x.getName() << endl; 
+		}
+		else {
+			cin.ignore();
+			x = DangKy();
+		}
 		if(x.getRole() == "Admin"){
 			DisplayMenuAdmin();
 			DisplayMenuBoth(); 
@@ -728,10 +771,31 @@ int main() {
 		cout << "Chon chuc nang ban muon su dung : " << endl;
 		int input2 = 0;
 		cin >> input2;
+		switch (input2){
+			case 4:
+				ManageBook(x.getID());
+				break;
+			case 8:
+				BorrowBook(x.getID());	
+				break;
+			case 10:
+				ShowBorrowInfoU(x.getID());
+				break;
+			case 11:
+				GetInfoBook();
+				break;
+			case 13:
+				// GetInforEbook();
+				break;
+			
+			case 15: 
+				UpdatePersonInfo(x);
+				break;
+			
+		}
 		 
 	} 
-	 
-	
+	else cout << "Vui long dang nhap/dang ky!\n"; 
 	return 0;
 }
 
