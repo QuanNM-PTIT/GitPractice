@@ -854,6 +854,7 @@ string editPersonalData(Person& p) {
 
     string name;
     name = input(name, attributeOfPerson);
+    name = input(name, attributeOfPerson);
     if (name == "-1") {
         info += '[' + p.getName() + "] ";
     }
@@ -862,6 +863,7 @@ string editPersonalData(Person& p) {
     }
 
     string email;
+    email = input(email, attributeOfPerson);
     email = input(email, attributeOfPerson);
     if (email == "-1") {
         info += '[' + p.getEmail() + "] ";
@@ -872,6 +874,7 @@ string editPersonalData(Person& p) {
 
     string sex;
     sex = input(sex, attributeOfPerson);
+    sex = input(sex, attributeOfPerson);
     if (sex == "-1") {
         info += '[' + p.getSex() + "] ";
     }
@@ -880,6 +883,7 @@ string editPersonalData(Person& p) {
     }
 
     string birthdate;
+    birthdate = input(birthdate, attributeOfPerson);
     birthdate = input(birthdate, attributeOfPerson);
     if (birthdate == "-1") {
         info += '[' + p.getBirthdate() + "] ";
@@ -890,6 +894,7 @@ string editPersonalData(Person& p) {
 
     string address;
     address = input(address, attributeOfPerson);
+    address = input(address, attributeOfPerson);
     if (address == "-1") {
         info += '[' + p.getAddress() + "] ";
     }
@@ -898,6 +903,7 @@ string editPersonalData(Person& p) {
     }
 
     string phoneNumber;
+    phoneNumber = input(phoneNumber, attributeOfPerson);
     phoneNumber = input(phoneNumber, attributeOfPerson);
     if (phoneNumber == "-1") {
         info += '[' + p.getPhoneNumber() + "] ";
@@ -1008,7 +1014,7 @@ int main() {
 
         if (welcome == true) {
             cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
-                    << "Welcome " << '<' << p.getRole() << '>' << endl;
+                    << "Welcome " << '<' << p.getName() << '>' << endl;
             welcome = false;
             cout << endl;
         }
