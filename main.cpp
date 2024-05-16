@@ -392,57 +392,7 @@ public:
 //     }
 // }
 
-// // login logout se tra ve 1 object nen khi su dung thi gan no bang bien (kieu Person)
-//     Person login(string email, string password)
-//     { // check thong tin dang nhap
-//         if (!checkUser(UserInfos(0, email, password)))
-//         {
-//             cout << "thong tin dang nhap sai!\n";
-//             return Person("", "", "", "", "", "", "");
-//         }
-//         else
-//         {
-//             ifstream ifs("people.txt");
-//             if (ifs.is_open())
-//             {
-//                 string line;
-//                 while (getline(ifs, line))
-//                 {
-//                     int id;
-//                     string name, emailCheck;
-//                     string sex, birthday, addre, phone, role;
-//                     char c;
-//                     ifs >> c >> id >> c >> c;
-//                     getline(ifs, name, ']');
-//                     ifs >> c;
-//                     getline(ifs, emailCheck, ']');
-//                     ifs >> c;
-//                     getline(ifs, sex, ']');
-//                     ifs >> c;
-//                     getline(ifs, birthday, ']');
-//                     ifs >> c;
-//                     getline(ifs, addre, ']');
-//                     ifs >> c;
-//                     getline(ifs, phone, ']');
-//                     ifs >> c;
-//                     getline(ifs, role, ']');
-//                     if (emailCheck == email)
-//                     {
-//                         ifs.close();
-//                         return Person(name, emailCheck, sex, birthday, addre, phone, role, id);
-//                     }
-//                 }
-//                 ifs.close();
-//                 return Person("", "", "", "", "", "", ""); // neu khong tim thay thong tin
-//             }
-//             else
-//             {
-//                 cout << "khong truy cap duoc vao data";
-//                 return Person("", "", "", "", "", "", ""); // neu khong tim thay thong tin
-//             }
-//         }
-//     }
-// };
+
 // Begin Person
 class Person
 {
@@ -679,16 +629,16 @@ vector<int> extractNumbers(const string &input) // ham tra ve 1 vector id, id tr
     char ch;
     int number;
 
-    // �?c t?ng k� t? t? chu?i
+    // Đọc từng kí tự chuỗi
     while (ss >> ch)
     {
         if (ch == '[')
         {
-            // N?u g?p k� t? '[', d?c s? trong d?u '[' ']'
+            // Nếu gặp kí tự '[', đọc số trong dấu '[' ']'
             if (ss >> number)
             {
                 numbers.push_back(number);
-                // B? qua c�c k� t? c�n l?i cho d?n khi g?p k� t? ']'
+                // Bỏ qua các kí tự còn lai cho đến khi gặp kí tự ']'
                 ss.ignore(numeric_limits<streamsize>::max(), ']');
             }
         }
@@ -1099,6 +1049,200 @@ int main()
                         {
                             cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
                         }
+                    }
+                    if (option == 'i')
+                    {
+                        // hien thi thong tin sach theo id nguoi dung nhap
+                        int id;
+                        cout << "Nhap id cuon sach ban muon xem thong tin: ";
+                        cin >> id;
+                        Book book;
+                        vector<Book> ans = book.getBooks();
+                        for (Book tmpBook : ans)
+                        {
+                            if (tmpBook.getId() == id)
+                            {
+                                cout << "ID: " << tmpBook.getId() << " - " << "Title: " << tmpBook.getTitle() << " - " << "Author: " << tmpBook.getAuthor() << " - " << "Quantity: " << tmpBook.getQuantity() << endl;
+                            }
+                        }
+                    }
+                    if (option == 'k')
+                    {
+
+                        // hien thi thong tin ebook theo id
+                        int id;
+                        cout << "Nhap id cuon sach dien tu ban muon xem thong tin: ";
+                        cin >> id;
+                        vector<EBook> ans;
+                        ifstream filein("ebooks.txt");
+                        if (filein.is_open())
+                        {
+                            string line;
+                            while (getline(filein, line))
+                            {
+                                stringstream ss(line);
+                                char c;
+                                int id, quantity, fileSize;
+                                string title, author, fileFormat;
+                                ss >> c >> id >> c >> c;
+                                getline(ss, title, ']');
+                                ss >> c;
+                                getline(ss, author, ']');
+                                ss >> c;
+                                ss >> quantity >> c >> c;
+                                getline(ss, fileFormat, ']');
+                                ss >> c;
+                                ss >> fileSize;
+                                EBook ebook(id, title, author, quantity, fileFormat, fileSize);
+                                ans.push_back(ebook);
+                            }
+                            for (EBook eb : ans)
+                            {
+                                if (eb.getId() == id)
+                                {
+                                    cout << "ID: " << eb.getId() << " - " << "Title: " << eb.getTitle() << " - " << "Author: " << eb.getAuthor() << " - " << "Quantity: " << eb.getQuantity() << " - " << "FileFormat: " << eb.getFileFormat() << " - " << "FileSize: "
+                                         << eb.getFileSize() << endl;
+                                }
+                            }
+                            filein.close();
+                        }
+                        else
+                        {
+                            cout << "Khong the mo tep ebooks.txt\n";
+                        }
+                    }
+                    if (option == 'h')
+                    {
+                        showBooks();
+                    }
+                    if (option == 'j')
+                    {
+                        showEBooks();
+                    }
+                    if (option == 'f')
+                    {
+                        themthongtinmuonsach();
+                    }
+                    if (option == 'g')
+                    {
+                        capnhatthongtinmuonsach();
+                    }
+                    if (option == 'm')
+                    {
+                        vector<BorrowInfo> v;
+                        ifstream filein("borrowInfos.txt");
+                        if (!filein.is_open())
+                        {
+                            cout << "Khong the mo tep borrowInfos.txt";
+                        }
+                        else
+                        {
+                            string tmp;
+                            while (getline(filein, tmp))
+                            {
+                                int id, perId, bookId, eBookId;
+                                vector<int> numbers = extractNumbers(tmp);
+                                id = numbers[0];
+                                perId = numbers[1];
+                                bookId = numbers[2];
+                                eBookId = numbers[3];
+                                BorrowInfo x(perId, bookId, eBookId);
+                                x.setId(id);
+                                v.push_back(x);
+                            }
+                            sort(v.begin(), v.end(), cmpBorrowInfo);
+                            for (BorrowInfo i : v)
+                            {
+                                if (i.getpersonId() == id)
+                                {
+                                    cout << "ID: " << i.getId() << " - " << "PersonId: " << i.getpersonId() << " - " << "BookId: " << i.getbookId() << " - " << "EBookId: " << i.geteBookId() << endl;
+                                }
+                            }
+                            filein.close();
+                        }
+                    }
+                    if (option == 'n')
+                    {
+                        if (role == "Admin")
+                        {
+                            int id;
+                            cout << "Nhap id nguoi muon xem thong tin: ";
+                            cin >> id;
+                            vector<BorrowInfo> v;
+                            ifstream filein("borrowInfos.txt");
+                            if (!filein.is_open())
+                            {
+                                cout << "Khong the mo tep borrowInfos.txt";
+                            }
+                            else
+                            {
+                                string tmp;
+                                while (getline(filein, tmp))
+                                {
+                                    int id, perId, bookId, eBookId;
+                                    vector<int> numbers = extractNumbers(tmp);
+                                    id = numbers[0];
+                                    perId = numbers[1];
+                                    bookId = numbers[2];
+                                    eBookId = numbers[3];
+                                    BorrowInfo x(perId, bookId, eBookId);
+                                    x.setId(id);
+                                    v.push_back(x);
+                                }
+                                sort(v.begin(), v.end(), cmpBorrowInfo);
+                                for (BorrowInfo i : v)
+                                {
+                                    if (i.getpersonId() == id)
+                                    {
+                                        cout << "ID: " << i.getId() << " - " << "PersonId: " << i.getpersonId() << " - " << "BookId: " << i.getbookId() << " - " << "EBookId: " << i.geteBookId() << endl;
+                                    }
+                                }
+                                filein.close();
+                            }
+                        }
+                        else
+                        {
+                            cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
+                        }
+                    }
+                    if (option == 'o')
+                    {
+                        // chinh sua thong tin ca nhan cua ban
+                        int id;
+                        cout << "Nhap id cua ban: ";
+                        cin >> id;
+                        string name, email;
+                        cout << "Nhap ten moi: ";
+                        cin >> name;
+                        cout << "Nhap email moi: ";
+                        cin >> email;
+                        Person x(id, name, email, "Nam", "01/01/2000", "Ha Noi", "0123456789", "User");
+                        x.addPerson();
+                    }
+                    if (option == 'p')
+                    {
+                        // chinh sua thong tin ca nhan cua mot nguoi
+                        if (role == "Admin")
+                        {
+                            int id;
+                            cout << "Nhap id nguoi muon chinh sua: ";
+                            cin >> id;
+                            string name, email;
+                            cout << "Nhap ten moi: ";
+                            cin >> name;
+                            cout << "Nhap email moi: ";
+                            cin >> email;
+                            Person x(id, name, email, "Nam", "01/01/2000", "Ha Noi", "0123456789", "User");
+                            x.addPerson();
+                        }
+                        else
+                        {
+                            cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
+                        }
+                    }
+                    if (option == 'q')
+                    {
+                        loggedIn = false;
                     }
 
                     // Thực hiện các chức năng khác tương tự
