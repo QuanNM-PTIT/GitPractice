@@ -4,10 +4,12 @@ class Book;
 class User;
 class Person;
 class BorrowInfo;
+class Ebook;
 vector<Book> v;
 vector<User> v_user;
 vector<Person> v_person; 
 vector<BorrowInfo> v_borrowInfo; 
+vector<Ebook> v_ebook;
 class Person{
 private:
     int id;
@@ -261,7 +263,7 @@ public:
 	}
 };
 class Book{
-	private:
+	protected:
 		int id;
 		string title;
 		string author;
@@ -388,12 +390,135 @@ class Book{
 		int getId(){
 			return this->id;
 		}
-		
+		string getTitle(){
+			return this->title;
+		}
+		string getAuthor(){
+			return this->author;
+		}
+		int getQuality(){
+			return this->quality;
+		}
 }; 
-class EBook : public Book{
-	private:
-		string fileFormat;
-		int fileSize;
+class Ebook : public Book{
+private:
+	string fileFormat;
+	int fileSize;
+public:
+	Ebook (){} 
+	Ebook (string title, string author, int quality, string fileFormat, int fileSize) : Book(title, author, quality){	
+		this->fileFormat = fileFormat;
+		this->fileSize = fileSize;
+	} 
+	string Tong_Hop(){
+		return '[' + to_string(this->id) + "] " + '[' + this->title + "] " + '[' + this->author + "] " + '[' + to_string(this->quality) + "] " + '[' + this->fileFormat + "] " + '[' + to_string(this->fileSize) + "] " ;
+	}
+	bool operator < ( const Ebook& y){
+		return this->id < y.id;
+	}
+	void SapXepFileEbooks(){
+		sort(v_ebook.begin(), v_ebook.end()); 
+	}	 
+	void GhiDeFileEbooks(){
+		ofstream output("ebooks.txt");
+		if(output.is_open()){
+			for(auto y : v_ebook){
+				output << y.Tong_Hop() << endl;
+			}
+			output.close();
+		}
+		else{
+			cout << "khong mo duoc file\n"; 
+		}
+	} 	
+	void addEbook(){
+			v_ebook.push_back(*this); 
+			ofstream output("ebooks.txt", ios::app);
+			if(output.is_open()){
+				output << '[' << to_string(id) << "] "  << '[' << title << "] " << '[' << author << "] " << '[' << to_string(quality) << "] " << '[' << fileFormat << "] " << '[' << to_string(fileSize) << "] " << endl ;
+				GhiDeFileEbooks();
+				output.close(); 
+			} 
+			else{
+				cout << "khong mo duoc file\n"; 
+			} 
+	} 
+	void getEbooks(){
+		v_ebook.clear(); 
+		ifstream input("ebooks.txt");
+		if(input.is_open()){
+			string tmp;
+			while(getline(input,tmp)){
+				Ebook x;
+				int start = 0, end = 0, i = 1;
+				while(tmp.find('[', end) != -1){
+					start =  tmp.find('[', end);
+					end =  tmp.find(']', start);
+					string tmp1 = tmp.substr(start + 1,end - start - 1); 
+					if(i == 1)  x.id = stoi(tmp1) ; 
+					else if (i == 2) x.title = tmp1 ;
+					else if (i == 3) x.author = tmp1;
+					else if(i == 4) x.quality = stoi(tmp1);
+					else if(i == 5) x.fileFormat = tmp1;
+					else  x.fileSize = stoi(tmp1);
+					i++; 
+				} 
+				v_ebook.push_back(x); 
+			}
+			SapXepFileEbooks();
+			GhiDeFileEbooks(); 
+			input.close();
+		}
+		else{
+			cout << "khong mo duoc file";
+		}
+	} 
+	void updateEbook(int id, string title, string author, int quality, string fileFormat, int fileSize){
+		int check = 0;
+		for(int i= 0; i<v_ebook.size(); i++){
+			if(v_ebook[i].id == id){
+				check = 1;
+				v_ebook[i].title = title;
+				v_ebook[i].author = author;
+				v_ebook[i].quality = quality;
+				v_ebook[i].fileFormat = fileFormat;
+				v_ebook[i].fileSize = fileSize;
+				break; 
+			} 
+		}
+		if(check == 1){
+			GhiDeFileEbooks();
+		} 
+		if(check == 0){
+			cout << "Khong ton tai id sach " << id << "\n";
+		}
+	}
+	
+	void deleteEbook(int id){
+		int check = 0;
+		for(int i = 0; i < v_ebook.size(); i++){
+			if(v_ebook[i].id == id){
+				check = 1;
+				v_ebook.erase(v_ebook.begin() + i);
+				break; 
+			}
+		}
+		if(check == 1){
+			GhiDeFileEbooks();
+		}
+		else{
+			cout << "ID ebook " << id << " khong ton tai" << "\n"; 
+		} 
+	}
+	void print(){
+		cout << this->id << ' ' << this->title << ' ' << this->author << ' ' << this->quality << ' ' << this->fileFormat << ' ' << this->fileSize << endl;
+	}
+	void print1(){
+		cout << "ID ebook: " <<this->id << "\nTen ebook: " << this->title << "\nTac gia: " << this->author << "\nDinh dang file: " << this->fileFormat << "\nKich thuoc file: " << this->fileSize << endl;
+	}
+	int getId(){
+		return this->id;
+	}
 };
 
 class User{
@@ -475,11 +600,6 @@ class User{
 					cout << "khong mo duoc file\n"; 
 				} 
 			} 	
-  
-		// Person login(){
-			
-		// } 
-		
 }; 
 
 void DisplayMenu1(){
@@ -716,6 +836,7 @@ void ShowBorrowInfoU(int personID){
 	}
 	if (!IdB.empty()){
 		cout << "Danh sach cac sach da muon:\n";
+		cout << "ID" << " Ten" << " Tac gia" << " So luong" << endl;
 		for(int x: IdB){
 			for(auto temp: v){
 				if (temp.getId() == x){
@@ -725,19 +846,24 @@ void ShowBorrowInfoU(int personID){
 		}
 	}
 	// in ra thong tin ebook
-	// if(IdEb.size() > 0){
-	// 	cout << "Danh sach cac ebook da muon:\n";
-	// 	for(int x: IdEb){
-	// 		for(auto temp: v_ebook){
-	// 			if (temp.getId() == x){
-	// 				temp.print();
-	// 			}
-	// 		}
-	// 	}
-	// }
+	if(IdEb.size() > 0){
+		cout << "Danh sach cac ebook da muon:\n";
+		for(int x: IdEb){
+			for(auto temp: v_ebook){
+				if (temp.getId() == x){
+					temp.print1();
+				}
+			}
+		}
+	}
+}
+void GetInfoEbook(){
+	cout << "ID" << " Ten" << " Tac gia" << " So luong" << " Dinh dang file" << " Kich thuoc file\n";
+	for(Ebook tmp: v_ebook){
+		tmp.print();
+	}
 }
 int main() {
-	DisplayMenu1();
 	Person a;
 	a.getPerson();
 	User b;
@@ -746,58 +872,66 @@ int main() {
 	k.getBooks(); 
 	BorrowInfo c;
 	c.getBorrowInfo();
-	int input;
-	cout << "Chon chuc nang muon su dung: ";
-	cin >> input; cout << endl;
+	Ebook d;
+	d.getEbooks();
+	bool success = false;
 //	cin.ignore(); 
-	if(input == 1 || input == 2 ){
+	while(true){
 		Person x;
-		if(input == 1){
-			x =  DangNhap();
-			cout << "Welcome " << x.getName() << endl; 
+		if(!success){
+			DisplayMenu1();
+			int input;
+			cout << "Chon chuc nang muon su dung: ";
+			cin >> input; cout << endl;
+			if(input == 1){
+				x =  DangNhap();
+				cout << "Welcome " << x.getName() << endl; 
+				success = true;
+			}
+			else {
+				cin.ignore();
+				x = DangKy();
+				success = true;
+			}
 		}
-		else {
-			cin.ignore();
-			x = DangKy();
-		}
-		if(x.getRole() == "Admin"){
+		if(success){
+			if(x.getRole() == "Admin"){
 			DisplayMenuAdmin();
 			DisplayMenuBoth(); 
-		} 
-		else{
-			DisplayMenuUser();
-			DisplayMenuBoth(); 
-		} 
-		cout << "Chon chuc nang ban muon su dung : " << endl;
-		int input2 = 0;
-		cin >> input2;
-		switch (input2){
-			case 4:
-				ManageBook(x.getID());
-				break;
-			case 8:
-				BorrowBook(x.getID());	
-				break;
-			case 10:
-				ShowBorrowInfoU(x.getID());
-				break;
-			case 11:
-				GetInfoBook();
-				break;
-			case 13:
-				// GetInforEbook();
-				break;
-			
-			case 15: 
-				UpdatePersonInfo(x);
-				break;
-			
+			} 
+			else{
+				DisplayMenuUser();
+				DisplayMenuBoth(); 
+			} 
+			cout << "Chon chuc nang ban muon su dung : " << endl;
+			int input2 = 0;
+			cin >> input2;
+			switch (input2){
+				case 4:
+					ManageBook(x.getID());
+					break;
+				case 8:
+					BorrowBook(x.getID());	
+					break;
+				case 10:
+					ShowBorrowInfoU(x.getID());
+					break;
+				case 11:
+					GetInfoBook();
+					break;
+				case 13:
+					GetInfoEbook();
+					break;
+				case 15: 
+					UpdatePersonInfo(x);
+					break;
+				case 16:
+					cout << "Dang xuat thanh cong!\n";
+					success = false;
+					break;
+				default:
+					break;
+			}
 		}
-		 
-	} 
-	else cout << "Vui long dang nhap/dang ky!\n"; 
-	return 0;
+	}
 }
-
-
-
