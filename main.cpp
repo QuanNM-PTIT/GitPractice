@@ -789,14 +789,15 @@ bool isExistAlphaOrNum(string& s) {
 }
 
 int cnt = 0;
-vector<string> arributeOfPerson = {"ten", "email", "gioi tinh", "ngay sinh", "dia chi", "so dien thoai"};
-string input(string& data) {
-    cout << "Nhap vao " << arributeOfPerson[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+vector<string> attributeOfPerson = {"ten", "email", "gioi tinh", "ngay sinh", "dia chi", "so dien thoai"};
+
+string input(string& data, vector<string>& attribute) {
+    cout << "Nhap vao " << attribute[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
     scanf("\n");
     getline(cin, data);
     while (isExistAlphaOrNum(data) == false) {
         cout    << "Nhap sai du lieu cho, yeu cau phai co it nhat 1 ky tu hoac 1 so!" << endl
-                << "Nhap lai  " << arributeOfPerson[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
+                << "Nhap lai  " << attribute[cnt] << " ban muon chinh sua, neu khong chinh sua gi thi nhap (Khong): ";
         scanf("\n");
         getline(cin, data);
     }
@@ -818,7 +819,7 @@ string editPersonalData(Person& p) {
     string info = "";
 
     string name;
-    name = input(name);
+    name = input(name, attributeOfPerson);
     if (name == "-1") {
         info += '[' + p.getName() + "] ";
     }
@@ -827,7 +828,7 @@ string editPersonalData(Person& p) {
     }
 
     string email;
-    email = input(email);
+    email = input(email, attributeOfPerson);
     if (email == "-1") {
         info += '[' + p.getEmail() + "] ";
     }
@@ -836,7 +837,7 @@ string editPersonalData(Person& p) {
     }
 
     string sex;
-    sex = input(sex);
+    sex = input(sex, attributeOfPerson);
     if (sex == "-1") {
         info += '[' + p.getSex() + "] ";
     }
@@ -845,7 +846,7 @@ string editPersonalData(Person& p) {
     }
 
     string birthdate;
-    birthdate = input(birthdate);
+    birthdate = input(birthdate, attributeOfPerson);
     if (birthdate == "-1") {
         info += '[' + p.getBirthdate() + "] ";
     }
@@ -854,7 +855,7 @@ string editPersonalData(Person& p) {
     }
 
     string address;
-    address = input(address);
+    address = input(address, attributeOfPerson);
     if (address == "-1") {
         info += '[' + p.getAddress() + "] ";
     }
@@ -863,7 +864,7 @@ string editPersonalData(Person& p) {
     }
 
     string phoneNumber;
-    phoneNumber = input(phoneNumber);
+    phoneNumber = input(phoneNumber, attributeOfPerson);
     if (phoneNumber == "-1") {
         info += '[' + p.getPhoneNumber() + "] ";
     }
