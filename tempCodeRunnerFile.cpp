@@ -1,55 +1,41 @@
-void Login()
-{
-    string userName, password;
-    cout << "Nhap Email: \n";
-    cin >> userName;
-    cout << "Nhap password: \n";
-    cin >> password;
-    ifstream filein("users.txt");
-    if (!filein.is_open())
-    {
-        cout << "Khong the mo tep users.txt\n";
-    }
-    else
-    {
-        string tmp;
-        while (getline(filein, tmp))
-        {
-            if (tmp.find(userName) != string::npos && tmp.find(password) != string::npos)
-            {
-                cout << "Dang nhap thanh cong\n";
-                loggedIn = true; // Đánh dấu đã đăng nhập thành công
-                filein.close();  // Đóng file users.txt trước khi tiếp tục
-                ifstream peopleFile("people.txt");
-                if (!peopleFile.is_open())
-                {
-                    cout << "Khong the mo tep people.txt\n";
-                }
-                else
-                {
-                    string name;
-                    while (getline(peopleFile, tmp))
-                    {
-                        if (tmp.find(userName) != string::npos)
-                        {
-                            // Tìm thấy email trong file people.txt
-                            // Sử dụng stringstream để lấy tên từ dòng chứa email
-                            stringstream ss(tmp);
-                            string bracket;
-                            ss >> bracket;          // Bỏ qua ký tự '['
-                            getline(ss, name, ']'); // Lấy tên đến khi gặp ký tự ']'
-
-                            name = name.substr(2); // Bỏ đi dấu [ ở đầu tên
-                            cout << "Welcome " << name << "!\n";
-                            break; // Kết thúc vòng lặp sau khi tìm thấy tên
-                        }
-                    }
-                    peopleFile.close();
-                }
-                return;
-            }
-        }
-        cout << "Dang nhap that bai\n";
-    }
-    filein.close();
-}
+void Signup()
+// {
+//     string userName, password;
+//     cout << "Nhap userName: \n";
+//     cin >> userName;
+//     cout << "Nhap password: \n";
+//     cin >> password;
+//     User x(0, userName, password);
+//     int id = x.getNextAvailableId();
+//     User a(id, userName, password);
+//     bool check = a.registerUser();
+//     if (check)
+//     {
+//         string name, email, sex, birthday, address, phoneNumber, role;
+//         cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
+//         cout << "Nhap Ho va ten: \n";
+//         scanf("\n");
+//         getline(cin, name);
+//         cout << "Nhap email: \n";
+//         cin >> email;
+//         cout << "Nhap gioi tinh: \n";
+//         cin >> sex;
+//         cout << "Nhap ngay thang nam sinh: \n";
+//         cin >> birthday;
+//         cout << "Nhap dia chi noi o: \n";
+//         scanf("\n");
+//         getline(cin, address);
+//         cout << "Nhap so dien thoai: \n";
+//         cin >> phoneNumber;
+//         role = "User";
+//         Person a(name, email, sex, birthday, address, phoneNumber, role);
+//         bool check = a.addPerson();
+//         if (check)
+//         {
+//             cout << "Them thong tin thanh cong\n";
+//         }
+//         else
+//             cout << "Khong the mo tep people.txt de them thong tin\n";
+//     }
+//     return;
+// }
