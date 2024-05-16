@@ -1,10 +1,3 @@
-if(!IdB.empty()){
-		cout << "Danh sach cac sach da muon:\n";
-		for(int x: IdB){
-			for(auto temp: v){
-				if (temp.getId() == x){
-					temp.print();
-				}
-			}
-		}
+void print1(){
+		cout << "ID ebook: " <<this->id << "\nTen ebook: " << this->title << "\nTac gia: " << this->author << "\nDinh dang file: " << this->fileFormat << "\nKich thuoc file: " << this->fileSize << endl;
 	}
