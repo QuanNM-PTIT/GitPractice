@@ -737,6 +737,15 @@ int BorrowInfo::geteBookId()
 
 // End BorrowInfo
 
+// Biến toàn cục
+vector<int>borrowedBooks;
+vector<int>borrowedEBook;
+bool loggedIn = false;
+Person curPer("", "", "", "", "", "", "");
+
+
+
+
 // Bat dau khai bao cac ham thao tac
 
 void themthongtinmuonsach(int perID)
@@ -775,7 +784,23 @@ void themthongtinmuonsach(int perID)
     }
     
     filein.close();
+    borrowedBooks.push_back(bookId);
+    borrowedEBook.push_back(eBookId);
+    //chưa trừ số lượng sách trong eBook
+}
 
+void ShowAllBorrowedBookEbook()
+{
+    cout << "Danh sach cac quyen sach da muon la: \n";
+    for(int id : borrowedBooks)
+    {
+        cout << getNameBookById(id) << endl;
+    }
+    cout << "Danh sach cac quyen sach dien tu da muon la: \n";
+    for(int id : borrowedEBook)
+    {
+        cout << getNameEBookById(id) << endl;
+    }
 }
 
 vector<int> extractNumbers(const string &input) // ham tra ve 1 vector id, id trong dau [] o file borrowInfo
@@ -930,9 +955,9 @@ void capnhatthongtinmuonsach()
 //     }
 //     return;
 // }
-bool loggedIn = false;
 
-Person getPerson()
+
+Person getPerson(string emailCheck)
 {
     ifstream filein("people.txt");
     if(filein.is_open())
@@ -959,10 +984,13 @@ Person getPerson()
             getline(ss, phoneNumber, ']');
             ss >> bracket;
             getline(ss, role, ']');
+            if(email == emailCheck)
+            {
+                Person cur(name, email, sex, birthdate, address, phoneNumber, role);
+                cur.setId(id);
+                return cur;
+            }
         }
-        Person cur(name, email, sex, birthdate, address, phoneNumber, role);
-        cur.setId(id);
-        return cur;
     }
 
     filein.close();
@@ -1137,10 +1165,6 @@ void showEBooks()
 }
 // Ket thuc khai bao cac ham thao tac
 
-// Start bien toan cuc
-Person curPer("", "", "", "", "", "", "");
-
-// End bien toan cuc
 int main()
 {
 //    PeopleDatabase database("people.txt");
@@ -1172,7 +1196,7 @@ int main()
 //            string name = database.getNameByEmail(email); // Lấy tên từ email
             	if (true)
             {
-            	curPer = getPerson();
+            	curPer = getPerson(email);
                 cout << "Dang nhap thanh cong\n";
                 cout << "Welcome " << curPer.getName() << "!\n"; // In ra tên người dùng đã đăng nhập
                 cout << "Vai tro cua ban la: " << curPer.getRole() << endl;
@@ -1337,37 +1361,7 @@ int main()
                     }
                     if (option == 'm')
                     {
-//                        vector<BorrowInfo> v;
-//                        ifstream filein("borrowInfos.txt");
-//                        if (!filein.is_open())
-//                        {
-//                            cout << "Khong the mo tep borrowInfos.txt";
-//                        }
-//                        else
-//                        {
-//                            string tmp;
-//                            while (getline(filein, tmp))
-//                            {
-//                                int id, perId, bookId, eBookId;
-//                                vector<int> numbers = extractNumbers(tmp);
-//                                id = numbers[0];
-//                                perId = numbers[1];
-//                                bookId = numbers[2];
-//                                eBookId = numbers[3];
-//                                BorrowInfo x(perId, bookId, eBookId);
-//                                x.setId(id);
-//                                v.push_back(x);
-//                            }
-//                            sort(v.begin(), v.end(), cmpBorrowInfo);
-//                            for (BorrowInfo i : v)
-//                            {
-//                                if (i.getpersonId() == id)
-//                                {
-//                                    cout << "ID: " << i.getId() << " - " << "PersonId: " << i.getpersonId() << " - " << "BookId: " << i.getbookId() << " - " << "EBookId: " << i.geteBookId() << endl;
-//                                }
-//                            }
-//                            filein.close();
-//                        }
+                       ShowAllBorrowedBookEbook();
                     }
                     if (option == 'n')
                     {
@@ -1457,6 +1451,8 @@ int main()
 
                     // Thực hiện các chức năng khác tương tự
                 }
+                borrowedBooks.clear();
+                borrowedEBook.clear();
             }
         }
         else
