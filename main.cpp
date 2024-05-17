@@ -176,6 +176,8 @@ int main(){
             break;
         case 11:
             cout << "11. Lay thong tin 1 ebook.\n";
+            getOneEBook();
+            getEnterKey();
             break;
         case 12:
             cout << "12. Hien thi tat ca cac quyen sach da muon.\n";
