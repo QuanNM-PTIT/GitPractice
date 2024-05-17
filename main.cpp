@@ -170,8 +170,9 @@ int main(){
             getOneBook();
             getEnterKey();
             break;
-        case 10:
-            cout << "10. Lay thong tin tat ca cac eBook hien co.\n";
+        case 10: //cout << "10. Lay thong tin tat ca cac eBook hien co.\n";
+            displayEBook();
+            getEnterKey();
             break;
         case 11:
             cout << "11. Lay thong tin 1 ebook.\n";
