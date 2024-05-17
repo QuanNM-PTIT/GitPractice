@@ -685,7 +685,7 @@ class EBook : public Book{ // thong tin eBook
         }
         bool comp(EBook &a , EBook &b){ // Sap xep theo thu tu id
             return a.getId() < b.getId();
-}
+        }
 };
 
 class EBooks{
@@ -849,7 +849,7 @@ class EBooks{
                 }
             }
             if(!check) cout<<"Khong tim thay thong tin sach !\n";
-            
+    
         }
 
 };
@@ -1151,7 +1151,7 @@ class BorrowInfo{
             out<<s<<endl;
         }
         out.close();
-        return;
+        cout<<"Cap nhat thanh cong !\n";
     }
 
     //Cap nhat thong tin tra sach
@@ -1508,7 +1508,7 @@ int main() {
                         int personId = P.getId();
                         vector<pair<int,int>> D = P.AllBorrowUser(personId);
                         for(pair<int,int> s : D){
-                            if(s.first >0 && s.second == -1) list_books.ABook(s.first);
+                            if(s.first > 0 && s.second == -1) list_books.ABook(s.first);
                             else if(s.first == -1 && s.second > 0) list_ebooks.ABook(s.second);
                         }
                     }
