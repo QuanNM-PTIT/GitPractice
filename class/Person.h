@@ -34,13 +34,13 @@ class Person {
 
 Person::Person(){
     this -> id = -1;
-    this -> name = "Hieu";
+    this -> name = "";
     this -> email = "";
     this -> sex = "";
     this -> birthdate = "";
     this -> address = "";
     this -> phoneNumber = "";
-    this -> role = "User";
+    this -> role = "";
 }
 Person::Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role){
     this -> id = id;

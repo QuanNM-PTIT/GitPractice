@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #include "./class/Book.h"
-// #include "./EBook.cpp"
+#include "./class/EBook.h"
 #include "./class/BorrowInfo.h"
 #include "./class/User.h"
 
@@ -147,14 +147,28 @@ int main(){
             }
             getEnterKey();
             break;
-        case 7:
-            cout << "7. Tra sach.\n";
+        case 7: //cout << "7. Tra sach.\n";
+            if (!isLogged) {
+                cout << "Ban chua dang nhap!!\n";
+                cout << "Hay dang nhap de su dung tinh nang nay!!\n";
+            }
+            else {
+                if (person.getPersonRole() == "User") {
+                    deleteBorrowInfo();
+                }
+                else {
+                    cout << "Chuc nang nay chi danh cho ADMIN!!\n";
+                }
+            }
+            getEnterKey();
             break;
-        case 8:
-            cout << "8. Lay thong tin cac quyen sach.\n";
+        case 8: //cout << "8. Lay thong tin cac quyen sach.\n";
+            displayBook();
+            getEnterKey();
             break;
-        case 9:
-            cout << "9. Lay thong tin 1 quyen sach.\n";
+        case 9: //cout << "9. Lay thong tin 1 quyen sach.\n";
+            getOneBook();
+            getEnterKey();
             break;
         case 10:
             cout << "10. Lay thong tin tat ca cac eBook hien co.\n";

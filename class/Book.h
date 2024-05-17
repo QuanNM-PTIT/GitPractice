@@ -9,6 +9,8 @@
 
 using namespace std;
 
+int cmp(string book1, string book2);
+
 class Book {
     private:
         int id;
@@ -19,8 +21,9 @@ class Book {
         Book(string title, string author, int quantity);
         friend void addBook();
         friend vector<Book> getBooks();
-        friend void updateBook(int bookId);
-        friend void deleteBook(int bookId);
+        friend void updateBook();
+        friend void deleteBook();
+        friend void displayBook();
 
         int getBookId();
         string getBookTitle();
@@ -161,7 +164,63 @@ void deleteBook(){
             int choose;
             cin >> choose;
             if (!choose) {
-                cout << "Ban da huy yeu cau sua thong tin sach!\n";
+                cout << "Ban da huy yeu cau xoa sach!!\n";
+                break;
+            }
+        }
+    }
+    return;
+}
+void displayBook(){
+    system("cls");
+    cout << "8. Lay thong tin cac quyen sach.\n";
+    vector<string> bookList;
+    ifstream inFile(BooksFile);
+    string tmp;
+    while (getline(inFile, tmp)){
+        bookList.push_back(tmp);
+    }
+    inFile.close();
+    sort(bookList.begin(), bookList.end(), cmp);
+    cout << "Danh sach cac dau sach hien co:\n";
+    for (auto book : bookList) {
+        cout << book << "\n";
+    }
+    return;
+}
+void getOneBook(){
+    while (1) {
+        system("cls");
+        cout << "9. Lay thong tin 1 quyen sach.\n";
+        cout << "Nhap ID sach can tim: ";
+        int bookId;
+        cin >> bookId;
+        if (exsitedId(bookId, BooksFile)) {
+            vector<string> bookList;
+            ifstream inFile(BooksFile);
+            string tmp;
+            while (getline(inFile, tmp)){
+                bookList.push_back(tmp);
+            }
+            inFile.close();
+            string bookInfo = "";
+            for (auto book : bookList) {
+                if (bookId == getKeyId(book)) {
+                    bookInfo = book;
+                    break;
+                }
+            }
+            cout << "Thong tin sach tim duoc:\n";
+            cout << bookInfo << "\n";
+            break;
+        }
+        else {
+            cout << "ID sach khong ton tai!\n";
+            cout << "Ban co muon nhap lai ID sach? (1/0) ";
+            int choose;
+            cin >> choose;
+            if (!choose) {
+                cout << "Ban da huy yeu cau tim sach!!\n";
                 break;
             }
         }
@@ -180,6 +239,9 @@ string Book::getBookAuthor(){
 }
 int Book::getBookQuantity(){
     return this -> quantity;
+}
+int cmp(string book1, string book2){
+    return getKeyId(book1) < getKeyId(book2);
 }
 
 #endif

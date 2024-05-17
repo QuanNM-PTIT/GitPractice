@@ -12,13 +12,14 @@ class EBook : private Book{
         string fileFormat;
         int fileSize;
     public:
-        EBook();
+        EBook::EBook(string title, string author, int quantity, string fileFormat, int fileSize);
 };
 
-EBook::EBook(){
-    Book("", "", 0);
-    this -> fileFormat = "";
-    this -> fileSize = 0;
+EBook::EBook(string title, string author, int quantity, string fileFormat, int fileSize){
+    Book(title, author, quantity);
+    this -> fileFormat = fileFormat;
+    this -> fileSize = fileSize;
 }
+
 
 #endif

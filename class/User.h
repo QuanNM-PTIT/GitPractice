@@ -55,7 +55,8 @@ void registerUser(){
         cout << "2. Dang ki.\n";
         cout << "Hay nhap thong tin sach can them!\n";
         cout << "Nhap Ten: ";
-        cin >> name;
+        cin.ignore();
+        getline(cin, name);
         cout << "Nhap Email: ";
         cin >> email;
         cout << "Nhap Password: ";
@@ -65,7 +66,8 @@ void registerUser(){
         cout << "Nhap Ngay sinh: ";
         cin >> birthdate;
         cout << "Nhap Dia chi: ";
-        cin >> address;
+        cin.ignore();
+        getline(cin, address);
         cout << "Nhap So dien thoai: ";
         cin >> phoneNumber;
         role = "User";

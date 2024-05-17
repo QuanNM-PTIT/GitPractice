@@ -22,6 +22,7 @@ class BorrowInfo {
         friend BorrowInfo initBorrowInfo();
         friend void addBorrowInfo();
         friend void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId);
+        friend void deleteBorrowInfo();
         int getBorrowId();
         int getPersonId();
         int getBookId();
@@ -43,12 +44,9 @@ BorrowInfo initBorrowInfo(int personId, int bookId, int eBookId){
     }
 }
 void addBorrowInfo(){
-    // int borrowId = newBorrowInfo.getBorrowId();
-    // int personId = newBorrowInfo.getPersonId();
-    // int bookId = newBorrowInfo.getBookId();
-    // int eBookId = newBorrowInfo.getEBookId();
     while (1) {
         system("cls");
+        cout << "6. Muon sach.\n";
         int borrowId, personId, bookId, eBookId;
         cout << "Hay nhap thong tin!\n";
         borrowId = getSmallestId(BorrowInfosFile);
@@ -111,6 +109,54 @@ void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int n
     }
     return;
 }
+void deleteBorrowInfo(){
+    while (1) {
+        system("cls");
+        cout << "7. Tra sach.\n";
+        cout << "Nhap ID muon sach can tra: ";
+        int deleteBorrowId;
+        cin >> deleteBorrowId;
+        if (exsitedId(deleteBorrowId, BorrowInfosFile)) {
+            cout << "Ban co chac muon tra cuon sach nay? (1/0) ";
+            int choose;
+            cin >> choose;
+            if (choose) {
+                vector<string> borrowList;
+                ifstream inFile(BorrowInfosFile);
+                string tmp;
+                while (getline(inFile, tmp)){
+                    borrowList.push_back(tmp);
+                }
+                inFile.close();
+                ofstream outFile(BorrowInfosFile);
+                for (int i = 0; i < borrowList.size(); i++){
+                    int borrowId = getKeyId(borrowList[i]);
+                    if (borrowId != deleteBorrowId){
+                        outFile << borrowList[i] << "\n";
+                    }
+                }
+                outFile.close();
+                cout << "Tra sach thanh cong!!\n";
+            }
+            else {
+                cout << "Ban da huy yeu cau tra sach!!\n";
+            }
+            return;
+        }
+        else {
+            cout << "ID muon sach khong ton tai!\n";
+            cout << "Ban co muon nhap lai ID muon sach? (1/0) ";
+            int choose;
+            cin >> choose;
+            if (!choose) {
+                cout << "Ban da huy yeu cau tra sach!\n";
+                break;
+            }
+        }
+    }
+    return;
+}
+
 int BorrowInfo::getBorrowId(){
     return this -> id;
 }
