@@ -154,6 +154,7 @@ git log --oneline
 - Khi chạy chương trình, sẽ hiển thị ra 1 menu lựa chọn:
 	- 1. Đăng nhập: Nếu người dùng chọn chức năng này sẽ cho phép nhập vào thông tin đăng nhập và xác thực thông tin, nếu đăng nhập thành công sẽ in ra dòng chữ "Welcome <tên>!". Các chức năng từ chức năng thứ 3 trở đi sẽ phải yêu cầu người dùng đăng nhập mới có thể thao tác.
 	- 2. Đăng ký: Cho phép người dùng đăng ký tài khoản, role mặc định sẽ là user.
+
 	- 3. Thêm sách: Chỉ thực hiện được nếu người dùng có role admin. Sẽ cho phép người dùng thêm thông tin 1 cuốn sách mới.
 	- 4. Sửa thông tin sách: Chỉ thực hiện được nếu người dùng có role admin. Sẽ cho phép người dùng nhập vào id cuốn sách và cho phép sửa thông tin cuốn sách đó.
 	- 5. Xóa sách: Chỉ thực hiện được nếu người dùng có role admin. Cho phép người dùng nhập vào id cuốn sách, và có xác nhận trước khi xóa.
