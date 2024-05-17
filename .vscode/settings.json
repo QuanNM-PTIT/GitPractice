@@ -3,9 +3,14 @@
         "iosfwd": "cpp",
         "iostream": "cpp",
         "string": "cpp",
+<<<<<<< HEAD
+        "ostream": "cpp",
+        "fstream": "cpp"
+=======
         "string_view": "cpp",
         "deque": "cpp",
         "vector": "cpp",
         "ostream": "cpp"
+>>>>>>> 1a996acd36b9a3cc1147d1948dd32e4f8cd7d36b
     }
 }

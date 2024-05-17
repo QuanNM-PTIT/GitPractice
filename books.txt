@@ -13,3 +13,5 @@
 [3] [1984] [George Orwell] [7]
 [10] [Jane Eyre] [Charlotte Brontë] [5]
 [12] [Animal Farm] [George Orwell] [6]
+[16] [Toi thay hoa vang tren co xanh] [Nguyen Nhat Anh] [16]
+[17] [Muon kiep nhan sinh] [Nguyen Phong] [35]
