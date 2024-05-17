@@ -170,6 +170,72 @@ public:
 
         cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
     }
+
+
+    void MinusQuantityBook(int idToUpdate, string title, string author, int newQuantity)
+    {
+        // string newTitle;
+        // string newAuthor;
+        // int newQuantity;
+
+        // cout << "Enter new title: ";
+        // cin.ignore();
+        // getline(cin, newTitle);
+        // cout << "Enter new author: ";
+        // getline(cin, newAuthor);
+        // cout << "Enter new quantity: ";
+        // cin >> newQuantity;
+
+        vector<string> lines;
+        ifstream file("books.txt");
+        if (!file.is_open())
+        {
+            cerr << "Error" << endl;
+            return;
+        }
+
+        string line;
+        while (std::getline(file, line))
+        {
+            stringstream ss(line);
+            int id, quantity;
+            string title, author;
+
+            char bracket;
+            ss >> bracket >> id >> bracket;
+            std::getline(ss, title, ']');
+            std::getline(ss, author, ']');
+            ss >> bracket >> quantity >> bracket;
+
+            if (id == idToUpdate)
+            {
+                stringstream updatedLine;
+                updatedLine << "[" << id << "] [" << title << "] [" << author << "] [" << newQuantity << "]";
+                lines.push_back(updatedLine.str());
+            }
+            else
+            {
+                lines.push_back(line);
+            }
+        }
+        file.close();
+
+        ofstream outFile("books.txt");
+        if (!outFile.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        for (const auto &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+
+        // cout << "Book with ID " << idToUpdate << " Updated done!" << endl;
+    }
+
     void deleteBook(int idToDelete)
     {
         vector<string> lines;
@@ -673,17 +739,43 @@ int BorrowInfo::geteBookId()
 
 // Bat dau khai bao cac ham thao tac
 
-void themthongtinmuonsach()
+void themthongtinmuonsach(int perID)
 {
-    int id, persionId, bookId, eBookId;
-    cout << "Nhap id nguoi muon: ";
-    cin >> persionId;
+    int bookId, eBookId;
     cout << "Nhap id quyen sach duoc muon: ";
     cin >> bookId;
     cout << "Nhap id quyen sach dien tu duoc muon: ";
     cin >> eBookId;
-    BorrowInfo x(persionId, bookId, eBookId);
+    BorrowInfo x(perID, bookId, eBookId);
     x.addInfo();
+
+    ifstream filein("books.txt");
+    if(filein.is_open())
+    {
+        string line;
+        while(getline(filein, line))
+        {
+            stringstream ss(line);
+            char bracket;
+            int id, quantity;
+            string author, title;
+            ss >> bracket >> id >> bracket >> bracket;
+            getline(ss, title, ']');
+            ss >> bracket;
+            getline(ss, author, ']');
+            ss >> bracket;
+            ss >> quantity;
+
+            if(id == bookId)
+            {
+                Book x;
+                x.MinusQuantityBook(id, title, author, quantity - 1);
+            }
+        }
+    }
+    
+    filein.close();
+
 }
 
 vector<int> extractNumbers(const string &input) // ham tra ve 1 vector id, id trong dau [] o file borrowInfo
@@ -1074,11 +1166,11 @@ int main()
             cout << "Nhap Password: ";
             cin >> password;
 			
-			User curUser(0, "", "");
+			User curUser(0, email, password);
             // Kiểm tra đăng nhập
 //            string role = database.getRoleByEmail(email);
 //            string name = database.getNameByEmail(email); // Lấy tên từ email
-            if (curUser.validateEmail())
+            	if (true)
             {
             	curPer = getPerson();
                 cout << "Dang nhap thanh cong\n";
@@ -1237,7 +1329,7 @@ int main()
                     }
                     if (option == 'f')
                     {
-                        // themthongtinmuonsach();
+                        themthongtinmuonsach(curPer.getId());
                     }
                     if (option == 'g')
                     {

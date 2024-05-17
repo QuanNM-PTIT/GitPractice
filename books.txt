@@ -1,4 +1,4 @@
-[6] [The Catcher in the Rye] [J. D. Salinger] [5]
+﻿[6] [The Catcher in the Rye] [J. D. Salinger] [5]
 [11] [Brave New World] [Aldous Huxley] [4]
 [8] [The Lord of the Rings] [J. R. R. Tolkien] [10]
 [4] [Pride and Prejudice] [Jane Austen] [4]
