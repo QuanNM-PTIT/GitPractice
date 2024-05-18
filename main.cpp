@@ -209,11 +209,29 @@ int main(){
             getEnterKey();
             break;
         case 14: //cout << "14. Chinh sua thong tin ca nhan.\n";
-            updatePeopleInfo(person.getPersonId());
+            if (!isLogged) {
+                cout << "Ban chua dang nhap!!\n";
+                cout << "Hay dang nhap de su dung tinh nang nay!!\n";
+            }
+            else {
+                updatePeopleInfo(person.getPersonId());
+            }
             getEnterKey();
             break;
-        case 15:
-            cout << "15. Chinh sua thong tin ca nhan cua Users.\n";
+        case 15: //cout << "15. Chinh sua thong tin ca nhan cua Users.\n";
+            if (!isLogged) {
+                cout << "Ban chua dang nhap!!\n";
+                cout << "Hay dang nhap de su dung tinh nang nay!!\n";
+            }
+            else {
+                if (person.getPersonRole() == "Admin") {
+                    updatePeopleInfoByAdmin();
+                }
+                else {
+                    cout << "Chuc nang nay chi danh cho Admin!!\n";
+                }
+            }
+            getEnterKey();
             break;
         case 16: //cout << "16. Dang xuat.\n";
             if (isLogged) {
