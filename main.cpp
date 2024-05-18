@@ -32,6 +32,15 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
+bool isExistAlphaOrNum(string& s) {
+    for (char c : s) {
+        if (isalnum(c)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 class Person {
 private:
     int id;
@@ -45,6 +54,17 @@ private:
 
 public:
     Person() {}
+
+    Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role) {
+        this->id = id;
+        this->name = name;
+        this->email = email;
+        this->sex = sex;
+        this->birthdate = birthdate;
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->role = role;
+    }
 
     Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role) {
         this->name = name;
@@ -118,17 +138,6 @@ public:
 
     void setRole(const string& role) {
         this->role = role;
-    }
-
-    void clearInfo() {
-        id = -1;
-        name = "";
-        email = "";
-        sex = "";
-        birthdate = "";
-        address = "";
-        phoneNumber = "";
-        role = "";
     }
 
     void updatePerson(const string& filename, const string& newPersonInfo, string newPersonID) {
@@ -300,7 +309,7 @@ public:
         // Kiểm tra dữ liệu trước khi thêm vào file
         if(this->isValid()){
             cout << ">>> Them thong tin thanh cong !\n";
-            string file_name = "test_borrowInfos.txt";
+            string file_name = "borrowInfos.txt";
             ofstream file(file_name, ios::app);
             file << endl;
             file << "[" << id << "] ";
@@ -318,7 +327,7 @@ public:
         // Kiểm tra thông tin đã tồn tại trong file chưa ?
         vector<string> lines;
         vector<string> personIds, bookIds, eBookIds;
-        string filename = "test_borrowInfos.txt";
+        string filename = "borrowInfos.txt";
         fstream file(filename);
         string line;
         while (getline(file, line)) {
@@ -359,9 +368,9 @@ public:
         file.close();
     }
 
-    void displayInfo(){
+    void displayInfo(const int personID){
         vector<string> personIds, bookIds, eBookIds;
-        string filename = "test_borrowInfos.txt";
+        string filename = "borrowInfos.txt";
         fstream file(filename);
         string line;
         while (getline(file, line)) {
@@ -377,7 +386,7 @@ public:
         }
         vector<string> books, eBooks;
         for(int pos = 0; pos < personIds.size(); pos ++){
-            if(this->personId == stoi(personIds[pos])){
+            if(personID == stoi(personIds[pos])){
                 if(bookIds[pos] != "-1") books.push_back(bookIds[pos]);
                 if(eBookIds[pos] != "-1") eBooks.push_back(eBookIds[pos]);
             }
@@ -387,13 +396,13 @@ public:
             return;
         }
         if(!books.empty()){
-            cout << "Ban da muon books co ID la : ";
+            cout << "Ban da muon books co ID la: ";
             for(auto bookID : books){
                 cout << bookID << " ";
             }
         }
         if(!eBooks.empty()){
-            cout << "\nBan da muon eBooks co ID la : ";
+            cout << "\nBan da muon eBooks co ID la: ";
             for(auto eBookID : eBooks){
                 cout << eBookID << " ";
             }
@@ -413,7 +422,7 @@ public:
         this->eBookId = new_eBookId;
 
         // Thay đổi dòng chứa dữ liệu cần sửa
-        string file_name = "test_borrowInfors.txt";
+        string file_name = "borrowInfos.txt";
         fstream file(file_name);
         vector<string> lines;
         string line;
@@ -510,16 +519,225 @@ public:
         return info;
     }
 
-    void Register(){
+    // Hàm tạo ID mới cho người dùng
+    int getNewUserID(const string& filename) {
+        ifstream file(filename);
+        vector<string> dataID = getInformationFromFile(filename, 0);
 
+        set<long long> dataIDInt;
+        for (string s : dataID) {
+            dataIDInt.insert(stoi(s));
+        } 
+
+        int mex = 0;
+        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {\
+            if (*it > mex + 1) {
+                break;
+            }
+            mex = *it;
+        }
+        
+        file.close();
+        return ++mex;
+    }
+
+    bool emailExists(const string& email) {
+        vector<string> emails = getInformationFromFile("users.txt", 1);
+        for (const string& e : emails) {
+            if (e == email) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool validatePassword(const string& email, const string& password) {
+        vector<string> emails = getInformationFromFile("users.txt", 1);
+        vector<string> passwords = getInformationFromFile("users.txt", 2);
+        for (size_t i = 0; i < emails.size(); ++i) {
+            if (emails[i] == email && passwords[i] == password) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Register(Person& p){
+        string fullName, email, gender, birthdate, address, phoneNumber, password;
+    
+        // Nhập thông tin từ người dùng
+        cout << "Enter full name: ";
+        scanf("\n");
+        getline(cin, fullName);
+
+        while (isExistAlphaOrNum(fullName) == false) {
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            scanf("\n");
+            getline(cin, fullName);
+        }
+
+        cout << "Enter email: ";
+        cin >> email;
+
+        // Kiểm tra email đã tồn tại chưa
+        while (emailExists(email)) {
+            cout << "Email already exists. Please choose another email." << endl;
+            cin >> email;
+        }
+
+        cout << "Enter gender: ";
+        cin >> gender;
+
+        while (isExistAlphaOrNum(gender) == false) {
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            scanf("\n");
+            cin >> gender;
+        }
+
+        cout << "Enter birthdate: ";
+        cin >> birthdate;
+
+        while (isExistAlphaOrNum(birthdate) == false) {
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            scanf("\n");
+            cin >> birthdate;
+        }
+
+        cout << "Enter address: ";
+        cin.ignore();
+        getline(cin, address);
+
+        while (isExistAlphaOrNum(address) == false) {
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            scanf("\n");
+            cin >> address;
+        }
+
+        cout << "Enter phone number: ";
+        cin >> phoneNumber;
+
+        while (isExistAlphaOrNum(phoneNumber) == false) {
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            scanf("\n");
+            cin >> phoneNumber;
+        }
+
+        // Tạo ID mới cho người dùng
+        int personID = getNewUserID("people.txt");
+
+        // Ghi thông tin người dùng vào file people.txt
+        ofstream personFile("people.txt", ios_base::app);
+        if (personFile.is_open()) {
+            personFile << endl << "[" + to_string(personID) + "] [" + fullName + "] [" + email + "] [" + gender + "] [" + birthdate + "] [" + address + "] [" + phoneNumber + "] [User]";;
+            personFile.close();
+        } 
+        else {
+            cerr << "Unable to open file people.txt" << endl;
+        }
+        
+        // Nhập mật khẩu
+        cout << "Create password: ";
+        cin >> password;
+
+        while (password == "" or password.size() < 8) {
+            cout << "Your password is too weak, please enter a password longer than 8 characters!" << endl;
+            cout << "Create password: ";
+            cin >> password;
+        }
+
+        // Ghi email và mật khẩu vào file user.txt
+        int userID = getNewUserID("users.txt");
+        ofstream userFile("users.txt", ios_base::app);
+        if (userFile.is_open()) {
+            userFile << endl << "[" + to_string(userID) + "] [" + email + "] [" + password + "]";
+            userFile.close();
+            cout << "Registration successful!" << endl;
+        } 
+        else {
+            cerr << "Unable to open file users.txt" << endl;
+        }
+
+        p.setID(personID);
+        p.setName(fullName);
+        p.setEmail(email);
+        p.setSex(gender);
+        p.setBirthdate(birthdate);
+        p.setAddress(address);
+        p.setPhoneNumber(phoneNumber);
+        p.setRole("User");
     }
     
-    Person login(){
-        return Person("HDL", "hdl@gmail.com", "Male", "25/01/2005", "Ha Noi", "000", "Admin");
-    }   
+    bool login(Person& p){
+        string email, password;
 
-    void logout(){
-        
+        while (true) {
+            cout << "Enter email: ";
+            cin >> email;
+
+            if (!emailExists(email)) {
+                cout << "Email does not exist. Please try again." << endl;
+            } 
+            else {
+                break;
+            }
+        }
+
+        while (true) {
+            cout << "Enter password: ";
+            cin >> password;
+
+            if (!validatePassword(email, password)) {
+                cout << "Invalid password. Please try again." << endl;
+            } 
+            else {
+                break;
+            }
+        }
+
+        ifstream file("people.txt");
+        string line;
+        while (getline(file, line)) {
+            size_t pos = 0;
+            string token;
+            vector<string> tokens;
+
+            while ((pos = line.find("] [")) != string::npos) {
+                token = line.substr(1, pos - 1);
+                tokens.push_back(token);
+                line.erase(0, pos + 2);
+            }
+
+            if (!line.empty()) {
+                line.pop_back();
+                line.erase(0, 1);
+                tokens.push_back(line);
+            }
+
+            if (tokens.size() >= 7 && tokens[2] == email) { 
+                file.close();
+                p.setName(tokens[1]);
+                p.setEmail(tokens[2]);
+                p.setSex(tokens[3]);
+                p.setBirthdate(tokens[4]);
+                p.setAddress(tokens[5]);
+                p.setPhoneNumber(tokens[6]);
+                p.setRole(tokens[7]);
+            }
+        }
+        file.close();
+        return true;
+    }  
+
+    void logout(Person& p){
+        cout << "Logging out..." << endl;
+
+        p.setName("");
+        p.setEmail("");
+        p.setSex("");
+        p.setBirthdate("");
+        p.setAddress("");
+        p.setPhoneNumber("");
+        p.setRole("");
     }
 
     int getId(){
@@ -893,21 +1111,8 @@ void menu() {
             << "-------------------------------------------------------------------------------------------------\n";
 }
 
-bool isLogin(Person& p) {
-    return p.getID() > 0 and p.getName() != "" and p.getEmail() != "" and p.getSex() != "" and p.getBirthdate() != "" and p.getAddress() != "" and p.getPhoneNumber() != "" and p.getRole() != "";
-}
-
 void clearScreen() {
     system("cls");
-}
-
-bool isExistAlphaOrNum(string& s) {
-    for (char c : s) {
-        if (isalnum(c)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 int cnt = 0;
@@ -944,7 +1149,6 @@ string editPersonalData(Person& p) {
 
     string name;
     name = input(name, attributeOfPerson);
-    name = input(name, attributeOfPerson);
     if (name == "-1") {
         info += '[' + p.getName() + "] ";
     }
@@ -953,7 +1157,6 @@ string editPersonalData(Person& p) {
     }
 
     string email;
-    email = input(email, attributeOfPerson);
     email = input(email, attributeOfPerson);
     if (email == "-1") {
         info += '[' + p.getEmail() + "] ";
@@ -964,7 +1167,6 @@ string editPersonalData(Person& p) {
 
     string sex;
     sex = input(sex, attributeOfPerson);
-    sex = input(sex, attributeOfPerson);
     if (sex == "-1") {
         info += '[' + p.getSex() + "] ";
     }
@@ -973,7 +1175,6 @@ string editPersonalData(Person& p) {
     }
 
     string birthdate;
-    birthdate = input(birthdate, attributeOfPerson);
     birthdate = input(birthdate, attributeOfPerson);
     if (birthdate == "-1") {
         info += '[' + p.getBirthdate() + "] ";
@@ -984,7 +1185,6 @@ string editPersonalData(Person& p) {
 
     string address;
     address = input(address, attributeOfPerson);
-    address = input(address, attributeOfPerson);
     if (address == "-1") {
         info += '[' + p.getAddress() + "] ";
     }
@@ -993,7 +1193,6 @@ string editPersonalData(Person& p) {
     }
 
     string phoneNumber;
-    phoneNumber = input(phoneNumber, attributeOfPerson);
     phoneNumber = input(phoneNumber, attributeOfPerson);
     if (phoneNumber == "-1") {
         info += '[' + p.getPhoneNumber() + "] ";
@@ -1074,7 +1273,7 @@ int main() {
     BorrowInfo bI;
 
     while (query != 18) {
-        while (isLogin(p) == false) {
+        while (welcome == false) {
             cout << "Dang nhap/Dang ky de su dung tinh nang!!!\n";
 
             // Try...catch để bắt lỗi nhập không đúng định dạng số cho query
@@ -1089,25 +1288,25 @@ int main() {
 
                 switch(query){
                     case 1: 
-                        p = u.login();
-                        p.setID(1);
+                        u.login(p);
                         welcome = true;
                         break;
-                        
-                    case 2: // Tinh nang 2: Dang ky.
+
+                    case 2: 
+                        u.Register(p);
+                        welcome = true;
                         break;
                 }
             }
             catch (const exception& e) {
                 cout << e.what() << endl;
             }
-        }
 
-        if (welcome == true) {
-            cout    << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
+            if (welcome == true) {
+                cout << endl << "Chuc mung ban da dang nhap thanh cong!" << endl
                     << "Welcome " << '<' << p.getName() << '>' << endl;
-            welcome = false;
-            cout << endl;
+                cout << endl;
+            }
         }
 
         cout << "Nhap vao tinh nang ban muon su dung: ";
@@ -1231,19 +1430,21 @@ int main() {
                     break;
 
                 case 12: 
-                    if(p.getRole() == "User"){
-                        int personId, bookId, eBookId;
-                        cout << "Nhap personId, bookId, eBookId\n";
-                        cin >> personId >> bookId >> eBookId;
-                        BorrowInfo bI(personId, bookId, eBookId);
-                        // Hien thi id cac quyen sach da muon cua User
-                        bI.displayInfo();
-                    }
+                    bI.displayInfo(p.getID());
                     cout << endl;
                     break;
 
-                case 13: // Tinh nang 13: Hien thi tat ca sach cua 1 nguoi dung da muon theo id (Admin).
-                    
+                case 13: 
+                    if (p.getRole() == "User") {
+                        cout << "Ban khong co quyen su dung chuc nang nay!!!" << endl;
+                    }
+                    else {
+                        int id;
+                        cout << "Nhap vao ID cua nguoi dung ban muon xem so sach ho da muon: ";
+                        cin >> id;
+                        bI.displayInfo(id);
+                    }
+                    cout << endl;
                     break;
 
                 case 14:
@@ -1290,8 +1491,8 @@ int main() {
                     break;
 
                 case 16: 
-                    u.logout();
-                    p.clearInfo();
+                    u.logout(p);
+                    cout << endl;
                     break;
 
                 case 17:
