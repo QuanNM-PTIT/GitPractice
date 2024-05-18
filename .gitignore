@@ -6,3 +6,4 @@ LongTest.cpp
 *.exe
 tempCodeRunnerFile.cpp
 *.idea
+.git
