@@ -193,8 +193,20 @@ int main(){
             }
             getEnterKey();
             break;
-        case 13:
-            cout << "13. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon.\n";
+        case 13: //cout << "13. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon.\n";
+            if (!isLogged) {
+                cout << "Ban chua dang nhap!!\n";
+                cout << "Hay dang nhap de su dung tinh nang nay!!\n";
+            }
+            else {
+                if (person.getPersonRole() == "Admin") {
+                    showBorrowedBookWithUserId();
+                }
+                else {
+                    cout << "Chuc nang nay chi danh cho Admin!!\n";
+                }
+            }
+            getEnterKey();
             break;
         case 14:
             cout << "14. Chinh sua thong tin ca nhan.\n";

@@ -24,7 +24,8 @@ class BorrowInfo {
         friend void addBorrowInfo();
         friend void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId);
         friend void deleteBorrowInfo();
-        friend void showBorrowedBook();
+        friend void showBorrowedBook(int personId);
+        friend void showBorrowedBookWithUserId();
         int getBorrowId();
         int getPersonId();
         int getBookId();
@@ -210,6 +211,82 @@ void showBorrowedBook(int personId){
     }
     else {
         cout << "Ban chua muon cuon sach nao ca!!\n";
+    }
+    return;
+}
+void showBorrowedBookWithUserId(){
+    while (1) {
+        system("cls");
+        cout << "12. Hien thi tat ca cac quyen sach da muon.\n";
+        cout << "Nhap ID nguoi dung can tra cuu: ";
+        int personId;
+        cin >> personId;
+        if (!exsitedId(personId, PeopleFile)) {
+            cout << "ID nguoi dung khong ton tai!!\n";
+            cout << "Ban co muon nhap lai? (1/0) ";
+            int choose;
+            cin >> choose;
+            if (choose) {
+                continue;
+            }
+            else {
+                cout << "Ban da huy yeu cau tra cuu!!\n";
+                break;
+            }
+        }
+        else if (exsitedId(personId, BorrowInfosFile, 2)) {
+            vector<string> borrowList;
+            ifstream inFile(BorrowInfosFile);
+            string tmp;
+            while (getline(inFile, tmp)){
+                borrowList.push_back(tmp);
+            }
+            inFile.close();
+            int bookIdInFile = -1;
+            int eBookIdInFile = -1;
+            for (int i = 0; i < borrowList.size(); i++){
+                int personIdInFile = getPersonIdInLine(borrowList[i]);
+                if (personId == personIdInFile){
+                    stringstream ss(borrowList[i]);
+                    string tmp;
+                    ss >> tmp;
+                    ss >> tmp;
+                    ss >> tmp;
+                    bookIdInFile = stoi(tmp.substr(1, tmp.size()-2));
+                    ss >> tmp;
+                    eBookIdInFile = stoi(tmp.substr(1, tmp.size()-2));
+                    break;
+                }
+            }
+            if (bookIdInFile != -1) {
+                ifstream inFile(BooksFile);
+                string tmp;
+                while (getline(inFile, tmp)){
+                    if (getKeyId(tmp) == bookIdInFile) {
+                        cout << tmp << "\n";
+                        break;
+                    }
+                }
+                inFile.close();
+            }
+            if (eBookIdInFile != -1) {
+                ifstream inFile(EBooksFile);
+                string tmp;
+                while (getline(inFile, tmp)){
+                    if (getKeyId(tmp) == eBookIdInFile) {
+                        cout << tmp << "\n";
+                        break;
+                    }
+                }
+                inFile.close();
+            }
+            break;
+        }
+        else {
+            cout << "Nguoi dung nay chua muon cuon sach nao ca!!\n";
+            break;
+        }
+
     }
     return;
 }
