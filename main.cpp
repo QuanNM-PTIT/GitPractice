@@ -184,7 +184,6 @@ public:
         // getline(cin, newAuthor);
         // cout << "Enter new quantity: ";
         // cin >> newQuantity;
-        cin.ignore();
 
         vector<string> lines;
         ifstream file("books.txt");
@@ -195,16 +194,17 @@ public:
         }
 
         string line;
-        while (getline(file, line))
+        while (std::getline(file, line))
         {
             stringstream ss(line);
             int id, quantity;
             string title, author;
 
             char bracket;
-            ss >> bracket >> id >> bracket;
-            getline(ss, title, ']');
-            getline(ss, author, ']');
+            ss >> bracket >> id >> bracket >> bracket;
+            std::getline(ss, title, ']');
+            ss >> bracket;
+            std::getline(ss, author, ']');
             ss >> bracket >> quantity >> bracket;
 
             if (id == idToUpdate)
@@ -407,8 +407,84 @@ public:
 
         cout << "EBook with ID " << idToUpdate << " Updated done!" << endl;
     }
+
+    void MinusQuantityEBook(int idToUpdate, string title, string author, int newQuantity, string fileFormat, int fileSize)
+    {
+        // string newTitle;
+        // string newAuthor;
+        // int newQuantity;
+        // string newFileFormat;
+        // int newFileSize;
+
+        // cout << "Enter new title: ";
+        // cin.ignore();
+        // getline(cin, newTitle);
+        // cout << "Enter new author: ";
+        // getline(cin, newAuthor);
+        // cout << "Enter new quantity: ";
+        // cin >> newQuantity;
+        // cout << "Enter new file format: ";
+        // cin.ignore();
+        // getline(cin, newFileFormat);
+        // cout << "Enter new file size: ";
+        // cin >> newFileSize;
+
+        vector<string> lines;
+        ifstream file("ebooks.txt");
+        if (!file.is_open())
+        {
+            cerr << "Error" << endl;
+            return;
+        }
+
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            int id1, quantity1;
+            string title1, author1, fileFormat1;
+            int fileSize1;
+
+            char bracket;
+            ss >> bracket >> id1 >> bracket >> bracket;
+            getline(ss, title1, ']');
+            ss >> bracket;
+            getline(ss, author1, ']');
+            ss >> bracket >> quantity1 >> bracket >> bracket;
+            getline(ss, fileFormat1, ']');
+            ss >> bracket >> fileSize1 >> bracket;
+
+            if (id1 == idToUpdate)
+            {
+                stringstream updatedLine;
+                updatedLine << "[" << idToUpdate << "] [" << title << "] [" << author << "] [" << newQuantity << "] [" << fileFormat << "] [" << fileSize << "]";
+                lines.push_back(updatedLine.str());
+            }
+            else
+            {
+                lines.push_back(line);
+            }
+        }
+        file.close();
+
+        ofstream outFile("ebooks.txt");
+        if (!outFile.is_open())
+        {
+            cerr << "Error!" << endl;
+            return;
+        }
+
+        for (const auto &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+
+        // cout << "EBook with ID " << idToUpdate << " Updated done!" << endl;
+    }
 };
 // Begin Person
+
 class Person
 {
 private:
@@ -484,153 +560,6 @@ bool Person::addPerson()
     fileout.close();
 }
 
-// Person::Person(string name, string email, string sex, string birthday, string address, string phoneNumber, string role)
-
-// End Person
-//  class Users
-//  {
-// End Person
-// class Users
-// {
-
-// private:
-//     vector<UserInfos> dsUsers;
-
-//     bool checkUser(UserInfos check)
-//     {
-//         if (check.getEmail().empty() || check.getPassword().empty())
-//             return false;
-//         return true;
-//     }
-
-//     int getNextId()
-//     {
-//         if (dsUsers.empty())
-//             return 1;
-//         return dsUsers.size() + 1;
-//     }
-
-// public:
-//     Users()
-//     {
-//         ifstream ifs("users.txt");
-//         if (ifs.is_open())
-//         {
-//             string line;
-//             while (getline(ifs, line))
-//             {
-//                 stringstream ss(line);
-//                 int id;
-//                 string email, password;
-//                 char c;
-//                 ss >> c >> id >> c >> c;
-//                 getline(ss, email, ']');
-//                 ss >> c;
-//                 getline(ss, password, ']');
-//                 dsUsers.push_back(UserInfos(id, email, password));
-//             }
-//             ifs.close();
-//         }
-//     }
-
-//     bool checkInfor(string email, string password)
-//     {
-//         for (auto x : dsUsers)
-//         {
-//             if (email == x.getEmail() && password == x.getPassword())
-//                 return true;
-//         }
-//         return false;
-//     }
-
-//     void updateUser(UserInfos &UserUpdate)
-//     {
-//         bool check = false;
-//         for (auto &x : dsUsers)
-//         {
-//             if (x.getId() == UserUpdate.getId())
-//             {
-//                 check = true;
-//                 if (!checkUser(UserUpdate))
-//                     cout << "thong tin update khong hop le\n";
-//                 else
-//                     x = UserUpdate; // cap nhat trong vector dsUsers
-//                 break;
-//             }
-//         }
-//         if (!check)
-//             cout << "khong tim thay thong tin!\n";
-//         else
-//         {
-//             ofstream ofs("users.txt", ios::trunc); // mo tep trong che đo ghi đe
-//             if (ofs.is_open())
-//             { // cap nhat lai trong file users.txt
-//                 for (auto x : dsUsers)
-//                     ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getEmail() << ']' << ' ' << '[' << x.getPassword() << ']' << endl;
-//                 ofs.close();
-//                 cout << "update thanh cong!\n";
-//             }
-//             else
-//                 cout << "loi khi khong truy cap duoc vao data.\n";
-//         }
-//     }
-
-// void regist(Person info, string password)
-// { // check thong tin dang ki
-//     if (!checkUser(UserInfos(0, info.getEmail(), password)))
-//         cout << "thong tin sai!\n";
-//     else
-//     {
-//         int id = getNextId();
-//         dsUsers.push_back(UserInfos(id, info.getEmail(), password)); // add them vao vector
-//         ofstream ofs("users.txt");
-//         if (ofs.is_open())
-//         {
-//             for (auto &x : dsUsers) // cap nhat lai file user.txt
-//                 ofs << '[' << x.getId() << ']' << ' ' << '[' << x.getEmail() << ']' << ' ' << '[' << x.getPassword() << ']' << endl;
-//             cout << "dang ki thanh cong!\n";
-//             cout << "hay dang nhap bang email cua ban!\n";
-//             ofs.close();
-//             info.addInfo(); // them thong tin vao people.txt
-//         }
-//         else
-//             cout << "khong truy cap duoc data!\n";
-//     }
-// }
-
-// Begin Person
-// class Person
-// {
-// private:
-//     int id;
-//     string name, email, sex, birthdate,
-//         address, phoneNumber, role;
-
-// public:
-// 	bool addPerson();
-//     Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role)
-//         : id(id), name(name), email(email), sex(sex), birthdate(birthdate), address(address), phoneNumber(phoneNumber), role(role) {}
-
-// int getId() const { return id; }
-// string getName() const { return name; }
-// string getEmail() const { return email; }
-// string getSex() const { return sex; }
-// string getBirthdate() const { return birthdate; }
-// string getAddress() const { return address; }
-// string getPhoneNumber() const { return phoneNumber; }
-// string getRole() const { return role; }
-// int getId() const { return id; }
-// string getName() const { return name; }
-// string getEmail() const { return email; }
-// string getSex() const { return sex; }
-// string getBirthdate() const { return birthdate; }
-// string getAddress() const { return address; }
-// string getPhoneNumber() const { return phoneNumber; }
-// string getRole() const { return role; }
-// };
-// End Person
-
-// Begin User
 class User
 {
 private:
@@ -856,6 +785,12 @@ int BorrowInfo::geteBookId()
 
 // End BorrowInfo
 
+// Biến toàn cục
+vector<int> borrowedBooks;
+vector<int> borrowedEBook;
+bool loggedIn = false;
+Person curPer("", "", "", "", "", "", "");
+
 // Bat dau khai bao cac ham thao tac
 
 void themthongtinmuonsach(int perID)
@@ -892,8 +827,52 @@ void themthongtinmuonsach(int perID)
             }
         }
     }
-
     filein.close();
+
+    ifstream filein2("ebooks.txt");
+    if (filein2.is_open())
+    {
+        string line;
+        while (getline(filein2, line))
+        {
+            stringstream ss(line);
+            int id, quantity;
+            string title, author, fileFormat;
+            int fileSize;
+            char bracket;
+            ss >> bracket >> id >> bracket >> bracket;
+            getline(ss, title, ']');
+            ss >> bracket;
+            getline(ss, author, ']');
+            ss >> bracket >> quantity >> bracket >> bracket;
+            getline(ss, fileFormat, ']');
+            ss >> bracket >> fileSize >> bracket;
+            if (id == eBookId)
+            {
+                EBook x;
+                x.MinusQuantityEBook(id, title, author, quantity - 1, fileFormat, fileSize);
+            }
+        }
+    }
+    filein2.close();
+
+    borrowedBooks.push_back(bookId);
+    borrowedEBook.push_back(eBookId);
+    // chưa trừ số lượng sách trong eBook
+}
+
+void ShowAllBorrowedBookEbook()
+{
+    cout << "Danh sach cac quyen sach da muon la: \n";
+    for (int id : borrowedBooks)
+    {
+        //        cout << getNameBookById(id) << endl;
+    }
+    cout << "Danh sach cac quyen sach dien tu da muon la: \n";
+    for (int id : borrowedEBook)
+    {
+        //        cout << getNameEBookById(id) << endl;
+    }
 }
 
 vector<int> extractNumbers(const string &input) // ham tra ve 1 vector id, id trong dau [] o file borrowInfo
@@ -1096,287 +1075,119 @@ Person login(bool &check)
     cout << "Sai thong tin dang nhap !\n";
     return Person("", "", "", "", "", "", "");
 }
-// void Signup()
-// {
-//     string userName, password;
-//     cout << "Nhap userName: \n";
-//     cin >> userName;
-//     cout << "Nhap password: \n";
-//     cin >> password;
-//     User x(0, userName, password);
-//     int id = x.getNextAvailableId();
-//     User a(id, userName, password);
-//     bool check = a.registerUser();
-//     if (check)
-//     {
-//         string name, email, sex, birthday, address, phoneNumber, role;
-//         cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
-//         cout << "Nhap Ho va ten: \n";
-//         scanf("\n");
-//         getline(cin, name);
-//         cout << "Nhap email: \n";
-//         cin >> email;
-//         cout << "Nhap gioi tinh: \n";
-//         cin >> sex;
-//         cout << "Nhap ngay thang nam sinh: \n";
-//         cin >> birthday;
-//         cout << "Nhap dia chi noi o: \n";
-//         scanf("\n");
-//         getline(cin, address);
-//         cout << "Nhap so dien thoai: \n";
-//         cin >> phoneNumber;
-//         role = "User";
-//         Person a(name, email, sex, birthday, address, phoneNumber, role);
-//         bool check = a.addPerson();
-//         if (check)
-//         {
-//             cout << "Them thong tin thanh cong\n";
-//         }
-//         else
-//             cout << "Khong the mo tep people.txt de them thong tin\n";
-//     }
-//     return;
-// }
-// Thang viet:
-void SignUp()
+
+void Signup()
 {
+    string userName, password;
+    cout << "Nhap userName: \n";
+    cin >> userName;
+    cout << "Nhap password: \n";
+    cin >> password;
+    User x(0, userName, password);
+    int id = x.getNextAvailableId();
+    User a(id, userName, password);
+    bool check = a.registerUser();
+    if (check)
+    {
+        string name, email, sex, birthday, address, phoneNumber, role;
+        cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
+        cout << "Nhap Ho va ten: \n";
+        scanf("\n");
+        getline(cin, name);
+        cout << "Nhap email: \n";
+        cin >> email;
+        cout << "Nhap gioi tinh: \n";
+        cin >> sex;
+        cout << "Nhap ngay thang nam sinh: \n";
+        cin >> birthday;
+        cout << "Nhap dia chi noi o: \n";
+        scanf("\n");
+        getline(cin, address);
+        cout << "Nhap so dien thoai: \n";
+        cin >> phoneNumber;
+        role = "User";
+        Person a(name, email, sex, birthday, address, phoneNumber, role);
+        bool check = a.addPerson();
+        if (check)
+        {
+            cout << "Them thong tin thanh cong\n";
+        }
+        else
+            cout << "Khong the mo tep people.txt de them thong tin\n";
+    }
+    return;
 }
 
-// bool loggedIn = false;
-// vector<Person> dsPeople;
-// Person getPerson()
-// {
-//     ifstream filein("people.txt");
-//     if (filein.is_open())
-//     {
-//         string line;
-//         int id;
-//         string name, email, sex, birthdate,
-//             address, phoneNumber, role;
-//         char bracket;
-//         while (getline(filein, line))
-//         {
-//             stringstream ss(line);
-//             ss >> bracket >> id >> bracket >> bracket;
-//             getline(ss, name, ']');
-//             ss >> bracket;
-//             getline(ss, email, ']');
-//             ss >> bracket;
-//             getline(ss, sex, ']');
-//             ss >> bracket;
-//             getline(ss, birthdate, ']');
-//             ss >> bracket;
-//             getline(ss, address, ']');
-//             ss >> bracket;
-//             getline(ss, phoneNumber, ']');
-//             ss >> bracket;
-//             getline(ss, role, ']');
-//         }
-//         Person cur(name, email, sex, birthdate, address, phoneNumber, role);
-//         cur.setId(id);
-//         dsPeople.push_back(cur);
-//         return cur;
-//     }
+Person getPerson(string emailCheck)
+{
+    ifstream filein("people.txt");
+    if (filein.is_open())
+    {
+        string line;
+        int id;
+        string name, email, sex, birthdate,
+            address, phoneNumber, role;
+        char bracket;
+        while (getline(filein, line))
+        {
+            stringstream ss(line);
+            ss >> bracket >> id >> bracket >> bracket;
+            getline(ss, name, ']');
+            ss >> bracket;
+            getline(ss, email, ']');
+            ss >> bracket;
+            getline(ss, sex, ']');
+            ss >> bracket;
+            getline(ss, birthdate, ']');
+            ss >> bracket;
+            getline(ss, address, ']');
+            ss >> bracket;
+            getline(ss, phoneNumber, ']');
+            ss >> bracket;
+            getline(ss, role, ']');
+            if (email == emailCheck)
+            {
+                Person cur(name, email, sex, birthdate, address, phoneNumber, role);
+                cur.setId(id);
+                return cur;
+            }
+        }
+    }
 
-//     filein.close();
-// }
+    filein.close();
+}
 
-// string GetRoleByEmail(const string &email)
-// {
-//     ifstream peopleFile("people.txt");
-//     if (!peopleFile.is_open())
-//     {
-//         cout << "Khong the mo tep people.txt\n";
-//         return ""; // Trả về chuỗi rỗng nếu không mở được file
-//     }
+string GetRoleByEmail(const string &email)
+{
+    ifstream peopleFile("people.txt");
+    if (!peopleFile.is_open())
+    {
+        cout << "Khong the mo tep people.txt\n";
+        return ""; // Trả về chuỗi rỗng nếu không mở được file
+    }
 
-//     string tmp;
-//     while (getline(peopleFile, tmp))
-//     {
-//         if (tmp.find(email) != string::npos)
-//         {
-//             // Tìm thấy email trong file people.txt
-//             stringstream ss(tmp);
-//             string role;
-//             ss >> tmp >> tmp;
-//             // Đọc Role
-//             ss >> role;
-//             // Xóa kí tự [ ở đầu và ] ở cuối
-//             role = role.substr(1, role.size() - 2);
-//             peopleFile.close();
-//             return role;
-//         }
-//     }
+    string tmp;
+    while (getline(peopleFile, tmp))
+    {
+        if (tmp.find(email) != string::npos)
+        {
+            // Tìm thấy email trong file people.txt
+            stringstream ss(tmp);
+            string role;
+            ss >> tmp >> tmp;
+            // Đọc Role
+            ss >> role;
+            // Xóa kí tự [ ở đầu và ] ở cuối
+            role = role.substr(1, role.size() - 2);
+            peopleFile.close();
+            return role;
+        }
+    }
 
-//     cout << "Khong tim thay thong tin nguoi dung.\n";
-//     peopleFile.close();
-//     return ""; // Trả về chuỗi rỗng nếu không tìm được email
-// }
-
-// class PeopleDatabase
-//{
-// private:
-//     vector<Person> people;
-//
-// public:
-//     PeopleDatabase(const string &filename)
-//     {
-//         ifstream file(filename);
-//         if (file.is_open())
-//         {
-//             string line;
-//             while (getline(file, line))
-//             {
-//                 stringstream ss(line);
-//                 char bracket;
-//                 int id;
-//                 string name, email, sex, birthdate, address, phoneNumber, role;
-//                 ss >> bracket >> id >> bracket;
-//                 getline(ss, name, ']');
-//                 ss >> bracket;
-//                 getline(ss, email, ']');
-//                 ss >> bracket;
-//                 getline(ss, sex, ']');
-//                 ss >> bracket;
-//                 getline(ss, birthdate, ']');
-//                 ss >> bracket;
-//                 getline(ss, address, ']');
-//                 ss >> bracket;
-//                 getline(ss, phoneNumber, ']');
-//                 ss >> bracket;
-//                 getline(ss, role, ']');
-//                 people.push_back(Person(id, name, email, sex, birthdate, address, phoneNumber, role));
-//             }
-//             file.close();
-//         }
-//         else
-//         {
-//             cout << "Khong mo duoc file " << filename << endl;
-//         }
-//     }
-//
-//     string getRoleByEmail(const string &email) const
-//     {
-//         for (const auto &person : people)
-//         {
-//             if (person.getEmail() == email)
-//             {
-//                 return person.getRole();
-//             }
-//         }
-//         return "";
-//     }
-//     string getNameByEmail(const string &email) const
-//     {
-//         for (const auto &person : people)
-//         {
-//             if (person.getEmail() == email)
-//             {
-//                 string name = person.getName();
-//                 if (name.size() > 2)
-//                 {
-//                     name = name.substr(2); // Bỏ đi 2 ký tự đầu tiên
-//                     return name;
-//                 }
-//             }
-//         }
-//         return "";
-//     }
-//
-//     int getIdByEmail(string email)
-//     {
-//         for (const auto &person : people)
-//         {
-//             if (person.getEmail() == email)
-//             {
-//                 return person.getId();
-//             }
-//         }
-//         return 0;
-//     }
-// };
-// class PeopleDatabase
-//{
-// private:
-//    vector<Person> people;
-//
-// public:
-//    PeopleDatabase(const string &filename)
-//    {
-//        ifstream file(filename);
-//        if (file.is_open())
-//        {
-//            string line;
-//            while (getline(file, line))
-//            {
-//                stringstream ss(line);
-//                char bracket;
-//                int id;
-//                string name, email, sex, birthdate, address, phoneNumber, role;
-//                ss >> bracket >> id >> bracket;
-//                getline(ss, name, ']');
-//                ss >> bracket;
-//                getline(ss, email, ']');
-//                ss >> bracket;
-//                getline(ss, sex, ']');
-//                ss >> bracket;
-//                getline(ss, birthdate, ']');
-//                ss >> bracket;
-//                getline(ss, address, ']');
-//                ss >> bracket;
-//                getline(ss, phoneNumber, ']');
-//                ss >> bracket;
-//                getline(ss, role, ']');
-//                people.push_back(Person(id, name, email, sex, birthdate, address, phoneNumber, role));
-//            }
-//            file.close();
-//        }
-//        else
-//        {
-//            cout << "Khong mo duoc file " << filename << endl;
-//        }
-//    }
-//
-//    string getRoleByEmail(const string &email) const
-//    {
-//        for (const auto &person : people)
-//        {
-//            if (person.getEmail() == email)
-//            {
-//                return person.getRole();
-//            }
-//        }
-//        return "";
-//    }
-//    string getNameByEmail(const string &email) const
-//    {
-//        for (const auto &person : people)
-//        {
-//            if (person.getEmail() == email)
-//            {
-//                string name = person.getName();
-//                if (name.size() > 2)
-//                {
-//                    name = name.substr(2); // Bỏ đi 2 ký tự đầu tiên
-//                    return name;
-//                }
-//            }
-//        }
-//        return "";
-//    }
-//
-//    int getIdByEmail(string email)
-//    {
-//        for (const auto &person : people)
-//        {
-//            if (person.getEmail() == email)
-//            {
-//                return person.getId();
-//            }
-//        }
-//        return 0;
-//    }
-//};
+    cout << "Khong tim thay thong tin nguoi dung.\n";
+    peopleFile.close();
+    return ""; // Trả về chuỗi rỗng nếu không tìm được email
+}
 
 void showBooks()
 {
@@ -1431,10 +1242,6 @@ void showEBooks()
 }
 // Ket thuc khai bao cac ham thao tac
 
-// Start bien toan cuc
-Person curPer("", "", "", "", "", "", "");
-
-// End bien toan cuc
 int main()
 {
     loadUsers();
@@ -1527,7 +1334,20 @@ int main()
                     }
                     if (option == 'd')
                     {
-                        // // updatebook
+                        // UpdateBook
+                        if (curPer.getRole() == "Admin")
+                        {
+                            int idToUpdate;
+                            cout << "Enter ID want to update: ";
+                            cin >> idToUpdate;
+                            Book book;
+                            book.updateBook(idToUpdate);
+                        }
+                        else
+                        {
+                            cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
+                        }
+                        // updateEbook
                         // if (curPer.getRole() == "Admin")
                         // {
                         //     int idToUpdate;
@@ -1540,20 +1360,19 @@ int main()
                         // {
                         //     cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
                         // }
-                        // updateEbook
 
-                        if (curPer.getRole() == "Admin")
-                        {
-                            int idToUpdate;
-                            cout << "Enter ID want to update: ";
-                            cin >> idToUpdate;
-                            EBook ebook;
-                            ebook.updateEbooktoFile(idToUpdate);
-                        }
-                        else
-                        {
-                            cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
-                        }
+                        // if (curPer.getRole() == "Admin")
+                        // {
+                        //     int idToUpdate;
+                        //     cout << "Enter ID want to update: ";
+                        //     cin >> idToUpdate;
+                        //     EBook ebook;
+                        //     ebook.updateEbooktoFile(idToUpdate);
+                        // }
+                        // else
+                        // {
+                        //     cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
+                        // }
                     }
                     if (option == 'i')
                     {
@@ -1667,6 +1486,7 @@ int main()
                             }
                             filein.close();
                         }
+                        
                     }
                     if (option == 'n')
                     {
@@ -1718,12 +1538,20 @@ int main()
                         int id;
                         cout << "Nhap id cua ban: ";
                         cin >> id;
-                        string name, email;
+                        string name, email,sex, birthdate, address, phoneNumber, role;
                         cout << "Nhap ten moi: ";
                         cin >> name;
                         cout << "Nhap email moi: ";
                         cin >> email;
-                        Person x(name, email, "Nam", "01/01/2000", "Ha Noi", "0123456789", "User");
+                        cout << "Nhap gioi tinh moi: ";
+                        cin>>sex;
+                        cout << "Nhap ngay thang nam sinh moi: ";
+                        cin>>birthdate;
+                        cout << "Nhap dia chi moi: ";
+                        cin >> address;
+                        cout << "Nhap so dien thoai moi: ";
+                        cin >> phoneNumber;
+                        Person x(name, email,sex,birthdate, address, phoneNumber, role);
                         x.setId(id);
                         x.addPerson();
                     }
@@ -1756,6 +1584,8 @@ int main()
 
                     // Thực hiện các chức năng khác tương tự
                 }
+                borrowedBooks.clear();
+                borrowedEBook.clear();
             }
             else
             {
@@ -1764,79 +1594,4 @@ int main()
         }
     }
     return 0;
-
-    // //    Book book;
-    // // book.addBook(); // Thêm một sách vào file books.txt
-    // // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
-
-    // EBook ebook;
-    // ebook.addBook(); // Thêm một Ebook vào file books.txt
-    // int idToUpdate;
-    // cout << "Enter ID want to update: ";
-    // cin >> idToUpdate;
-    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
-
-    // // themthongtinmuonsach();
-    // // -- > done
-
-    // int id = User::getNextAvailableId();
-    // string email = "example@example.com";
-    // string password = "PTITd22@";
-    // User user(id, email, password);
-    // user.registerUser();
-    // cout << "Register Successfully" << endl;
-
-    // // capnhatthongtinmuonsach();
-    // // -- > done
-
-    // int id = User::getNextAvailableId();
-    // string email = "example@example.com";
-    // string password = "PTITd22@";
-    // User user(id, email, password);
-    // user.registerUser();
-    // cout << "Register Successfully" << endl;
-
-    // int idToUpdate;
-    // cout << "Enter ID want to update: ";
-    // cin >> idToUpdate;
-    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
-
-    // // themthongtinmuonsach();
-    // // -- > done
-
-    // //  Tạo một đối tượng User
-    // User user1(1, "john.smith@gmail.com", "pass1234");
-    // User user2(2, "jane.doe@gmail.com", "abcD1234");
-    // User user3(3, "alice.johnson@gmail.com", "MyP@ssw0rd");
-    // User user4(4, "example@example.com", "PTITd22@");
-
-    // // Kiểm tra thông tin đăng nhập và trả về Person với email tương ứng.
-
-    // Users users;
-    // string email, password;
-    // cout << "Nhap email: ";
-    // cin >> email;
-    // cout << "Nhap mat khau: ";
-    // cin >> password;
-
-    // User loginUser(0, email, password);
-    // Person loggedInPerson = users.login(loginUser, email, password);
-
-    // if (loggedInPerson.getId() != 0)
-    // {
-    //     cout << "Thong tin cua ban:" << endl;
-    //     cout << "ID: " << loggedInPerson.getId() << endl;
-    //     cout << "Ten: " << loggedInPerson.getName() << endl;
-    //     cout << "Email: " << loggedInPerson.getEmail() << endl;
-    //     cout << "Gioi tinh: " << loggedInPerson.getSex() << endl;
-    //     cout << "Ngay sinh: " << loggedInPerson.getBirthdate() << endl;
-    //     cout << "Dia chi: " << loggedInPerson.getAddress() << endl;
-    //     cout << "So dien thoai: " << loggedInPerson.getPhoneNumber() << endl;
-    //     cout << "Vai tro: " << loggedInPerson.getRole() << endl;
-    // }
-    // // Đăng xuất
-    // users.logout();
-    // return 0;
-    // }
-    // themthongtinmuonsach(); --> done
 }
