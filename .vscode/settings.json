@@ -5,6 +5,10 @@
         "array": "cpp",
         "tuple": "cpp",
         "variant": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "istream": "cpp"
     }
 }
