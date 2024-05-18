@@ -18,7 +18,8 @@ class Book {
         string author;
         int quantity;
     public:
-        Book(string title, string author, int quantity);
+        Book(string title, string author, int quantity)
+            : title(title), author(author), quantity(quantity) {}
         friend void addBook();
         friend vector<Book> getBooks();
         friend void updateBook();
@@ -31,12 +32,6 @@ class Book {
         int getBookQuantity();
 };
 
-Book::Book(string title, string author, int quantity){
-    this -> id = getSmallestId(BooksFile);
-    this -> title = title;
-    this -> author = author;
-    this -> quantity = quantity;
-}
 void addBook(){
     system("cls");
     cout << "3. Them sach.\n";
