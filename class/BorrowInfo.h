@@ -217,20 +217,17 @@ void showBorrowedBook(int personId){
 void showBorrowedBookWithUserId(){
     while (1) {
         system("cls");
-        cout << "12. Hien thi tat ca cac quyen sach da muon.\n";
+        cout << "13. Hien thi tat ca cac quyen sach cua 1 nguoi dung da muon.\n";
         cout << "Nhap ID nguoi dung can tra cuu: ";
         int personId;
         cin >> personId;
         if (!exsitedId(personId, PeopleFile)) {
             cout << "ID nguoi dung khong ton tai!!\n";
-            cout << "Ban co muon nhap lai? (1/0) ";
+            cout << "Ban co muon nhap lai ID nguoi dung? (1/0) ";
             int choose;
             cin >> choose;
-            if (choose) {
-                continue;
-            }
-            else {
-                cout << "Ban da huy yeu cau tra cuu!!\n";
+            if (!choose) {
+                cout << "Ban da huy yeu cau sach da muon cua 1 nguoi dung!\n";
                 break;
             }
         }
@@ -286,7 +283,6 @@ void showBorrowedBookWithUserId(){
             cout << "Nguoi dung nay chua muon cuon sach nao ca!!\n";
             break;
         }
-
     }
     return;
 }

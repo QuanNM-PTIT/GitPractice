@@ -7,6 +7,8 @@ using namespace std;
 #ifndef PERSON_H
 #define PERSON_H
 
+string getPersonRoleInLine(string data);
+
 class Person {
     private:
         int id;
@@ -22,6 +24,7 @@ class Person {
         Person(int id, string name, string email, string sex, string birthdate, string address, string phoneNumber, string role);
         Person(string name, string email, string sex, string birthdate, string address, string phoneNumber, string role);
         friend void addPerson(Person newPerson);
+        friend void updatePeopleInfo(int personId);
         int getPersonId();
         string getPersonName();
         string getPersonEmail();
@@ -74,6 +77,67 @@ void addPerson(Person newPerson){
     outFile << "[" << newPerson.getPersonRole() << "]\n";
     outFile.close();
 }
+void updatePeopleInfo(int updatePersonId){
+    system("cls");
+    cout << "14. Chinh sua thong tin ca nhan.\n";
+    cout << "Hay nhap thong tin moi!\n";
+    string newName;
+    string newEmail;
+    string newSex;
+    string newBirthdate;
+    string newAddress;
+    string newPhoneNumber;
+    cout << "Nhap ten moi: ";
+    cin.ignore();
+    getline(cin, newName);
+    cout << "Nhap Email moi: ";
+    cin >> newEmail;
+    cout << "Nhap Gioi tinh moi: ";
+    cin >> newSex;
+    cout << "Nhap Ngay sinh moi: ";
+    cin >> newBirthdate;
+    cout << "Nhap dia chi moi: ";
+    cin.ignore();
+    getline(cin, newAddress);
+    cout << "Nhap So dien thoai moi: ";
+    cin >> newPhoneNumber;
+    cout << "Ban co chac chan muon sua thong tin? (1/0) ";
+    int choose;
+    cin >> choose;
+    if (choose) {
+        vector<string> peopleList;
+        ifstream inFile(PeopleFile);
+        string tmp;
+        while (getline(inFile, tmp)){
+            peopleList.push_back(tmp);
+        }
+        inFile.close();
+        for (int i = 0; i < peopleList.size(); i++){
+            int personId = getKeyId(peopleList[i]);
+            if (personId == updatePersonId){
+                peopleList[i] = "[" + to_string(updatePersonId) + "] ";
+                peopleList[i] += "[" + newName + "] ";
+                peopleList[i] += "[" + newEmail + "] ";
+                peopleList[i] += "[" + newSex + "] ";
+                peopleList[i] += "[" + newBirthdate + "] ";
+                peopleList[i] += "[" + newAddress + "] ";
+                peopleList[i] += "[" + newPhoneNumber + "] ";
+                peopleList[i] += "[" + getPersonRoleInLine(peopleList[i]) + "] ";
+                break;
+            }
+        }
+        ofstream outFile(PeopleFile);
+        for (string item : peopleList){
+            outFile << item << "\n";
+        }
+        outFile.close();
+
+    }  
+    else {
+        cout << "Ban da huy yeu cau sua thong tin!\n";
+    }
+    return;
+}
 
 int Person::getPersonId(){
     return this -> id;
@@ -98,6 +162,15 @@ string Person::getPersonPhoneNumber(){
 }
 string Person::getPersonRole(){
     return this -> role;
+}
+string getPersonRoleInLine(string data){
+    stringstream ss(data);
+    string tmp;
+    int t = 7;
+    while (t--) {
+        ss >> tmp;
+    }
+    return tmp.substr(1, tmp.size() -2);
 }
 
 #endif

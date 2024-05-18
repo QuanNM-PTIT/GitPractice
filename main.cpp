@@ -208,8 +208,9 @@ int main(){
             }
             getEnterKey();
             break;
-        case 14:
-            cout << "14. Chinh sua thong tin ca nhan.\n";
+        case 14: //cout << "14. Chinh sua thong tin ca nhan.\n";
+            updatePeopleInfo(person.getPersonId());
+            getEnterKey();
             break;
         case 15:
             cout << "15. Chinh sua thong tin ca nhan cua Users.\n";
