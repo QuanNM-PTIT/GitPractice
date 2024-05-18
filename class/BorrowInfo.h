@@ -10,6 +10,7 @@ using namespace std;
 #define BORROWINFO_H
 
 bool validate(int borrowId, int personId, int bookId, int eBookId);
+int getPersonIdInLine(string dataLine);
 
 class BorrowInfo {
     private:
@@ -23,6 +24,7 @@ class BorrowInfo {
         friend void addBorrowInfo();
         friend void updateBorrowInfor(int updateBorrowId, int newPersonId, int newBookId, int newEBookId);
         friend void deleteBorrowInfo();
+        friend void showBorrowedBook();
         int getBorrowId();
         int getPersonId();
         int getBookId();
@@ -114,9 +116,9 @@ void deleteBorrowInfo(){
         system("cls");
         cout << "7. Tra sach.\n";
         cout << "Nhap ID muon sach can tra: ";
-        int deleteBorrowId;
-        cin >> deleteBorrowId;
-        if (exsitedId(deleteBorrowId, BorrowInfosFile)) {
+        int deleteId;
+        cin >> deleteId;
+        if (exsitedId(deleteId, BorrowInfosFile)) {
             cout << "Ban co chac muon tra cuon sach nay? (1/0) ";
             int choose;
             cin >> choose;
@@ -131,7 +133,7 @@ void deleteBorrowInfo(){
                 ofstream outFile(BorrowInfosFile);
                 for (int i = 0; i < borrowList.size(); i++){
                     int borrowId = getKeyId(borrowList[i]);
-                    if (borrowId != deleteBorrowId){
+                    if (borrowId != deleteId){
                         outFile << borrowList[i] << "\n";
                     }
                 }
@@ -153,6 +155,61 @@ void deleteBorrowInfo(){
                 break;
             }
         }
+    }
+    return;
+}
+void showBorrowedBook(int personId){
+    system("cls");
+    cout << "12. Hien thi tat ca cac quyen sach da muon.\n";
+    if (exsitedId(personId, BorrowInfosFile, 2)) {
+        vector<string> borrowList;
+        ifstream inFile(BorrowInfosFile);
+        string tmp;
+        while (getline(inFile, tmp)){
+            borrowList.push_back(tmp);
+        }
+        inFile.close();
+        int bookIdInFile = -1;
+        int eBookIdInFile = -1;
+        for (int i = 0; i < borrowList.size(); i++){
+            int personIdInFile = getPersonIdInLine(borrowList[i]);
+            if (personId == personIdInFile){
+                stringstream ss(borrowList[i]);
+                string tmp;
+                ss >> tmp;
+                ss >> tmp;
+                ss >> tmp;
+                bookIdInFile = stoi(tmp.substr(1, tmp.size()-2));
+                ss >> tmp;
+                eBookIdInFile = stoi(tmp.substr(1, tmp.size()-2));
+                break;
+            }
+        }
+        if (bookIdInFile != -1) {
+            ifstream inFile(BooksFile);
+            string tmp;
+            while (getline(inFile, tmp)){
+                if (getKeyId(tmp) == bookIdInFile) {
+                    cout << tmp << "\n";
+                    break;
+                }
+            }
+            inFile.close();
+        }
+        if (eBookIdInFile != -1) {
+            ifstream inFile(EBooksFile);
+            string tmp;
+            while (getline(inFile, tmp)){
+                if (getKeyId(tmp) == eBookIdInFile) {
+                    cout << tmp << "\n";
+                    break;
+                }
+            }
+            inFile.close();
+        }
+    }
+    else {
+        cout << "Ban chua muon cuon sach nao ca!!\n";
     }
     return;
 }
@@ -188,6 +245,14 @@ bool validate(int borrowId, int personId, int bookId, int eBookId){
         return false;
     }
     return true;
+}
+int getPersonIdInLine(string dataLine){
+    stringstream ss(dataLine);
+    string tmp;
+    ss >> tmp;
+    ss >> tmp;
+    int id = stoi(tmp.substr(1, tmp.size()-2));
+    return id;
 }
 
 #endif
