@@ -6,7 +6,7 @@
 [13] [Little Women] [Louisa May Alcott] [3]
 [15] [Fahrenheit 451] [Ray Bradbury] [5]
 [14] [Wuthering Heights] [Emily Brontë] [4]
-[9] [Moby-Dick] [Herman Melville] [3]
+[9] [Moby-Dick] [Herman Melville] [2]
 [5] [To Kill a Mockingbird] [Harper Lee] [6]
 [7] [The Great Gatsby] [F. Scott Fitzgerald] [2]
 [2] [The Hobbit] [J. R. R. Tolkien] [3]
