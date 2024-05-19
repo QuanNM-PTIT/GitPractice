@@ -1023,7 +1023,6 @@ int main() {
 
         try {
             cin >> query;
-
             if (cin.fail() == true) {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
