@@ -7,5 +7,5 @@
 [4] [Michael Brown] [michael.brown@gmail.com] [Male] [05/12/1992] [101 Maple St, Houston, TX] [0234567890] [User]
 [3] [Alice Johnson] [alice.johnson@gmail.com] [Female] [10/03/1978] [789 Pine St, Chicago, IL] [0112345678] [User]
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
-[1] [Le Quang Minh] [minhle@hgmail.com] [Male] [14/04/2005] [Hung Yen] [0986768441] [User]
+[1] [Le Quang Minh] [minhle@gmail.com] [Male] [14/04/2005] [Hung Yen] [0986768441] [Admin]
 [11] [Ha Duy Long] [haduylong@gmail.com] [Male] [25/01/2005] [Ha Noi] [0703567999] [Admin]
