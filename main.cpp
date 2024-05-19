@@ -1224,34 +1224,42 @@ void Signup()
     User x(0, userName, password);
     int id = x.getNextAvailableId();
     User a(id, userName, password);
-    bool check = a.registerUser();
-    if (check)
+    bool checkPassword = a.validatePassword();
+    if(checkPassword == false)
     {
-        string name, email, sex, birthday, address, phoneNumber, role;
-        cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
-        cout << "Nhap Ho va ten: \n";
-        scanf("\n");
-        getline(cin, name);
-        cout << "Nhap email: \n";
-        cin >> email;
-        cout << "Nhap gioi tinh: \n";
-        cin >> sex;
-        cout << "Nhap ngay thang nam sinh: \n";
-        cin >> birthday;
-        cout << "Nhap dia chi noi o: \n";
-        scanf("\n");
-        getline(cin, address);
-        cout << "Nhap so dien thoai: \n";
-        cin >> phoneNumber;
-        role = "User";
-        Person a(name, email, sex, birthday, address, phoneNumber, role);
-        bool check = a.addPerson();
-        if (check)
+        cout << "Nhap lai mat khau dung yeu cau, bao gom chua it nhat 1 chu so,\n";
+        cout << "mot chu cai in thuong, mot chu cai in hoa, mot ky tu dac biet va co it nhat 8 ky tu\n";
+    }
+    else
+    {
+        if (a.registerUser())
         {
-            cout << "Them thong tin thanh cong\n";
+            string name, email, sex, birthday, address, phoneNumber, role;
+            cout << "Dang ky tai khoan truy cap thanh cong, vui long nhap thong tin ca nhan\n";
+            cout << "Nhap Ho va ten: \n";
+            scanf("\n");
+            getline(cin, name);
+            cout << "Nhap email: \n";
+            cin >> email;
+            cout << "Nhap gioi tinh: \n";
+            cin >> sex;
+            cout << "Nhap ngay thang nam sinh: \n";
+            cin >> birthday;
+            cout << "Nhap dia chi noi o: \n";
+            scanf("\n");
+            getline(cin, address);
+            cout << "Nhap so dien thoai: \n";
+            cin >> phoneNumber;
+            role = "User";
+            Person a(name, email, sex, birthday, address, phoneNumber, role);
+            bool check = a.addPerson();
+            if (check)
+            {
+                cout << "Them thong tin thanh cong\n";
+            }
+            else
+                cout << "Khong the mo tep people.txt de them thong tin\n";
         }
-        else
-            cout << "Khong the mo tep people.txt de them thong tin\n";
     }
     return;
 }
@@ -1480,11 +1488,11 @@ int main()
         cin >> option;
         if (option == 'r')
             return 0;
-        if (option == 'b')
+        else if (option == 'b')
         {
             Signup();
         }
-        if (option == 'a')
+        else if (option == 'a')
         {
             bool check;
             Person curPer = login(check);
@@ -1570,19 +1578,6 @@ int main()
 	                     {
 	                         cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
 	                     }
-
-                        if (curPer.getRole() == "Admin")
-                        {
-                            int idToUpdate;
-                            cout << "Enter ID want to update: ";
-                            cin >> idToUpdate;
-                            EBook ebook;
-                            ebook.updateEbooktoFile(idToUpdate);
-                        }
-                        else
-                        {
-                            cout << "Ban khong co quyen thuc hien chuc nang nay!\n";
-                        }
                     }
                     if (option == 'i')
                     {
@@ -1655,7 +1650,14 @@ int main()
                     }
                     if (option == 'f')
                     {
-                        themthongtinmuonsach(curPer.getId());
+                        if(curPer.getRole() == "Admin")
+                        {
+                            cout << "Ban la Admin nen khong the muon sach!\n";
+                        }
+                        else
+                        {
+                            themthongtinmuonsach(curPer.getId());
+                        }
                     }
                     if (option == 'g')
                     {
@@ -1663,37 +1665,37 @@ int main()
                     }
                     if (option == 'm')
                     {
-                        // vector<BorrowInfo> v;
-                        // ifstream filein("borrowInfos.txt");
-                        // if (!filein.is_open())
-                        // {
-                        //     cout << "Khong the mo tep borrowInfos.txt";
-                        // }
-                        // else
-                        // {
-                        //     string tmp;
-                        //     while (getline(filein, tmp))
-                        //     {
-                        //         int id, perId, bookId, eBookId;
-                        //         vector<int> numbers = extractNumbers(tmp);
-                        //         id = numbers[0];
-                        //         perId = numbers[1];
-                        //         bookId = numbers[2];
-                        //         eBookId = numbers[3];
-                        //         BorrowInfo x(perId, bookId, eBookId);
-                        //         x.setId(id);
-                        //         v.push_back(x);
-                        //     }
-                        //     sort(v.begin(), v.end(), cmpBorrowInfo);
-                        //     for (BorrowInfo i : v)
-                        //     {
-                        //         if (i.getpersonId() == id)
-                        //         {
-                        //             cout << "ID: " << i.getId() << " - " << "PersonId: " << i.getpersonId() << " - " << "BookId: " << i.getbookId() << " - " << "EBookId: " << i.geteBookId() << endl;
-                        //         }
-                        //     }
-                        //     filein.close();
-                        // }
+                        vector<BorrowInfo> v;
+                        ifstream filein("borrowInfos.txt");
+                        if (!filein.is_open())
+                        {
+                            cout << "Khong the mo tep borrowInfos.txt";
+                        }
+                        else
+                        {
+                            string tmp;
+                            while (getline(filein, tmp))
+                            {
+                                int id, perId, bookId, eBookId;
+                                vector<int> numbers = extractNumbers(tmp);
+                                id = numbers[0];
+                                perId = numbers[1];
+                                bookId = numbers[2];
+                                eBookId = numbers[3];
+                                BorrowInfo x(perId, bookId, eBookId);
+                                x.setId(id);
+                                v.push_back(x);
+                            }
+//                            sort(v.begin(), v.end(), cmpBorrowInfo);
+                            for (BorrowInfo i : v)
+                            {
+                                if (i.getpersonId() == curPer.getId())
+                                {
+                                    cout << "ID: " << i.getId() << " - " << "PersonId: " << i.getpersonId() << " - " << "BookId: " << i.getbookId() << " - " << "EBookId: " << i.geteBookId() << endl;
+                                }
+                            }
+                            filein.close();
+                        }
                     }
                     if (option == 'n')
                     {
@@ -1783,8 +1785,6 @@ int main()
 
                     // Thực hiện các chức năng khác tương tự
                 }
-                borrowedBooks.clear();
-                borrowedEBook.clear();
             }
         }
         else
