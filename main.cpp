@@ -1458,7 +1458,62 @@ int main()
                     }
                     if (option == 'g')
                     {
-                        capnhatthongtinmuonsach();
+                        int id;
+                        cout << "Nhap id cuon sach ban muon tra: ";
+                        cin >> id;
+                        vector<BorrowInfo> v;
+                        ifstream filein("borrowInfos.txt");
+                        if (!filein.is_open())
+                        {
+                            cout << "Khong the mo tep borrowInfos.txt";
+                        }
+                        else
+                        {
+                            string tmp;
+                            while (getline(filein, tmp))
+                            {
+                                int id, perId, bookId, eBookId;
+                                vector<int> numbers = extractNumbers(tmp);
+                                id = numbers[0];
+                                perId = numbers[1];
+                                bookId = numbers[2];
+                                eBookId = numbers[3];
+                                BorrowInfo x(perId, bookId, eBookId);
+                                x.setId(id);
+                                v.push_back(x);
+                            }
+                            int ok = 0;
+                            for (auto it = v.begin(); it != v.end(); it++)
+                            {
+                                if (it->getbookId() == id)
+                                {
+                                    v.erase(it);
+                                    ok = 1;
+                                    break;
+                                }
+                            }
+                            if (ok == 0)
+                            {
+                                cout << "Khong tim thay id cuon sach ban muon tra\n";
+                            }
+                            else
+                            {
+                                ofstream fileout("borrowInfos.txt", ios::trunc);
+                                if (fileout.is_open())
+                                {
+                                    std::sort(v.begin(), v.end(), cmpBorrowInfo);
+                                    for (BorrowInfo i : v)
+                                    {
+                                        fileout << "[" << i.getId() << "] " << "[" << i.getpersonId() << "] " << "[" << i.getbookId() << "] " << "[" << i.geteBookId() << "]" << endl;
+                                    }
+                                    cout << "Da tra sach thanh cong\n";
+                                }
+                                else
+                                    cout << "Khong the mo tep borrowInfos.txt\n";
+                                fileout.close();
+                            }
+                        }
+                        filein.close();
                     }
                     if (option == 'm')
                     {
@@ -1571,12 +1626,24 @@ int main()
                             int id;
                             cout << "Nhap id nguoi muon chinh sua: ";
                             cin >> id;
-                            string name, email;
+                            string name, email, sex, birthdate,
+                                address, phoneNumber, role;
                             cout << "Nhap ten moi: ";
                             cin >> name;
                             cout << "Nhap email moi: ";
                             cin >> email;
-                            Person x(name, email, "Nam", "01/01/2000", "Ha Noi", "0123456789", "User");
+                            cout << "Nhap gioi tinh moi: ";
+                            cin >> sex;
+                            cout << "Nhap ngay sinh moi: ";
+                            cin >> birthdate;
+                            cout << "Nhap dia chi moi: ";
+                            cin >> address;
+                            cout << "Nhap so dien thoai moi: ";
+                            cin >> phoneNumber;
+                            cout << "Nhap role moi: ";
+                            cin >> role;
+                            Person x(name, email, sex, birthdate, address, phoneNumber, role);
+
                             x.setId(id);
                             x.addPerson();
                         }
@@ -1589,6 +1656,7 @@ int main()
                     {
                         loggedIn = false;
                     }
+                    // Th?c hi?n các ch?c nang khác tuong t?
                 }
             }
         }

@@ -3,16 +3,4 @@
 [4] [Dracula] [Bram Stoker] [7] [PDF] [9]
 [3] [War and Peace] [Leo Tolstoy] [6] [MOBI] [12]
 [6] [The Art of War] [Sun Tzu] [9] [MOBI] [3]
-<<<<<<< HEAD
-<<<<<<< HEAD
 [5] [Frankenstein] [Mary Shelley] [5] [EPUB] [4]
-=======
-<<<<<<< HEAD
-[5] [ghjgh] [gjjg] [1120] [utut] [12122]
-=======
-[5] [ghjgh] [gjjg] [1121] [utut] [12122]
->>>>>>> 8dbf963df2606db44272ea90a7b1b233062db2b4
->>>>>>> 2fd5cfeb52170bd065d7e4d6de007de023f3a40e
-=======
-[5] [Frankenstein] [Mary Shelley] [5] [EPUB] [4]
->>>>>>> 16d8e41a2efe1594fae6a80a2a0a51a901f40d35
