@@ -1078,8 +1078,8 @@ bool isValid(const vector<val>& info, const val needCheck) {
 }
 
 int cnt = 0;
-vector<string> attributeOfPerson = {"ten", "email", "gioi tinh", "ngay sinh", "dia chi", "so dien thoai"};
-vector<string> attributeOfBook = {"ten sach", "ten tac gia", "so luong"};
+vector<string> attributeOfPerson = {"name", "email", "gender", "date of birth", "address", "phone number"};
+vector<string> attributeOfBook = {"book name", "author name", "quantity"};
 
 string input(string& data, vector<string>& attribute) {
     cout << "Enter the " << attribute[cnt] << " you want to edit, if you don't want to edit anything, enter (None): ";
