@@ -505,7 +505,70 @@ public:
     string getAddress() const { return address; }
     string getPhoneNumber() const { return phoneNumber; }
     string getRole() const { return role; }
+    bool upDateData();
 };
+
+bool Person::upDateData()
+{
+    vector<string> lines;
+    ifstream file("people.txt");
+    if (!file.is_open())
+    {
+        cerr << "Error to open people.txt" << endl;
+        return false;
+    }
+
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        int id1;
+        string name1, email1, sex1, birthdate1,
+            address1, phoneNumber1, role1;
+
+        char bracket;
+        ss >> bracket >> id1 >> bracket >> bracket;
+        getline(ss, name1, ']');
+        ss >> bracket;
+        getline(ss, email1, ']');
+        ss >> bracket;
+        getline(ss, sex1, ']');
+        ss >> bracket;
+        getline(ss, birthdate1, ']');
+        ss >> bracket;
+        getline(ss, address1, ']');
+        ss >> bracket;
+        getline(ss, phoneNumber1, ']');
+        ss >> bracket;
+        getline(ss, role1, ']');
+        if (id1 == id)
+        {
+            stringstream updatedLine;
+            updatedLine << "[" << id << "] [" << name << "] [" << email << "] [" << sex << "] [" << birthdate << "] [" << address << 
+            "] [" << phoneNumber << "] [" << role << "]";
+            lines.push_back(updatedLine.str());
+        }
+        else
+        {
+            lines.push_back(line);
+        }
+    }
+    file.close();
+
+    ofstream outFile("people.txt");
+    if (!outFile.is_open())
+    {
+        cerr << "Error!" << endl;
+        return false;
+    }
+
+    for (const auto &line : lines)
+    {
+        outFile << line << endl;
+    }
+    outFile.close();
+    return true;
+}
 
 Person::Person(string name, string email, string sex, string birthday, string address, string phoneNumber, string role)
 {
@@ -1745,16 +1808,25 @@ int main()
                     {
                         // chinh sua thong tin ca nhan cua ban
                         int id;
-                        cout << "Nhap id cua ban: ";
-                        cin >> id;
-                        string name, email;
+                        string name, email, sex, birthdate,
+                            address, phoneNumber, role;
+                        
                         cout << "Nhap ten moi: ";
-                        cin >> name;
+                        scanf("\n");
+                        getline(cin, name);
                         cout << "Nhap email moi: ";
-                        cin >> email;
-                        Person x(name, email, "Nam", "01/01/2000", "Ha Noi", "0123456789", "User");
-                        x.setId(id);
-                        x.addPerson();
+                        getline(cin, email);
+                        cout << "Nhap gioi tinh moi: ";
+                        getline(cin, sex);
+                        cout << "Nhap ngay sinh moi: ";
+                        getline(cin, birthdate);
+                        cout << "Nhap dia chi moi: ";
+                        getline(cin, address);
+                        cout << "Nhap so dien thoai moi: ";
+                        getline(cin, phoneNumber);
+                        Person x(name, email, sex, birthdate, address, phoneNumber, curPer.getRole());
+                        x.setId(curPer.getId());
+                        if(x.upDateData()) cout << "Cap nhat thong tin thanh cong!\n\n";
                     }
                     if (option == 'p')
                     {
