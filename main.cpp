@@ -843,28 +843,19 @@ public:
         }
     }
 
-    void getBooks(const string& filename, int data) const {
+    void getBooks(const string &filename, int data) const{
         ifstream file(filename);
         string line;
-        int cnt = 0;
+        vector<string> lines;
 
-        while (getline(file, line)) {
-            ++cnt;
+        while (getline(file, line)){
+            lines.push_back(line);
         }
 
         file.close();
 
-        vector<vector<string>> bookInfor(data);
-
-        for (int i = 0; i < data; ++i) {
-            bookInfor[i] = getInformationFromFile(filename, i);
-        }
-
-        for (int i = 0; i < cnt; ++i) {
-            for (int j = 0; j < data; ++j) {
-                cout << "[" << bookInfor[j][i] << "] ";
-            }
-            cout << endl;
+        for (const string &line : lines){
+            cout << line << endl;
         }
     }
 
