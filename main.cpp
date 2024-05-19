@@ -173,17 +173,6 @@ public:
 
     void MinusQuantityBook(int idToUpdate, string title, string author, int newQuantity)
     {
-        // string newTitle;
-        // string newAuthor;
-        // int newQuantity;
-
-        // cout << "Enter new title: ";
-        // cin.ignore();
-        // getline(cin, newTitle);
-        // cout << "Enter new author: ";
-        // getline(cin, newAuthor);
-        // cout << "Enter new quantity: ";
-        // cin >> newQuantity;
 
         vector<string> lines;
         ifstream file("books.txt");
@@ -410,25 +399,6 @@ public:
 
     void MinusQuantityEBook(int idToUpdate, string title, string author,int newQuantity, string fileFormat, int fileSize)
     {
-        // string newTitle;
-        // string newAuthor;
-        // int newQuantity;
-        // string newFileFormat;
-        // int newFileSize;
-
-        // cout << "Enter new title: ";
-        // cin.ignore();
-        // getline(cin, newTitle);
-        // cout << "Enter new author: ";
-        // getline(cin, newAuthor);
-        // cout << "Enter new quantity: ";
-        // cin >> newQuantity;
-        // cout << "Enter new file format: ";
-        // cin.ignore();
-        // getline(cin, newFileFormat);
-        // cout << "Enter new file size: ";
-        // cin >> newFileSize;
-
         vector<string> lines;
         ifstream file("ebooks.txt");
         if (!file.is_open())
@@ -1864,81 +1834,5 @@ int main()
             cout << "Dang nhap that bai\n";
         }
     }
-
     return 0;
-
-    // //    Book book;
-    // // book.addBook(); // Thêm một sách vào file books.txt
-    // // // book.getBooks(); // Hiển thị thông tin sách trong file books.txt
-
-    // EBook ebook;
-    // ebook.addBook(); // Thêm một Ebook vào file books.txt
-    // int idToUpdate;
-    // cout << "Enter ID want to update: ";
-    // cin >> idToUpdate;
-    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
-
-    // // themthongtinmuonsach();
-    // // -- > done
-
-    // int id = User::getNextAvailableId();
-    // string email = "example@example.com";
-    // string password = "PTITd22@";
-    // User user(id, email, password);
-    // user.registerUser();
-    // cout << "Register Successfully" << endl;
-
-    // // capnhatthongtinmuonsach();
-    // // -- > done
-
-    // int id = User::getNextAvailableId();
-    // string email = "example@example.com";
-    // string password = "PTITd22@";
-    // User user(id, email, password);
-    // user.registerUser();
-    // cout << "Register Successfully" << endl;
-
-    // int idToUpdate;
-    // cout << "Enter ID want to update: ";
-    // cin >> idToUpdate;
-    // book.updateBook(idToUpdate); // Cập nhật thông tin của sách
-
-    // // themthongtinmuonsach();
-    // // -- > done
-
-    // //  Tạo một đối tượng User
-    // User user1(1, "john.smith@gmail.com", "pass1234");
-    // User user2(2, "jane.doe@gmail.com", "abcD1234");
-    // User user3(3, "alice.johnson@gmail.com", "MyP@ssw0rd");
-    // User user4(4, "example@example.com", "PTITd22@");
-
-    // // Kiểm tra thông tin đăng nhập và trả về Person với email tương ứng.
-
-    // Users users;
-    // string email, password;
-    // cout << "Nhap email: ";
-    // cin >> email;
-    // cout << "Nhap mat khau: ";
-    // cin >> password;
-
-    // User loginUser(0, email, password);
-    // Person loggedInPerson = users.login(loginUser, email, password);
-
-    // if (loggedInPerson.getId() != 0)
-    // {
-    //     cout << "Thong tin cua ban:" << endl;
-    //     cout << "ID: " << loggedInPerson.getId() << endl;
-    //     cout << "Ten: " << loggedInPerson.getName() << endl;
-    //     cout << "Email: " << loggedInPerson.getEmail() << endl;
-    //     cout << "Gioi tinh: " << loggedInPerson.getSex() << endl;
-    //     cout << "Ngay sinh: " << loggedInPerson.getBirthdate() << endl;
-    //     cout << "Dia chi: " << loggedInPerson.getAddress() << endl;
-    //     cout << "So dien thoai: " << loggedInPerson.getPhoneNumber() << endl;
-    //     cout << "Vai tro: " << loggedInPerson.getRole() << endl;
-    // }
-    // // Đăng xuất
-    // users.logout();
-    // return 0;
-    // }
-    // themthongtinmuonsach(); --> done
 }
