@@ -8,16 +8,3 @@
 [4] [Michael Brown] [michael.brown@gmail.com] [Male] [05/12/1992] [101 Maple St, Houston, TX] [0234567890] [User]
 [3] [Alice Johnson] [alice.johnson@gmail.com] [Female] [10/03/1978] [789 Pine St, Chicago, IL] [0112345678] [User]
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
-<<<<<<< HEAD
-[11] [Vu Ngoc Yen] [vungocyensg@gmail.com] [10/03/1967] [Nu] [TPLS - tinh lang son] [0949221418] [User]
-=======
-[11] [Thang] [phuongdaithang2004@gmail.com] [Male] [2/6/2004] [Ha Noi] [0123] [Admin]
-[5] [thang] [thfnfh] [Nam] [01/01/2000] [Ha Noi] [0123456789] [User]
-[1] [rhrhr] [rhrhr] [Nam] [01/01/2000] [Ha Noi] [0123456789] [User]
-[1] [thsng] [tjhht] [Nam] [01/01/2000] [Ha Noi] [0123456789] [User]
-[15] [thinh] [thinhlangson@gmail.com] [nam] [2004] [hanoi] [0000] [User]
-[16] [thinhdev] [thinh@gmail.com] [nam] [2004] [hanoi] [0000] [User]
-[17] [thanggg] [thangdai@gmail.com] [nam] [2/6/2004] [hanoi] [01991] [User]
-[5] [thang] [ththth] [thth] [05/3/2002] [jrjrj] [29292] []
-[5] [ryyry] [ahh] [Nam] [01/01/2000] [Ha Noi] [0123456789] [User]
->>>>>>> 8dbf963df2606db44272ea90a7b1b233062db2b4
