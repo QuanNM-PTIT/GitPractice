@@ -8,6 +8,25 @@ using namespace std;
 void setColor(int textColor, int bgColor) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, (bgColor << 4) | textColor);
+    
+    /*
+    0 = Đen
+    1 = Xanh dương đậm
+    2 = Xanh lá cây đậm
+    3 = Xanh nước biển
+    4 = Đỏ đậm
+    5 = Tím
+    6 = Vàng đậm
+    7 = Trắng xám
+    8 = Xám đậm
+    9 = Xanh dương nhạt
+    10 = Xanh lá cây nhạt
+    11 = Xanh cyan
+    12 = Đỏ nhạt
+    13 = Hồng
+    14 = Vàng nhạt
+    15 = Trắng sáng
+    */
 }
 
 // Hàm lấy ra từng kiểu thông tin một trong file (ví dụ: trả về 1 vector<string> toàn ID)
@@ -41,12 +60,17 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
-bool isExistAlphaOrNum(string& s) {
+bool isExistAlphaOrNum(const string& s) {
+    if (s.empty()) {
+        return false;
+    }
+
     for (char c : s) {
         if (isalnum(c)) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -597,61 +621,82 @@ public:
         return false;
     }
 
-    void Register(Person& p){
+    bool hasGmailDomain(const string& email) {
+    const string gmailDomain = "@gmail.com";
+    if (email.size() > gmailDomain.size()) {
+        return email.compare(email.size() - gmailDomain.size(), gmailDomain.size(), gmailDomain) == 0;
+    }
+    return false;
+}
+
+   void Register(Person& p) {
         string fullName, email, gender, birthdate, address, phoneNumber, password;
-    
+
         // Nhập thông tin từ người dùng
         setColor(5, 0);
         cout << "Enter full name: ";
         setColor(7, 0);
-        scanf("\n");
+        cin.ignore();
         getline(cin, fullName);
 
-        while (isExistAlphaOrNum(fullName) == false) {
-            setColor(5, 0);
+        while (!isExistAlphaOrNum(fullName)) {
+            setColor(12, 0);
             cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            setColor(5, 0);
+            cout << "Enter full name: ";
             setColor(7, 0);
-            scanf("\n");
             getline(cin, fullName);
         }
-        
+
         setColor(5, 0);
         cout << "Enter email: ";
         setColor(7, 0);
-        cin >> email;
+        getline(cin, email);
 
-        // Kiểm tra email đã tồn tại chưa
-        while (emailExists(email)) {
+        while (!isExistAlphaOrNum(email) or !hasGmailDomain(email)) {
+            setColor(12, 0);
+            cout << "Wrong format, please enter correct format, no special characters!" << endl;
             setColor(5, 0);
-            cout << "Email already exists. Please choose another email." << endl;
+            cout << "Enter email: ";
             setColor(7, 0);
-            cin >> email;
+            getline(cin, email);
+        }
+
+        while (emailExists(email)) {
+            setColor(12, 0);
+            cout << "Email already exists. Please choose another email." << endl;
+            setColor(5, 0);
+            cout << "Enter email: ";
+            setColor(7, 0);
+            getline(cin, email);
         }
 
         setColor(5, 0);
         cout << "Enter gender: ";
         setColor(7, 0);
-        cin >> gender;
+        getline(cin, gender);
 
-        while (isExistAlphaOrNum(gender) == false) {
-            setColor(5, 0);
+        while (!isExistAlphaOrNum(gender)) {
+            setColor(12, 0);
             cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            setColor(5, 0);
+            cout << "Enter gender: ";
             setColor(7, 0);
-            scanf("\n");
-            cin >> gender;
+            getline(cin, gender);
         }
-        
+
         setColor(5, 0);
         cout << "Enter birthdate: ";
         setColor(7, 0);
-        cin >> birthdate;
+        getline(cin, birthdate);
 
-        while (isExistAlphaOrNum(birthdate) == false) {
-            setColor(5, 0);
+        while (!isExistAlphaOrNum(birthdate)) {
+            setColor(12, 0);
             cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            setColor(5, 0);
+            cout << "Enter birthdate: ";
             setColor(7, 0);
-            scanf("\n");
-            cin >> birthdate;
+            getline(cin, birthdate);
         }
 
         setColor(5, 0);
@@ -660,25 +705,27 @@ public:
         cin.ignore();
         getline(cin, address);
 
-        while (isExistAlphaOrNum(address) == false) {
-            setColor(5, 0);
+        while (!isExistAlphaOrNum(address)) {
+            setColor(12, 0);
             cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            setColor(5, 0);
+            cout << "Enter address: ";
             setColor(7, 0);
-            scanf("\n");
-            cin >> address;
+            getline(cin, address);
         }
 
         setColor(5, 0);
         cout << "Enter phone number: ";
         setColor(7, 0);
-        cin >> phoneNumber;
+        getline(cin, phoneNumber);
 
-        while (isExistAlphaOrNum(phoneNumber) == false) {
-            setColor(5, 0);
+        while (!isExistAlphaOrNum(phoneNumber)) {
+            setColor(12, 0);
             cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            setColor(5, 0);
+            cout << "Enter phone number: ";
             setColor(7, 0);
-            scanf("\n");
-            cin >> phoneNumber;
+            getline(cin, phoneNumber);
         }
 
         // Tạo ID mới cho người dùng
@@ -687,27 +734,27 @@ public:
         // Ghi thông tin người dùng vào file people.txt
         ofstream personFile("people.txt", ios_base::app);
         if (personFile.is_open()) {
-            personFile << endl << "[" + to_string(personID) + "] [" + fullName + "] [" + email + "] [" + gender + "] [" + birthdate + "] [" + address + "] [" + phoneNumber + "] [User]";;
+            personFile << endl << "[" + to_string(personID) + "] [" + fullName + "] [" + email + "] [" + gender + "] [" + birthdate + "] [" + address + "] [" + phoneNumber + "] [User]";
             personFile.close();
-        } 
-        else {
+        } else {
             setColor(5, 0);
             cerr << "Unable to open file people.txt" << endl;
             setColor(7, 0);
         }
-        
+
         // Nhập mật khẩu
         setColor(5, 0);
         cout << "Create password: ";
         setColor(7, 0);
-        cin >> password;
+        getline(cin, password);
 
-        while (password == "" or password.size() < 8) {
-            setColor(5, 0);
+        while (password.empty() || password.size() < 8) {
+            setColor(12, 0);
             cout << "Your password is too weak, please enter a password longer than 8 characters!" << endl;
+            setColor(5, 0);
             cout << "Create password: ";
             setColor(7, 0);
-            cin >> password;
+            getline(cin, password);
         }
 
         // Ghi email và mật khẩu vào file user.txt
@@ -719,8 +766,7 @@ public:
             setColor(5, 0);
             cout << "Registration successful!" << endl;
             setColor(7, 0);
-        } 
-        else {
+        } else {
             setColor(5, 0);
             cerr << "Unable to open file users.txt" << endl;
             setColor(7, 0);
@@ -743,10 +789,11 @@ public:
             setColor(5, 0);
             cout << "Enter email: ";
             setColor(7, 0);
-            cin >> email;
+            cin.ignore();
+            getline(cin, email);
 
             if (!emailExists(email)) {
-                setColor(5, 0);
+                setColor(12, 0);
                 cout << "Email does not exist. Please try again." << endl;
                 setColor(7, 0);
             } 
@@ -759,10 +806,10 @@ public:
             setColor(5, 0);
             cout << "Enter password: ";
             setColor(7, 0);
-            cin >> password;
+            getline(cin, password);
 
             if (!validatePassword(email, password)) {
-                setColor(5, 0);
+                setColor(12, 0);
                 cout << "Invalid password. Please try again." << endl;
                 setColor(7, 0);
             } 
@@ -1192,8 +1239,9 @@ string input(string& data, vector<string>& attribute) {
     getline(cin, data);
     while (isExistAlphaOrNum(data) == false) {
         setColor(5, 0);
-        cout    << "Invalid input, it must contain at least 1 character!" << endl
-                << "Re-enter the " << attribute[cnt] << " you want to edit, if you don't want to edit anything, enter (None): ";
+        cout << "Invalid input, it must contain at least 1 character!" << endl;
+        setColor(12, 0);
+        cout << "Re-enter the " << attribute[cnt] << " you want to edit, if you don't want to edit anything, enter (None): ";
         setColor(7, 0);
         scanf("\n");
         getline(cin, data);
@@ -1312,9 +1360,10 @@ string changeRole(string& data) {
     scanf("\n");
     getline(cin, data);
     while (isExistAlphaOrNum(data) == false) {
-        setColor(5, 0);
-        cout    << "Invalid input, it must contain at least 1 character!" << endl
-                << "Re-enter the role you want to edit, if you don't want to edit anything, enter (None): ";
+        setColor(12, 0);
+        cout << "Invalid input, it must contain at least 1 character!" << endl;
+        setColor(6, 0);
+        cout << "Re-enter the role you want to edit, if you don't want to edit anything, enter (None): ";
         scanf("\n");
         setColor(7, 0);
         getline(cin, data);
@@ -1464,10 +1513,18 @@ int main() {
                         string bookInfo;
                         cin.ignore();
                         getline(cin, bookInfo);
+                        while (!isExistAlphaOrNum(bookInfo)) {
+                            setColor(12, 0);
+                            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+                            setColor(5, 0);
+                            cout << "Enter book information: ";
+                            setColor(7, 0);
+                            getline(cin, bookInfo);
+                        }
                         b.addBook("books.txt", bookInfo);
                     } 
                     else {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to add book information!!!\n";
                         setColor(7, 0);
                     }
@@ -1475,7 +1532,7 @@ int main() {
 
                 case 4:
                     if (p.getRole() == "User") {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to edit book information!" << endl;
                         setColor(7, 0);
                     } 
@@ -1504,7 +1561,7 @@ int main() {
 
                 case 5:
                     if (p.getRole() == "User") {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to delete books!\n";
                         setColor(7, 0);
                     }
@@ -1529,7 +1586,7 @@ int main() {
                         bI.addInfo();
                     } 
                     else {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to add book information!\n"; 
                         setColor(7, 0);
                     }
@@ -1546,7 +1603,7 @@ int main() {
                         bI.deleteInfo();
                     } 
                     else {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to delete books!\n";
                         setColor(7, 0);
                     }
@@ -1590,7 +1647,7 @@ int main() {
 
                 case 13: 
                     if (p.getRole() == "User") {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to use this feature!!!" << endl;
                         setColor(7, 0);
                     } 
@@ -1612,7 +1669,7 @@ int main() {
 
                 case 15:
                     if (p.getRole() == "User") {
-                        setColor(5, 0);
+                        setColor(12, 0);
                         cout << "You do not have permission to edit other users' information!" << endl;
                         setColor(7, 0);
                     } 
