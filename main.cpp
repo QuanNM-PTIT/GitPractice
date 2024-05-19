@@ -43,14 +43,14 @@ public:
                 lineCount++;
             }
             file.close();
-            return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+            return lineCount + 1; // id là dòng ti?p theo sau khi dã d?m du?c s? dòng
         }
-        return 1; // Trả về 1 nếu không mở được file
+        return 1; // Tr? v? 1 n?u không m? du?c file
     }
 
     void addBook()
     {
-        id = getNextAvailableId(); // Gán id là id bé nhất chưa xuất hiện
+        id = getNextAvailableId(); // Gán id là id bé nh?t chua xu?t hi?n
         cout << "Enter title: ";
         cin.ignore();
         getline(cin, title);
@@ -59,7 +59,7 @@ public:
         cout << "Enter quantity: ";
         cin >> quantity;
 
-        // Kiểm tra và ghi vào file
+        // Ki?m tra và ghi vào file
         ofstream file("books.txt", ios::app);
         if (file.is_open())
         {
@@ -95,7 +95,7 @@ public:
                 std::getline(ss, Title, ']');
                 ss >> c;
                 std::getline(ss, Author, ']');
-                ss >> c >> Quantity >> c; // Sửa lại để đọc Quantity trực tiếp
+                ss >> c >> Quantity >> c; // S?a l?i d? d?c Quantity tr?c ti?p
 
                 Book book(Id, Author, Title, Quantity);
                 ans.push_back(book);
@@ -304,7 +304,7 @@ public:
     {
         return fileSize;
     }
-    // Phương thức thêm thông tin cuốn sách vào file ebooks.txt
+    // Phuong th?c thêm thông tin cu?n sách vào file ebooks.txt
     void addBookToFile()
     {
         ofstream file("ebooks.txt", ios::app);
@@ -571,9 +571,9 @@ int Person::getNextAvailableId()
             lineCount++;
         }
         file.close();
-        return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+        return lineCount + 1; // id là dòng ti?p theo sau khi dã d?m du?c s? dòng
     }
-    return 1; // Trả về 1 nếu không mở được file
+    return 1; // Tr? v? 1 n?u không m? du?c file
 }
 
 bool Person::addPerson()
@@ -620,16 +620,16 @@ public:
                 if (line.find(email) != string::npos)
                 {
                     file.close();
-                    return false; // email đã tồn tại
+                    return false; // email dã t?n t?i
                 }
             }
             file.close();
         }
-        return true; // email hợp lệ
+        return true; // email h?p l?
     }
 
-    // Kiểm tra mật khẩu bằng biểu thức,
-    //  thể hiện: Biểu thức này đảm bảo rằng mật khẩu chứa ít nhất một chữ số, một chữ cái thường, một chữ cái in hoa, một ký tự đặc biệt và có ít nhất 8 ký tự
+    // Ki?m tra m?t kh?u b?ng bi?u th?c,
+    //  th? hi?n: Bi?u th?c này d?m b?o r?ng m?t kh?u ch?a ít nh?t m?t ch? s?, m?t ch? cái thu?ng, m?t ch? cái in hoa, m?t ký t? d?c bi?t và có ít nh?t 8 ký t?
     bool validatePassword()
     {
         regex pattern("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-={}\\[\\]|;:'\"<>,.?/~]).{8,}$");
@@ -670,9 +670,9 @@ public:
                 lineCount++;
             }
             file.close();
-            return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+            return lineCount + 1; // id là dòng ti?p theo sau khi dã d?m du?c s? dòng
         }
-        return 1; // Trả về 1 nếu không mở được file
+        return 1; // Tr? v? 1 n?u không m? du?c file
     }
 };
 vector<User> dsUsers;
@@ -772,9 +772,9 @@ int BorrowInfo::getNextAvailableId()
             lineCount++;
         }
         file.close();
-        return lineCount + 1; // id là dòng tiếp theo sau khi đã đếm được số dòng
+        return lineCount + 1; // id là dòng ti?p theo sau khi dã d?m du?c s? dòng
     }
-    return 1; // Trả về 1 nếu không mở được file
+    return 1; // Tr? v? 1 n?u không m? du?c file
 }
 
 void BorrowInfo::setId(int id)
@@ -819,7 +819,7 @@ int BorrowInfo::geteBookId()
 
 // End BorrowInfo
 
-// Biến toàn cục
+// Bi?n toàn c?c
 vector<int> borrowedBooks;
 vector<int> borrowedEBook;
 bool loggedIn = false;
@@ -892,7 +892,7 @@ void themthongtinmuonsach(int perID)
 
     borrowedBooks.push_back(bookId);
     borrowedEBook.push_back(eBookId);
-    // chưa trừ số lượng sách trong eBook
+    // chua tr? s? lu?ng sách trong eBook
 }
 
 void ShowAllBorrowedBookEbook()
@@ -917,16 +917,16 @@ vector<int> extractNumbers(const string &input) // ham tra ve 1 vector id, id tr
     char ch;
     int number;
 
-    // Đọc từng kí tự chuỗi
+    // Ð?c t?ng kí t? chu?i
     while (ss >> ch)
     {
         if (ch == '[')
         {
-            // Nếu gặp kí tự '[', đọc số trong dấu '[' ']'
+            // N?u g?p kí t? '[', d?c s? trong d?u '[' ']'
             if (ss >> number)
             {
                 numbers.push_back(number);
-                // Bỏ qua các kí tự còn lai cho đến khi gặp kí tự ']'
+                // B? qua các kí t? còn lai cho d?n khi g?p kí t? ']'
                 ss.ignore(numeric_limits<streamsize>::max(), ']');
             }
         }
@@ -1019,7 +1019,7 @@ void capnhatthongtinmuonsach()
 
     filein.close();
 }
-// Hàm LoadUsers chịu trách nhiệm đọc dữ liệu người dùng từ tệp user.txt và tải nó vào vectơ dsUsers.
+// Hàm LoadUsers ch?u trách nhi?m d?c d? li?u ngu?i dùng t? t?p user.txt và t?i nó vào vecto dsUsers.
 void loadUsers()
 {
     ifstream file("users.txt");
@@ -1043,7 +1043,7 @@ void loadUsers()
         file.close();
     }
 }
-// Hàm LoadPeople chịu trách nhiệm đọc dữ liệu người từ tệp people.txt và tải nó vào vectơ dsPeople.
+// Hàm LoadPeople ch?u trách nhi?m d?c d? li?u ngu?i t? t?p people.txt và t?i nó vào vecto dsPeople.
 void loadPeople()
 {
     ifstream file("people.txt");
@@ -1205,7 +1205,7 @@ string GetRoleByEmail(const string &email)
     if (!peopleFile.is_open())
     {
         cout << "Khong the mo tep people.txt\n";
-        return ""; // Trả về chuỗi rỗng nếu không mở được file
+        return ""; // Tr? v? chu?i r?ng n?u không m? du?c file
     }
 
     string tmp;
@@ -1213,13 +1213,13 @@ string GetRoleByEmail(const string &email)
     {
         if (tmp.find(email) != string::npos)
         {
-            // Tìm thấy email trong file people.txt
+            // Tìm th?y email trong file people.txt
             stringstream ss(tmp);
             string role;
             ss >> tmp >> tmp;
-            // Đọc Role
+            // Ð?c Role
             ss >> role;
-            // Xóa kí tự [ ở đầu và ] ở cuối
+            // Xóa kí t? [ ? d?u và ] ? cu?i
             role = role.substr(1, role.size() - 2);
             peopleFile.close();
             return role;
@@ -1228,7 +1228,7 @@ string GetRoleByEmail(const string &email)
 
     cout << "Khong tim thay thong tin nguoi dung.\n";
     peopleFile.close();
-    return ""; // Trả về chuỗi rỗng nếu không tìm được email
+    return ""; // Tr? v? chu?i r?ng n?u không tìm du?c email
 }
 
 void showBooks()
@@ -1333,7 +1333,7 @@ int main()
 
                     cin >> option;
                     if (option == 'r')
-                    	return 0; // Thoát chương trình
+                    	return 0; // Thoát chuong trình
                     if (option == 'e')
                     {
                         if (curPer.getRole() == "Admin")
@@ -1342,7 +1342,7 @@ int main()
                             cout << "Enter ID want to delete: ";
                             cin >> idToDelete;
                             Book book;
-                            // Xác nhận trước khi xóa
+                            // Xác nh?n tru?c khi xóa
                             cout << "Are you sure you want to delete this book? (Y/N): ";
                             char confirm;
                             cin >> confirm;
@@ -1589,7 +1589,7 @@ int main()
                     {
                         loggedIn = false;
                     }
-                    // Thực hiện các chức năng khác tương tự
+                    // Th?c hi?n các ch?c nang khác tuong t?
                 }
             }
         }
