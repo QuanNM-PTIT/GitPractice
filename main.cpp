@@ -1450,7 +1450,66 @@ int main()
                     }
                     if (option == 'g')
                     {
-                        capnhatthongtinmuonsach();
+                        //Trả sách: Chỉ thực hiện được nếu người dùng có role user. Cho phép người dùng nhập vào id cuốn sách muốn trả.
+                        // Sau khi trả sách, cập nhật lại thông tin số lượng sách trong file books.txt và số lượng sách điện tử trong file ebooks.txt
+                        // Xóa thông tin mượn sách trong file borrowInfos.txt
+                        int id;
+                        cout << "Nhap id cuon sach ban muon tra: ";
+                        cin >> id;
+                        vector<BorrowInfo> v;
+                        ifstream filein("borrowInfos.txt");
+                        if (!filein.is_open())
+                        {
+                            cout << "Khong the mo tep borrowInfos.txt";
+                        }
+                        else
+                        {
+                            string tmp;
+                            while (getline(filein, tmp))
+                            {
+                                int id, perId, bookId, eBookId;
+                                vector<int> numbers = extractNumbers(tmp);
+                                id = numbers[0];
+                                perId = numbers[1];
+                                bookId = numbers[2];
+                                eBookId = numbers[3];
+                                BorrowInfo x(perId, bookId, eBookId);
+                                x.setId(id);
+                                v.push_back(x);
+                            }
+                            int ok = 0;
+                            for (auto it = v.begin(); it != v.end(); it++)
+                            {
+                                if (it->getbookId() == id)
+                                {
+                                    v.erase(it);
+                                    ok = 1;
+                                    break;
+                                }
+                            }
+                            if (ok == 0)
+                            {
+                                cout << "Khong tim thay id cuon sach ban muon tra\n";
+                            }
+                            else
+                            {
+                                ofstream fileout("borrowInfos.txt", ios::trunc);
+                                if (fileout.is_open())
+                                {
+                                    std::sort(v.begin(), v.end(), cmpBorrowInfo);
+                                    for (BorrowInfo i : v)
+                                    {
+                                        fileout << "[" << i.getId() << "] " << "[" << i.getpersonId() << "] " << "[" << i.getbookId() << "] " << "[" << i.geteBookId() << "]" << endl;
+                                    }
+                                    cout << "Da tra sach thanh cong\n";
+                                }
+                                else
+                                    cout << "Khong the mo tep borrowInfos.txt\n";
+                                fileout.close();
+                            }
+                        }
+                        filein.close();
+                        
                     }
                     if (option == 'm')
                     {
