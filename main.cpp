@@ -1028,7 +1028,7 @@ public:
         }
     }
 
-    void getBooks(const string& filename, int data) const {
+    void getBooks(const string &filename, int data) const{
         ifstream file(filename);
         string line;
         vector<string> lines;
