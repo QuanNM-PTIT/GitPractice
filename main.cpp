@@ -56,7 +56,9 @@ vector<string> getInformationFromFile(const string& filename, int n) {
             info.push_back(tokens[n]);
         }
     }
+
     file.close();
+
     return info;
 }
 
@@ -290,12 +292,15 @@ public:
         this->personId = personId;
         this->bookId = bookId;
         this->eBookId = eBookId;
+
         // Cập nhật Id
         vector<string> ID_list = this->getInfo(0);
         map<int, int> mp;
+
         for(string ID : ID_list){
             mp[stoi(ID)] = 1;
         }
+
         while(mp[id]){
             ++ id;
         }
@@ -306,16 +311,21 @@ public:
         string filename = "borrowInfos.txt";
         ifstream file(filename);
         string line;
+
         while (getline(file, line)) {
             stringstream ss(line);
             string token;
             vector<string> tokens;
+
             while(ss >> token){
                 tokens.push_back(token.substr(1, token.size() - 2));
             }
+
             info.push_back(tokens[n]);
         }   
+
         file.close();
+
         return info;
     }
     
@@ -325,18 +335,23 @@ public:
         string filename = "test_borrowInfos.txt";
         ifstream file(filename);
         string line;
+
         while (getline(file, line)) {
             stringstream ss(line);
             string token;
             vector<string> tokens;
+
             while(ss >> token){
                 tokens.push_back(token.substr(1, token.size() - 2));
             }
+
             personIds.push_back(tokens[1]);
             bookIds.push_back(tokens[2]);
             eBookIds.push_back(tokens[3]);
         }   
+
         file.close();
+
         if(!personIds.empty()){
             for(int pos = 0; pos < personIds.size(); pos ++){
                 if(this->personId == stoi(personIds[pos]) && this->bookId == stoi(bookIds[pos]) && this->eBookId == stoi(eBookIds[pos])){
@@ -347,6 +362,7 @@ public:
                 }
             }
         }
+
         return true;
     }
 
@@ -379,19 +395,24 @@ public:
         string filename = "borrowInfos.txt";
         fstream file(filename);
         string line;
+
         while (getline(file, line)) {
             lines.push_back(line);
             stringstream ss(line);
             string token;
             vector<string> tokens;
+
             while(ss >> token){
                 tokens.push_back(token.substr(1, token.size() - 2));
             }
+
             personIds.push_back(tokens[1]);
             bookIds.push_back(tokens[2]);
             eBookIds.push_back(tokens[3]);
         }
+
         int del_pos = -1;
+
         if(!personIds.empty()){
             for(int pos = 0; pos < personIds.size(); pos ++){
                 if(this->personId == stoi(personIds[pos]) && this->bookId == stoi(bookIds[pos]) && this->eBookId == stoi(eBookIds[pos])){
@@ -400,6 +421,7 @@ public:
                 }
             }
         }
+
         if(del_pos == -1){
             setColor(5, 0);
             cout << "Invalid return book information!\n";
@@ -408,16 +430,19 @@ public:
         else{
             // Đặt con trỏ về đầu tập tin
             file.seekg(0);
+            
             // Bỏ qua dòng chứa thông tin muốn xóa
             for(int pos = 0; pos < lines.size(); pos ++){
                 if(pos != del_pos){
                     file << lines[pos] << endl;
                 }
             }
+
             setColor(5, 0);
             cout << "Deleted borrowInfo line " << del_pos << endl;
             setColor(7, 0);
         }
+
         file.close();
     }
 
@@ -426,30 +451,37 @@ public:
         string filename = "borrowInfos.txt";
         fstream file(filename);
         string line;
+
         while (getline(file, line)) {
             stringstream ss(line);
             string token;
             vector<string> tokens;
+
             while(ss >> token){
                 tokens.push_back(token.substr(1, token.size() - 2));
             }
+
             personIds.push_back(tokens[1]);
             bookIds.push_back(tokens[2]);
             eBookIds.push_back(tokens[3]);
         }
+
         vector<string> books, eBooks;
+
         for(int pos = 0; pos < personIds.size(); pos ++){
             if(personID == stoi(personIds[pos])){
                 if(bookIds[pos] != "-1") books.push_back(bookIds[pos]);
                 if(eBookIds[pos] != "-1") eBooks.push_back(eBookIds[pos]);
             }
         }
+
         if(books.empty() && eBooks.empty()){
             setColor(5, 0);
             cout << "You haven't borrowed any book!\n";
             setColor(7, 0);
             return;
         }
+
         if(!books.empty()){
             setColor(5, 0);
             cout << "You have borrowed books with ID: ";
@@ -458,6 +490,7 @@ public:
                 cout << bookID << " ";
             }
         }
+
         if(!eBooks.empty()){
             setColor(5, 0);
             cout << "\nYou have borrowed eBooks with ID: ";
@@ -475,6 +508,7 @@ public:
         if(!valid_var.isValid()){
             return;
         }
+
         // Cập nhật dữ liệu
         this->personId = new_personId;
         this->bookId = new_bookId;
@@ -485,9 +519,11 @@ public:
         fstream file(file_name);
         vector<string> lines;
         string line;
+
         while(getline(file, line)){
             lines.push_back(line);
         }
+
         // Thay đổi dữ liệu dựa theo personId
         vector<string> personIds = this->getInfo(1);
         for(int pos = 0; pos < personIds.size(); pos ++){
@@ -496,11 +532,13 @@ public:
                 lines[pos] += "[" + to_string(new_bookId) + "] [" + to_string(new_eBookId) + "]";
             }
         }
+
         // Đặt con trỏ về đầu tập tin để ghi lại dữ liệu
         file.seekg(0);
         for(const string& l : lines){
             file << l << endl;
         }
+
         file.close();
     }
 
@@ -550,11 +588,14 @@ public:
         this->email = email;
         this->password = password;
         // Cập nhật Id
+
         vector<string> ID_list = this->getInfo(0);
         map<int, int> mp;
+
         for(string ID : ID_list){
             mp[stoi(ID)] = 1;
         }
+
         while(mp[id]){
             ++ id;
         }
@@ -565,16 +606,21 @@ public:
         string filename = "test_user.txt";
         ifstream file(filename);
         string line;
+
         while (getline(file, line)) {
             stringstream ss(line);
             string token;
             vector<string> tokens;
+
             while(ss >> token){
                 tokens.push_back(token.substr(1, token.size() - 2));
             }
+
             info.push_back(tokens[n]);
         }   
+
         file.close();
+
         return info;
     }
 
@@ -597,11 +643,13 @@ public:
         }
         
         file.close();
+
         return ++mex;
     }
 
     bool emailExists(const string& email) {
         vector<string> emails = getInformationFromFile("users.txt", 1);
+
         for (const string& e : emails) {
             if (e == email) {
                 return true;
@@ -613,21 +661,24 @@ public:
     bool validatePassword(const string& email, const string& password) {
         vector<string> emails = getInformationFromFile("users.txt", 1);
         vector<string> passwords = getInformationFromFile("users.txt", 2);
+
         for (size_t i = 0; i < emails.size(); ++i) {
             if (emails[i] == email && passwords[i] == password) {
                 return true;
             }
         }
+
         return false;
     }
 
     bool hasGmailDomain(const string& email) {
-    const string gmailDomain = "@gmail.com";
-    if (email.size() > gmailDomain.size()) {
-        return email.compare(email.size() - gmailDomain.size(), gmailDomain.size(), gmailDomain) == 0;
+        const string gmailDomain = "@gmail.com";
+
+        if (email.size() > gmailDomain.size()) {
+            return email.compare(email.size() - gmailDomain.size(), gmailDomain.size(), gmailDomain) == 0;
+        }
+        return false;
     }
-    return false;
-}
 
    void Register(Person& p) {
         string fullName, email, gender, birthdate, address, phoneNumber, password;
@@ -736,7 +787,8 @@ public:
         if (personFile.is_open()) {
             personFile << endl << "[" + to_string(personID) + "] [" + fullName + "] [" + email + "] [" + gender + "] [" + birthdate + "] [" + address + "] [" + phoneNumber + "] [User]";
             personFile.close();
-        } else {
+        } 
+        else {
             setColor(5, 0);
             cerr << "Unable to open file people.txt" << endl;
             setColor(7, 0);
@@ -766,7 +818,8 @@ public:
             setColor(5, 0);
             cout << "Registration successful!" << endl;
             setColor(7, 0);
-        } else {
+        } 
+        else {
             setColor(5, 0);
             cerr << "Unable to open file users.txt" << endl;
             setColor(7, 0);
@@ -820,6 +873,7 @@ public:
 
         ifstream file("people.txt");
         string line;
+
         while (getline(file, line)) {
             size_t pos = 0;
             string token;
@@ -848,7 +902,9 @@ public:
                 p.setRole(tokens[7]);
             }
         }
+
         file.close();
+
         return true;
     }  
 
@@ -960,6 +1016,7 @@ public:
             }
             mex = *it;
         }
+
         ++mex;
 
         if (outFile.is_open()) {
@@ -976,7 +1033,7 @@ public:
         string line;
         vector<string> lines;
 
-         while (getline(file, line)){
+        while (getline(file, line)){
             lines.push_back(line);
         }
 
@@ -1235,8 +1292,10 @@ string input(string& data, vector<string>& attribute) {
     setColor(5, 0);
     cout << "Enter the " << attribute[cnt] << " you want to edit, if you don't want to edit anything, enter (None): ";
     setColor(7, 0);
+
     scanf("\n");
     getline(cin, data);
+
     while (isExistAlphaOrNum(data) == false) {
         setColor(5, 0);
         cout << "Invalid input, it must contain at least 1 character!" << endl;
@@ -1357,8 +1416,10 @@ string changeRole(string& data) {
     setColor(5, 0);
     cout << "Enter the role you want to edit, if you don't want to edit anything, enter (None): ";
     setColor(7, 0);
+
     scanf("\n");
     getline(cin, data);
+
     while (isExistAlphaOrNum(data) == false) {
         setColor(12, 0);
         cout << "Invalid input, it must contain at least 1 character!" << endl;
@@ -1417,6 +1478,7 @@ void pauseAndClear() {
     setColor(5, 0);
     cout << "Press (Enter) to go back to the Menu..." << endl;
     setColor(7, 0);
+    
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the buffer
     cin.get(); // Wait for the user to press Enter
     clearScreen();
