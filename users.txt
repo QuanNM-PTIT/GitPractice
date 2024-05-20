@@ -1,11 +1,7 @@
 [1] [john.smith@gmail.com] [pass1234]
 [2] [jane.doe@gmail.com] [abcD1234]
 [3] [alice.johnson@gmail.com] [MyP@ssw0rd]
-<<<<<<< HEAD
-[4] [minhle@gmail.com] [minhle1234]
-[5] [haduylong@gmail.com] [long1234]
-=======
 [4] [minhle@hgmail.com] [minhle1234]
 [5] [haduylong@gmail.com] [long1234]
 [6] [arabicqth@gmail.com] [hahahahau]
->>>>>>> 26e6067d81ff0ab04af2b2b5574b2aa3faa9299a
+[7] [nhna@gmail.com] [nhna1234]
