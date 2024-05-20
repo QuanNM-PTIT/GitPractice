@@ -1108,7 +1108,6 @@ Person login(bool &check)
     cout << "Sai thong tin dang nhap !\n";
     return Person("", "", "", "", "", "", "");
 }
-
 void Signup()
 {
     string userName, password;
