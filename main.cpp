@@ -833,23 +833,34 @@ Person DangKy(){
 	return x;
 
 }
-void ManageBook(int ID){
-	bool check = false;
-	for(auto person: v_person){
-		if(person.getID() == ID){
-			string title, author;
-			int id, quality;
-			cout << "Nhap ID sach: "; cin >> id; cin.ignore();
-			cout << "\nNhap ten sach: "; getline(cin, title);
-			cout << "\nNhap tac gia: "; getline(cin, author);
-			cout << "\nNhap so luong: "; cin >> quality;
-			Book x;
-			x.updateBook(id, title, author, quality);
-			check = true;
-			return;
-		}
+void ManageBook(){
+	int i;
+	cout << "Chon 1 de sua sach, chon 2 de sua ebook.\n";
+	cin >> i; 
+	if(i == 1){
+		string title, author;
+		int id, quality;
+		cout << "\nNhap ID sach: "; cin >> id; cin.ignore();
+		cout << "\nNhap ten sach: "; getline(cin, title);
+		cout << "\nNhap tac gia: "; getline(cin, author);
+		cout << "\nNhap so luong: "; cin >> quality;
+		Book x;
+		x.updateBook(id, title, author, quality);
+		return;
 	}
-	if(!check) cout << "Loi khong sua duoc sach!\n";
+	if(i == 2){
+		string title, author, fileformat;
+		int id, quality, filesize;
+		cout << "Nhap ID sach: "; cin >> id; cin.ignore();
+		cout << "\nNhap ten sach: "; getline(cin, title);
+		cout << "\nNhap tac gia: "; getline(cin, author);
+		cout << "\nNhap so luong: "; cin >> quality;
+		cout << "\nNhap dinh dang file: "; cin >> fileformat;
+		cout << "\nNhap kich thuoc file: "; cin >> filesize;
+		Ebook x;
+		x.updateEbook(id, title, author, quality, fileformat, filesize);
+		return;
+	}
 }
 void BorrowBook(int ID){
 	bool check = false;
@@ -1160,7 +1171,7 @@ int main(){
 					Them_Sach(); 
 					break; 
 				case 4:
-					ManageBook(x.getID());
+					ManageBook();
 					break;
 				case 5:
 					Xoa_Sach(); 
