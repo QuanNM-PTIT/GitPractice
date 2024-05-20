@@ -1006,7 +1006,7 @@ public:
         set<long long> dataIDInt;
         for (string s : dataID) {
             dataIDInt.insert(stoi(s));
-        } 
+        }
 
         int mex = 0;
         for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
@@ -1020,11 +1020,9 @@ public:
         ++mex;
 
         if (outFile.is_open()) {
-            outFile << endl << '[' << to_string(mex) << "] " <<  bookInf;
+            outFile << endl << '[' << to_string(mex) << "] "<< bookInf;
             outFile.close();
-            setColor(5, 0);
-            cout << "The information of the book has been successfully written!\n";
-            setColor(7, 0);
+            cout << "The book's information has been saved successfully !!!\n\n";
         }
     }
 
@@ -1569,28 +1567,37 @@ int main() {
             switch (query) {
                 case 3: 
                     if (p.getRole() == "Admin") {
-                        setColor(5, 0);
-                        cout << "Enter book information: ";
-                        setColor(7, 0);
-                        string bookInfo;
+                        int cnt = 0;
+                        string info;
                         cin.ignore();
-                        getline(cin, bookInfo);
-                        while (!isExistAlphaOrNum(bookInfo)) {
-                            setColor(12, 0);
-                            cout << "Wrong format, please enter correct format, no special characters!" << endl;
-                            setColor(5, 0);
-                            cout << "Enter book information: ";
-                            setColor(7, 0);
-                            getline(cin, bookInfo);
+                        while(cnt < 3)
+                        {
+                            if(cnt == 0)
+                                cout << "Enter the book title: ";
+                            else if(cnt == 1)
+                                cout << "Enter the author: ";
+                            else if(cnt == 2)
+                                cout << "Enter the quantity: ";
+                            string s;
+                            getline(cin, s);
+                            if (s.empty())
+                                cout << "You entered missing book information, please re-enter !!!\n";
+                            else
+                            {
+                                info = info + '[' + s + "] ";
+                                ++cnt;
+                            }
                         }
-                        b.addBook("books.txt", bookInfo);
-                    } 
+                        cout << '\n';
+                        b.addBook("books.txt", info);
+                    }
                     else {
                         setColor(12, 0);
                         cout << "You do not have permission to add book information!!!\n";
                         setColor(7, 0);
                     }
                     break;
+            
 
                 case 4:
                     if (p.getRole() == "User") {
