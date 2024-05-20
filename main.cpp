@@ -635,7 +635,7 @@ public:
         } 
 
         int mex = 0;
-        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {\
+        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
             if (*it > mex + 1) {
                 break;
             }
@@ -1011,7 +1011,6 @@ public:
         int mex = 0;
         for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
             if (*it > mex + 1) {
-                mex = mex + 1;
                 break;
             }
             mex = *it;
