@@ -1572,16 +1572,9 @@ int main() {
                         cout << "Enter book information: ";
                         setColor(7, 0);
                         string bookInfo;
-                        cin.ignore();
-                        getline(cin, bookInfo);
-                        while (!isExistAlphaOrNum(bookInfo)) {
-                            setColor(12, 0);
-                            cout << "Wrong format, please enter correct format, no special characters!" << endl;
-                            setColor(5, 0);
-                            cout << "Enter book information: ";
-                            setColor(7, 0);
-                            getline(cin, bookInfo);
-                        }
+                        
+                        bookInfo = validBookInfo();
+
                         b.addBook("books.txt", bookInfo);
                     } 
                     else {
