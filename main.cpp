@@ -635,7 +635,7 @@ public:
         } 
 
         int mex = 0;
-        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {\
+        for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
             if (*it > mex + 1) {
                 break;
             }
@@ -677,6 +677,7 @@ public:
         if (email.size() > gmailDomain.size()) {
             return email.compare(email.size() - gmailDomain.size(), gmailDomain.size(), gmailDomain) == 0;
         }
+        
         return false;
     }
 
@@ -1011,7 +1012,6 @@ public:
         int mex = 0;
         for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
             if (*it > mex + 1) {
-                mex = mex + 1;
                 break;
             }
             mex = *it;
@@ -1570,20 +1570,30 @@ int main() {
                         int cnt = 0;
                         string info;
                         cin.ignore();
-                        while(cnt < 3)
-                        {
-                            if(cnt == 0)
+                        while(cnt < 3){
+                            if(cnt == 0){
+                                setColor(5, 0);
                                 cout << "Enter the book title: ";
-                            else if(cnt == 1)
+                                setColor(7, 0);
+                            }
+                            else if(cnt == 1){
+                                setColor(5, 0);
                                 cout << "Enter the author: ";
-                            else if(cnt == 2)
+                                setColor(7, 0);
+                            }
+                            else if(cnt == 2){
+                                setColor(5, 0);
                                 cout << "Enter the quantity: ";
+                                setColor(7, 0);
+                            }
                             string s;
                             getline(cin, s);
-                            if (s.empty())
+                            if (s.empty()){
+                                setColor(12, 0);
                                 cout << "You entered missing book information, please re-enter !!!\n";
-                            else
-                            {
+                                setColor(7, 0);
+                            }
+                            else{
                                 info = info + '[' + s + "] ";
                                 ++cnt;
                             }
