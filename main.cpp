@@ -677,6 +677,7 @@ public:
         if (email.size() > gmailDomain.size()) {
             return email.compare(email.size() - gmailDomain.size(), gmailDomain.size(), gmailDomain) == 0;
         }
+        
         return false;
     }
 
@@ -1568,15 +1569,40 @@ int main() {
             switch (query) {
                 case 3: 
                     if (p.getRole() == "Admin") {
-                        setColor(5, 0);
-                        cout << "Enter book information: ";
-                        setColor(7, 0);
-                        string bookInfo;
-                        
-                        bookInfo = validBookInfo();
-
-                        b.addBook("books.txt", bookInfo);
-                    } 
+                        int cnt = 0;
+                        string info;
+                        cin.ignore();
+                        while(cnt < 3){
+                            if(cnt == 0){
+                                setColor(5, 0);
+                                cout << "Enter the book title: ";
+                                setColor(7, 0);
+                            }
+                            else if(cnt == 1){
+                                setColor(5, 0);
+                                cout << "Enter the author: ";
+                                setColor(7, 0);
+                            }
+                            else if(cnt == 2){
+                                setColor(5, 0);
+                                cout << "Enter the quantity: ";
+                                setColor(7, 0);
+                            }
+                            string s;
+                            getline(cin, s);
+                            if (s.empty()){
+                                setColor(12, 0);
+                                cout << "You entered missing book information, please re-enter !!!\n";
+                                setColor(7, 0);
+                            }
+                            else{
+                                info = info + '[' + s + "] ";
+                                ++cnt;
+                            }
+                        }
+                        cout << '\n';
+                        b.addBook("books.txt", info);
+                    }
                     else {
                         setColor(12, 0);
                         cout << "You do not have permission to add book information!!!\n";
