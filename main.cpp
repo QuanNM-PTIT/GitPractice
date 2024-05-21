@@ -1007,7 +1007,7 @@ public:
         set<long long> dataIDInt;
         for (string s : dataID) {
             dataIDInt.insert(stoi(s));
-        } 
+        }
 
         int mex = 0;
         for (auto it = dataIDInt.begin(); it != dataIDInt.end(); ++it) {
@@ -1020,11 +1020,9 @@ public:
         ++mex;
 
         if (outFile.is_open()) {
-            outFile << endl << '[' << to_string(mex) << "] " <<  bookInf;
+            outFile << endl << '[' << to_string(mex) << "] "<< bookInf;
             outFile.close();
-            setColor(5, 0);
-            cout << "The information of the book has been successfully written!\n";
-            setColor(7, 0);
+            cout << "The book's information has been saved successfully !!!\n\n";
         }
     }
 
@@ -1609,6 +1607,7 @@ int main() {
                         setColor(7, 0);
                     }
                     break;
+            
 
                 case 4:
                     if (p.getRole() == "User") {
