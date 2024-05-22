@@ -62,6 +62,18 @@ vector<string> getInformationFromFile(const string& filename, int n) {
     return info;
 }
 
+// Kiểm tra thông tin needCheck đã tồn tại trong file hay chưa
+template <class val>
+bool isValid(const vector<val>& info, const val needCheck) {
+    for (auto i : info) {
+        if (i == needCheck) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool isExistAlphaOrNum(const string& s) {
     if (s.empty()) {
         return false;
@@ -681,7 +693,21 @@ public:
         return false;
     }
 
-   void Register(Person& p) {
+    bool isExistNum(const string& s) {
+        if (s.empty()) {
+            return false;
+        }
+
+        for (char c : s) {
+            if (c < '0' or c > '9') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    void Register(Person& p) {
         string fullName, email, gender, birthdate, address, phoneNumber, password;
 
         // Nhập thông tin từ người dùng
@@ -728,9 +754,9 @@ public:
         setColor(7, 0);
         getline(cin, gender);
 
-        while (!isExistAlphaOrNum(gender)) {
+        while (gender != "Male" and gender != "Female") {
             setColor(12, 0);
-            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            cout << "Wrong format, please enter correct format, Female or Male!" << endl;
             setColor(5, 0);
             cout << "Enter gender: ";
             setColor(7, 0);
@@ -771,9 +797,9 @@ public:
         setColor(7, 0);
         getline(cin, phoneNumber);
 
-        while (!isExistAlphaOrNum(phoneNumber)) {
+        while (!isExistNum(phoneNumber) or phoneNumber.size() != 10 or phoneNumber[0] != '0') {
             setColor(12, 0);
-            cout << "Wrong format, please enter correct format, no special characters!" << endl;
+            cout << "Wrong format, please enter the correct format. The number must contain only digits, start with a 0, and be 10 digits long!" << endl;
             setColor(5, 0);
             cout << "Enter phone number: ";
             setColor(7, 0);
@@ -1270,17 +1296,6 @@ public:
         this->fileSize = fs;
     } 
 };
-
-// Kiểm tra thông tin needCheck đã tồn tại trong file hay chưa
-template <class val>
-bool isValid(const vector<val>& info, const val needCheck) {
-    for (auto i : info) {
-        if (i == needCheck) {
-            return false;
-        }
-    }
-    return true;
-}
 
 int cnt = 0;
 vector<string> attributeOfPerson = {"name", "email", "gender", "date of birth", "address", "phone number"};
