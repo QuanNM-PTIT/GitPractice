@@ -9,6 +9,6 @@
 [9] [Olivia Martinez] [olivia.martinez@gmail.com] [Female] [16/08/1990] [606 Aspen St, Denver, CO] [0456789012] [User]
 [1] [Le Quang Minh] [minhle@hgmail.com] [Male] [14/04/2005] [Hung Yen] [0986768441] [Admin]
 [11] [Ha Duy Long] [haduylong@gmail.com] [Male] [25/01/2005] [Ha Noi] [0703567999] [Admin]
-[12] [Quach Thi Hau] [arabicqth@gmail.com] [Female] [09/07/2005] [Bac Giang] [0377211626] [Admin]
+[12] [Quach Thi Hau] [arabicqth@gmail.com] [Female] [09/07/2005] [Bac Giang] [0377211626] [User]
 [13] [Nguyen Huu Nguyen Anh] [nhna@gmail.com] [Male] [11/11/2005] [Ha Noi] [0987654321] [User]
 [14] [haduylong] [hdl@gmail.com] [Male] [25/01/2005] [N] [1] [User]

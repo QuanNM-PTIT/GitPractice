@@ -21,3 +21,4 @@
 [21] [Sach Day Makeup] [Le Quang Minh] [100] 
 [22] [Sach Day Sua Chua Dien Thoai] [Vu Pham Hong Anh] [200] 
 [23] [Pascal] [Le Quang Minh] [50] 
+[12] [Coding C++] [Ha Duy Long] [100] 
